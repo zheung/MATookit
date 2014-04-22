@@ -1,0 +1,22 @@
+#No Jar File
+*.jar
+
+#No Eclipse Setting
+.classpath
+.project
+.settings
+
+#No sensitive Source
+/src/org/danor/matookit/PcTest.java
+/src/org/danor/matookit/PcPtbus.java
+/src/org/danor/matookit/PcConsole.java
+
+#No Test Folder
+/bin/
+
+/wrk/dat/
+/wrk/log/
+/wrk/pak/
+/wrk/ptb/
+/wrk/res/Card
+/wrk/res/Item
