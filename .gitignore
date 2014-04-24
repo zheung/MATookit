@@ -7,9 +7,7 @@
 .settings
 
 #No sensitive Source
-/src/org/danor/matookit/PcTest.java
-/src/org/danor/matookit/PcPtbus.java
-/src/org/danor/matookit/PcConsole.java
+/src/danor/matookit/test
 
 #No Test Folder
 /bin/
