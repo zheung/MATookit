@@ -57,7 +57,7 @@ public class UConfig
 			sb.append(sb2.substring(0,sb2.length()-1)).append("\r\n");
 		}
 		
-		UUtil.Output(new File("./wrk/dat/cfg"), sb.substring(0,sb.length()-2).getBytes(), false);
+		UUtil.Output(new File("./wrk/dat/cfg"), sb.substring(0,sb.length()-2).getBytes("utf-8"), false);
 		
 		ULog.getInstance().log("Config-Save-"+key, true);
 	}
