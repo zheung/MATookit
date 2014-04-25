@@ -119,6 +119,8 @@ public class GMain7
 
 	private JComboBox<String> cbxExpFloor;
 
+	private final String title = "[DanoR MATookit][For.cn][Version.7.2.0][Build.2014.04.25.A]";
+
 	private void initialize() throws Exception
 	{
 		log.log("System-Start", true);
@@ -132,7 +134,7 @@ public class GMain7
 		frmMain.setResizable(false);
 		frmMain.setType(Type.POPUP);
 		frmMain.setAutoRequestFocus(true);
-		frmMain.setTitle("[DanoR MATookit][CN][Version.7.1.5][Build.2014.04.22.A]");
+		frmMain.setTitle(title);
 		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage("./wrk/res/Gui/Ico.png"));
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		frmMain.setBounds((d.width - 848) / 2, (d.height - 480) / 2, 848, 480);
@@ -673,7 +675,7 @@ public class GMain7
 						iptPaswd.setText(u.split(",")[1]);
 		});
 	//设置托盘图标
-		tray = new TrayIcon(new ImageIcon("./wrk/res/ico.png").getImage(), "Rotonith Million Arthur Toolkit");
+		tray = new TrayIcon(new ImageIcon("./wrk/res/Gui/ico.png").getImage(), "MATookit");
 		tray.setImageAutoSize(true);
 		
 		SystemTray.getSystemTray().add(tray);
@@ -753,8 +755,8 @@ public class GMain7
 					iptAcout.setEnabled(true);
 					iptPaswd.setEnabled(true);
 					
-					frmMain.setTitle("[Rotonith Million Arthur Toolkit][CN][Version.7.0.1][Build.2014.04.10.A]");
-					tray.setToolTip("[Rotonith Million Arthur Toolkit]");
+					frmMain.setTitle(title);
+					tray.setToolTip("[DanoR MATookit]");
 				}
 			}).start();
 		});
