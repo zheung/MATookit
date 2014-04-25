@@ -2,13 +2,13 @@ package danor.matookit.utils;
 
 import java.io.File;
 
-public class UcLog
+public class ULog
 {
 	private final String timeStart;
 	
 	private final File fileLog;
 	
-	private UcLog() throws Exception
+	private ULog() throws Exception
 	{
 		timeStart = Long.toString(System.currentTimeMillis());
 		
@@ -24,27 +24,27 @@ public class UcLog
 	public synchronized void log(String content, boolean typPrint) throws Exception
 	{
 		if(typPrint)
-			UcUtil.p(content);
+			UUtil.p(content);
 		
-		UcUtil.Output(fileLog, (Thread.currentThread().getId()+" "+UcUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
+		UUtil.Output(fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
 	}
 	
 	public synchronized void log(String content) throws Exception
 	{
-		UcUtil.p(content);
+		UUtil.p(content);
 		
-		UcUtil.Output(fileLog, (Thread.currentThread().getId()+" "+UcUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
+		UUtil.Output(fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
 	}
 
 	private static class FcLogContainer
 	{
-		private static UcLog instance;
+		private static ULog instance;
 		static
 		{
-			try { instance = new UcLog(); }
+			try { instance = new ULog(); }
 			catch(Exception e) { e.printStackTrace(); }
 		}
 	}
 	
-	public static UcLog getInstance() { return FcLogContainer.instance; }
+	public static ULog getInstance() { return FcLogContainer.instance; }
 }

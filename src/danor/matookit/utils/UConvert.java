@@ -19,7 +19,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-public class UcConvert
+public class UConvert
 {
 	private static final byte[] encodingTable, decodingTable;
 	static
@@ -57,14 +57,14 @@ public class UcConvert
 	public static byte[] decryptAES(byte[] aryByte, File cvtFile, byte[] keyAES) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyAES, "AES"));
 		aryByte = cipher.doFinal(aryByte);
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}
@@ -78,14 +78,14 @@ public class UcConvert
 	public static byte[] encryptAES(byte[] aryByte, File cvtFile, byte[] keyAES) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyAES, "AES"));
 		aryByte = cipher.doFinal(aryByte);
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}
@@ -100,28 +100,28 @@ public class UcConvert
 	public static byte[] decryptRSA(byte[] aryByte, File cvtFile, byte[] keyRSA64) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(UcConvert.decodeBase64(keyRSA64, null))));
+		cipher.init(Cipher.DECRYPT_MODE, KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(UConvert.decodeBase64(keyRSA64, null))));
 		aryByte = cipher.doFinal(aryByte);
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}
 	public static byte[] encryptRSA(byte[] aryByte, File cvtFile, byte[] keyRSA64) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.ENCRYPT_MODE, KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(UcConvert.decodeBase64(keyRSA64, null))));
+		cipher.init(Cipher.ENCRYPT_MODE, KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(UConvert.decodeBase64(keyRSA64, null))));
 		aryByte = cipher.doFinal(aryByte);
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}
@@ -129,7 +129,7 @@ public class UcConvert
 	public static byte[] decodeBase64(byte[] aryByte, File cvtFile) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 
 		byte[] bytes;
 		byte b1;
@@ -190,14 +190,14 @@ public class UcConvert
 		}
 
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, bytes, false);
+			UUtil.Output(cvtFile, bytes, false);
 		
 		return bytes;
 	}
 	public static byte[] encodeBase64(byte[] aryByte, File cvtFile) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		byte[] bytes;
 		int modulus = aryByte.length % 3;
@@ -254,7 +254,7 @@ public class UcConvert
 		}
 
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, bytes, false);
+			UUtil.Output(cvtFile, bytes, false);
 		
 		return bytes;
 	}
@@ -262,24 +262,24 @@ public class UcConvert
 	public static byte[] encodeUrl(byte[] aryByte, File cvtFile) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		aryByte = URLEncoder.encode(new String(aryByte, "utf-8"),"utf-8").getBytes();
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}
 	public static byte[] decodeUrl(byte[] aryByte, File cvtFile) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		aryByte = URLDecoder.decode(new String(aryByte, "utf-8"),"utf-8").getBytes();
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}
@@ -295,14 +295,14 @@ public class UcConvert
 	public static byte[] decryptAESCBC(byte[] aryByte, File cvtFile, byte[] keyAES, byte[] keyCBC) throws Exception
 	{
 		if(aryByte == null && cvtFile != null)
-			aryByte = UcUtil.Input(cvtFile);
+			aryByte = UUtil.Input(cvtFile);
 		
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyAES, "AES"),new IvParameterSpec(keyCBC));
 		aryByte = cipher.doFinal(aryByte);
 		
 		if(cvtFile != null)
-			UcUtil.Output(cvtFile, aryByte, false);
+			UUtil.Output(cvtFile, aryByte, false);
 		
 		return aryByte;
 	}

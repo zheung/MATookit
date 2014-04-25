@@ -1,6 +1,6 @@
 package danor.matookit.natures.data.card;
 
-public class NDataCardTemp
+public class NDataCardBulider
 {
 	public String idCard;
 	public String idTown;
@@ -21,7 +21,7 @@ public class NDataCardTemp
 	public String maxHP;
 	public String maxAK;
 	public String hloMaxLV;
-	public String cpdTar;
+	public String cpdTarget;
 	public String cpdResult;
 	public String cpdPrices;
 
@@ -33,5 +33,5 @@ public class NDataCardTemp
 	public String isSync;
 	
 	public NDataCardGrow grow;
-	public NDataCardSkill skill;
+	public NDataCardSkillBuilder skill = new NDataCardSkillBuilder();
 }

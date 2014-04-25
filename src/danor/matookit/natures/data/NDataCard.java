@@ -1,6 +1,10 @@
-package danor.matookit.natures.data.card;
+package danor.matookit.natures.data;
 
-public class NDataCardFull extends NDataCard
+import danor.matookit.natures.data.card.NDataCardBulider;
+import danor.matookit.natures.data.card.NDataCardGrow;
+import danor.matookit.natures.data.card.NDataCardSkill;
+
+public class NDataCard
 {
 	private final String idCard;
 	private final String idTown;
@@ -21,7 +25,7 @@ public class NDataCardFull extends NDataCard
 	private final String maxHP;
 	private final String maxAK;
 	private final String hloMaxLV;
-	private final String cpdTar;
+	private final String cpdTarget;
 	private final String cpdResult;
 	private final String cpdPrices;
 
@@ -35,7 +39,7 @@ public class NDataCardFull extends NDataCard
 	private final NDataCardGrow grow;
 	private final NDataCardSkill skill;
 	
-	public NDataCardFull(NDataCardTemp temp)
+	public NDataCard(NDataCardBulider temp)
 	{
 		this.idCard = temp.idCard;
 		this.idTown = temp.idTown;
@@ -56,7 +60,7 @@ public class NDataCardFull extends NDataCard
 		this.maxHP = temp.maxHP;
 		this.maxAK = temp.maxAK;
 		this.hloMaxLV = temp.hloMaxLV;
-		this.cpdTar = temp.cpdTar;
+		this.cpdTarget = temp.cpdTarget;
 		this.cpdResult = temp.cpdResult;
 		this.cpdPrices = temp.cpdPrices;
 		
@@ -68,7 +72,7 @@ public class NDataCardFull extends NDataCard
 		this.isSync = temp.isSync;
 		
 		this.grow = temp.grow;
-		this.skill = temp.skill;
+		this.skill = new NDataCardSkill(temp.skill);
 	}
 	
 	public synchronized String idCard() { return idCard; }
@@ -90,7 +94,7 @@ public class NDataCardFull extends NDataCard
 	public synchronized String maxHP() { return maxHP; }
 	public synchronized String maxAK() { return maxAK; }
 	public synchronized String hloMaxLV() { return hloMaxLV; }
-	public synchronized String cpdTar() { return cpdTar; }
+	public synchronized String cpdTarget() { return cpdTarget; }
 	public synchronized String cpdResult() { return cpdResult; }
 	public synchronized String cpdPrices() { return cpdPrices; }
 

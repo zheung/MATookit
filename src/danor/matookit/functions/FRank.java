@@ -3,9 +3,11 @@ package danor.matookit.functions;
 import java.io.File;
 import java.util.List;
 
-public class FcRank
+import danor.matookit.utils.UUtil;
+
+public class FRank
 {
-	protected static void rank(FcAction action, String idRank, int rank) throws Exception
+	protected static void rank(FAction action, String idRank, int rank) throws Exception
 	{
 		List<String[]> lstRank = action.RankN("2085781", idRank);
 		
@@ -29,8 +31,8 @@ public class FcRank
 		
 			for(String[] r:lstRank)
 			{
-				FcUtil.pp(r[0]+"|"+r[1]+"|"+r[2]+"|"+r[3]);
-				FcUtil.Output(new File("./cfg/rank"), (r[1]+"|"+r[2]+"|"+r[3]+"\r\n").getBytes(), true);
+				UUtil.pp(r[0]+"|"+r[1]+"|"+r[2]+"|"+r[3]);
+				UUtil.Output(new File("./cfg/rank"), (r[1]+"|"+r[2]+"|"+r[3]+"\r\n").getBytes(), true);
 			}
 			
 			lstRank = action.RankN(lstRank.get(lstRank.size()-1)[0], idRank);

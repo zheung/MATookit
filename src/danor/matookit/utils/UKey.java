@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.dom4j.Element;
 
-public class UcKey
+public class UKey
 {
-	private final UcXml xml;
+	private final UXml xml;
 	
-	public UcKey() throws Exception
+	public UKey() throws Exception
 	{
-		xml = new UcXml(new File("./wrk/dat/arb"));
+		xml = new UXml(new File("./wrk/dat/arb"));
 	}
 
 	public synchronized String[] Data(String form, int id) throws Exception
@@ -40,13 +40,13 @@ public class UcKey
 
 	private static class FcDataBaseContainer
 	{
-		private static UcKey instance;
+		private static UKey instance;
 		static
 		{
-			try { instance = new UcKey(); }
+			try { instance = new UKey(); }
 			catch(Exception e) { e.printStackTrace(); }
 		}
 	}
 	
-	public static UcKey getInstance() { return FcDataBaseContainer.instance; }
+	public static UKey getInstance() { return FcDataBaseContainer.instance; }
 }

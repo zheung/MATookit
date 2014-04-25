@@ -3,17 +3,17 @@ package danor.matookit.utils;
 import java.util.Iterator;
 import java.util.List;
 
-public class UcReverseEnum<T> implements Iterable<T>
+public class UReverseEnum<T> implements Iterable<T>
 {
 	protected T[] elements;
 
-	public UcReverseEnum(T[] elements)
+	public UReverseEnum(T[] elements)
 	{
 		this.elements = elements;
 	}
 
 	@SuppressWarnings("unchecked")
-	public UcReverseEnum(List<T> list)
+	public UReverseEnum(List<T> list)
 	{
 		this.elements = (T[])list.toArray();
 	}

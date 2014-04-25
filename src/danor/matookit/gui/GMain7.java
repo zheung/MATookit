@@ -44,15 +44,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-public class PcGui7
+public class GMain7
 {
 	private JFrame frmMain;
 	
-	private UcConfig config;
+	private UConfig config;
 	private TrayIcon tray;
-	private final UcLog log = UcLog.getInstance();
+	private final ULog log = ULog.getInstance();
 	
-	private FcAction action;
+	private FAction action;
 	
 	private JComboBox<String> iptAcout;
 	private JPasswordField iptPaswd;
@@ -647,12 +647,12 @@ public class PcGui7
 //		tabMain.setSelectedIndex(1);
 	}
 
-	public PcGui7() throws Exception //初始化
+	public GMain7() throws Exception //初始化
 	{
 	//界面加载
 		initialize();
 	//配置预读取
-		config = UcConfig.getInstance();
+		config = UConfig.getInstance();
 		
 		String[] user = config.load("User");
 		
@@ -715,7 +715,7 @@ public class PcGui7
 					iptPaswd.setEnabled(false);
 					try
 					{
-						action = new FcAction(false, null);
+						action = new FAction(false, null);
 						action.Login((String) iptAcout.getSelectedItem(), new String(iptPaswd.getPassword()));
 
 						config.save("LastUser", (String)iptAcout.getSelectedItem());
@@ -746,7 +746,7 @@ public class PcGui7
 				else if(btnLogin.getText().equals("登出"))
 				{
 					action = null;
-					McPoint.reset();
+					MPoint.reset();
 					
 					btnLogin.setEnabled(true);
 					btnLogin.setText("登录");
@@ -801,7 +801,7 @@ public class PcGui7
 					if(!iptFryInterval.getText().equals(""))
 					{
 						timerPero = new Timer();
-						timerPero.schedule(new FcFryAuto(action, tblFryList, tray), 1000, Integer.parseInt(iptFryInterval.getText())*1000);
+						timerPero.schedule(new FFryAuto(action, tblFryList, tray), 1000, Integer.parseInt(iptFryInterval.getText())*1000);
 						btnFryControl.setText("暂停");
 					}
 				}
@@ -857,7 +857,7 @@ public class PcGui7
 								cbxExpFloor.removeAllItems();
 								cbxExpFloor.addItem("");
 								
-								for(NFloor f:UcUtil.reverse(a.floors()))
+								for(NFloor f:UUtil.reverse(a.floors()))
 									if(f.isNormal())
 										cbxExpFloor.addItem("区域 "+f.idFloor()+" ("+f.prog()+"%) -"+f.cost());
 									else
@@ -889,7 +889,7 @@ public class PcGui7
 					try
 					{
 						timerExp = new Timer();
-						timerExp.schedule(new FcExpAuto(action, valExpArea.getText(), tblExpLog, tray, btnExpControl, cbxExpFloor), 1000, 3000);
+						timerExp.schedule(new FExpAuto(action, valExpArea.getText(), tblExpLog, tray, btnExpControl, cbxExpFloor), 1000, 3000);
 					}
 					catch(Exception e1) { e1.printStackTrace(); }
 	
@@ -967,9 +967,9 @@ public class PcGui7
 				}
 			}
 			
-			McPoint.getInstance(action.arthur.point(), valAP, valBC, prgAP, prgBC);
+			MPoint.getInstance(action.arthur.point(), valAP, valBC, prgAP, prgBC);
 			
-			McPoint.update();
+			MPoint.update();
 		}
 	}
 	
@@ -1003,7 +1003,7 @@ public class PcGui7
 	{
 		EventQueue.invokeLater(new Runnable()
 		{
-			public void run() { try { new PcGui7().frmMain.setVisible(true); } catch(Exception e) { e.printStackTrace(); } }
+			public void run() { try { new GMain7().frmMain.setVisible(true); } catch(Exception e) { e.printStackTrace(); } }
 		});
 		
 //		EventQueue.invokeLater(() -> {try { new PcGui7().frmMain.setVisible(true); } catch(Exception e) { e.printStackTrace(); }});

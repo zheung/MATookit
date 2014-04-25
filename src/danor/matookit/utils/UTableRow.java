@@ -3,13 +3,13 @@ package danor.matookit.utils;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class UcTableRow
+public class UTableRow
 {
 	private int rowAt;
 	private final String[] values;
 	protected final JTable table;
 	
-	public UcTableRow(int rowAt, int colCount, JTable table)
+	public UTableRow(int rowAt, int colCount, JTable table)
 	{
 		this.setRowAt(rowAt);
 		this.values = new String[colCount];

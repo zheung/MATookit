@@ -2,7 +2,7 @@ package danor.matookit.functions;
 
 import org.dom4j.Element;
 
-import danor.matookit.middles.McPoint;
+import danor.matookit.middles.MPoint;
 import danor.matookit.natures.*;
 import danor.matookit.utils.*;
 
@@ -10,15 +10,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FcGain
+public class FGain
 {
-	public static String GainError(UcXml xml) throws Exception
+	public static String GainError(UXml xml) throws Exception
 	{
 		return xml.value("header>error>code");
 	}
 	public static NRevision GainRevision(File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		xml.move("header>revision");
 		
@@ -69,7 +69,7 @@ public class FcGain
 	
 	protected static NArthur GainArthur(File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		NArthur arthur = new NArthur(
 				new NBase(xml.value("body>login>user_id"), xml.value("header>your_data>name")),
@@ -84,7 +84,7 @@ public class FcGain
 	}
 	protected static void GainBase(File xmlFile, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		arthur.town().hasReward(xml.value("body>mainmenu>rewards").equals("1"));
 
@@ -107,22 +107,22 @@ public class FcGain
 		
 		arthur.town().hasFairy(xml.value("fairy_appearance").equals("1"));
 		
-		UcUtil.p("Gain-Base");
+		UUtil.p("Gain-Base");
 	}
 	protected static void GainCards(File xmlFile, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 
 	    xml.move("header>your_data>owner_card_list");
 	    
 		for(Object e:xml.list("user_card"))
 			arthur.cards().add(GainCard((Element)e));
 	    
-		UcUtil.p("Gain-Cards");
+		UUtil.p("Gain-Cards");
 	}
 	protected static void GainItems(File xmlFile, NArthur arthur) throws Exception
     {
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 
     	xml.move("header>your_data");
     	
@@ -137,11 +137,11 @@ public class FcGain
     		arthur.items().add(item);
     	}
     
-    	UcUtil.p("Gain-Items");
+    	UUtil.p("Gain-Items");
     }
 	protected static void GainPoint(File xmlFile, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 	    xml.move("header>your_data>ap");
 	    arthur.point().nowAP(Integer.parseInt(xml.value("current")));
@@ -155,14 +155,14 @@ public class FcGain
 	    arthur.point().revBC(Integer.parseInt(xml.value("current_time")));
 	    arthur.point().revBC(arthur.point().revBC() - Integer.parseInt(xml.value("last_update_time")));
 		
-	    McPoint.update();
+	    MPoint.update();
 	    
-		UcUtil.p("Gain-Point");
+		UUtil.p("Gain-Point");
 	}
 
 	protected static void GainFairyList(File xmlFile, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
     	xml.move("body>fairy_select");
     	
@@ -206,7 +206,7 @@ public class FcGain
 	}
 	protected static void GainFairyInfo(File xmlFile, NFairy fairy, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
     	xml.move("body>fairy_floor>explore>fairy");
     	
@@ -231,14 +231,14 @@ public class FcGain
 	}
 	protected static NBattleResult GainFairyFight(NFairy fairy, NArthur arthur, File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		NBattleResult result = new NBattleResult();
 		
 		if((result.error(GainError(xml))).equals("0"))
 		{
 			GainPoint(xmlFile, arthur);
-			McPoint.reset();
+			MPoint.reset();
 
 			GainCards(xmlFile, arthur);
 			GainItems(xmlFile, arthur);
@@ -297,7 +297,7 @@ public class FcGain
 
 	protected static void GainRewardList(File xmlFile, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
     	xml.move("body>rewardbox_list");
     	for(Object e:xml.list("rewardbox"))
@@ -330,20 +330,20 @@ public class FcGain
 
 	protected static boolean GainFriendInvite(File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
     	
 		return xml.value("body>friend_act_res>success").equals("1");
 	}
 	protected static void GainFriends(File xmlFile, NArthur arthur) throws Exception
 	{
-		NMatches matches = FcGain.GainMatches("body/friend_list", xmlFile);
+		NMatches matches = FGain.GainMatches("body/friend_list", xmlFile);
 
 		for(NMatch m:matches)
 			arthur.friends().add(m);
 	}
 	protected static NMatches GainMatches(String xPath, File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		NMatches matches = new NMatches();
 		
@@ -360,12 +360,12 @@ public class FcGain
 	}
 	protected static boolean GainFriendRemove(File pakFile) throws Exception
 	{
-		return new UcXml(pakFile).value("body>friend_act_res>success").equals("1");
+		return new UXml(pakFile).value("body>friend_act_res>success").equals("1");
 	}
 	
 	protected static void GainAreaList(File xmlFile, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		xml.move("body>exploration_area>area_info_list");
 		
@@ -382,7 +382,7 @@ public class FcGain
 	}
 	protected static void GainFloors(File xmlFile, NArea area) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		xml.move("body>exploration_floor>floor_info_list");
 		
@@ -391,7 +391,7 @@ public class FcGain
 	}
 	protected static NFloor GainFloor(NArea area, File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		NFloor floor = GainFloor(xml.move("body>get_floor>floor_info"));
 		
@@ -401,7 +401,7 @@ public class FcGain
 	}
 	protected static NFloor GainFloor(Element e) throws Exception
 	{
-		UcXml xml = new UcXml(null);
+		UXml xml = new UXml(null);
 		
 		xml.set(e);
 		
@@ -452,7 +452,7 @@ public class FcGain
 	}
 	protected static NExploreResult GainExplore(NArthur arthur, NArea area, File xmlFile) throws Exception
 	{
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		NExploreResult result = new NExploreResult();
 		
@@ -554,7 +554,7 @@ public class FcGain
 
 	private static NCard GainCard(Element e) throws Exception
 	{
-		UcXml xml = new UcXml(null);
+		UXml xml = new UXml(null);
 		xml.set(e);
 		
 		NCard card = new NCard(xml.value("serial_id"), xml.value("master_card_id"));
@@ -576,7 +576,7 @@ public class FcGain
 	}
 	private static NFairy GainFairy(Element e, NArthur arthur) throws Exception
 	{
-		UcXml xml = new UcXml(null);
+		UXml xml = new UXml(null);
 		xml.set(e);
 		
 		String idSerial = xml.value("serial_id");
@@ -600,7 +600,7 @@ public class FcGain
 	}
 	private static NMatch GainMatch(Element e) throws Exception
 	{
-		UcXml xml = new UcXml(null);
+		UXml xml = new UXml(null);
 		xml.set(e);
 		
 		NMatch match = new NMatch(xml.value("id"), xml.value("name"), xml.value("country_id"));
@@ -625,7 +625,7 @@ public class FcGain
 	{
 		List<String[]> lstRank = new ArrayList<>();
 		
-		UcXml xml = new UcXml(xmlFile);
+		UXml xml = new UXml(xmlFile);
 		
 		xml.move("body>ranking>user_list");
 		

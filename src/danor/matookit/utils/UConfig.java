@@ -5,13 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class UcConfig
+public class UConfig
 {
 	private final Map<String, String[]> config = new LinkedHashMap<String, String[]>();
 	
-	private UcConfig() throws Exception
+	private UConfig() throws Exception
 	{
-		String[] configs = (new String(UcUtil.Input(new File("./wrk/dat/cfg")))).split("\r\n");
+		String[] configs = (new String(UUtil.Input(new File("./wrk/dat/cfg")))).split("\r\n");
 		
 		for(String c:configs)
 		{
@@ -23,7 +23,7 @@ public class UcConfig
 				config.put(kv[0], new String[] {""});
 		}
 		
-		UcLog.getInstance().log("Config-Init");
+		ULog.getInstance().log("Config-Init");
 	}
 	
 	public synchronized String[] load(String key)
@@ -32,7 +32,7 @@ public class UcConfig
 		
 		try
 		{
-			UcLog.getInstance().log("Config-Load-"+key);
+			ULog.getInstance().log("Config-Load-"+key);
 		}
 		catch(Exception e) { e.printStackTrace(); }
 		
@@ -57,20 +57,20 @@ public class UcConfig
 			sb.append(sb2.substring(0,sb2.length()-1)).append("\r\n");
 		}
 		
-		UcUtil.Output(new File("./wrk/dat/cfg"), sb.substring(0,sb.length()-2).getBytes(), false);
+		UUtil.Output(new File("./wrk/dat/cfg"), sb.substring(0,sb.length()-2).getBytes(), false);
 		
-		UcLog.getInstance().log("Config-Save-"+key, true);
+		ULog.getInstance().log("Config-Save-"+key, true);
 	}
 
 	private static class FcConfigContainer
 	{
-		private static UcConfig instance;
+		private static UConfig instance;
 		static
 		{
-			try { instance = new UcConfig(); }
+			try { instance = new UConfig(); }
 			catch(Exception e) { e.printStackTrace(); }
 		}
 	}
 	
-	public static UcConfig getInstance() { return FcConfigContainer.instance; }
+	public static UConfig getInstance() { return FcConfigContainer.instance; }
 }

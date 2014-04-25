@@ -8,13 +8,13 @@ import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
 
-public class UcRePrintStream extends PrintStream
+public class URePrintStream extends PrintStream
 {  
 	private Vector<String> vector; 
 	private JList<String> list;
 	private JScrollBar scroll;
 	
-	public UcRePrintStream(OutputStream sout, JList<String> slist, JScrollBar Sscroll)
+	public URePrintStream(OutputStream sout, JList<String> slist, JScrollBar Sscroll)
 	{
 		super(sout);
 		this.list = slist;

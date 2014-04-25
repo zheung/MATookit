@@ -9,7 +9,7 @@ import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-public class McPoint
+public class MPoint
 {
 	private NPoint point;
 	private JLabel valAP;
@@ -25,7 +25,7 @@ public class McPoint
 	
 	private boolean isReset = false;
 	
-	private McPoint(NPoint point, JLabel valAP, JLabel valBC, JButton prgAP, JButton prgBC)
+	private MPoint(NPoint point, JLabel valAP, JLabel valBC, JButton prgAP, JButton prgBC)
 	{
 		this.point = point;
 		this.valAP = valAP;
@@ -74,7 +74,7 @@ public class McPoint
 					{	
 						if(!McPointContainer.instance.alertAP)
 						{
-							UcUtil.Sound();
+							UUtil.Sound();
 							McPointContainer.instance.alertAP = true;
 						}
 					}
@@ -105,7 +105,7 @@ public class McPoint
 					{	
 						if(!McPointContainer.instance.alertBC)
 						{
-							UcUtil.Sound();
+							UUtil.Sound();
 							McPointContainer.instance.alertBC = true;
 						}
 					}
@@ -118,16 +118,16 @@ public class McPoint
 			
 	}
 
-	private static class McPointContainer { private static McPoint instance; }
-	public synchronized static McPoint getInstance(NPoint point, JLabel valAP, JLabel valBC, JButton prgAP, JButton prgBC)
+	private static class McPointContainer { private static MPoint instance; }
+	public synchronized static MPoint getInstance(NPoint point, JLabel valAP, JLabel valBC, JButton prgAP, JButton prgBC)
 	{
 		if(McPointContainer.instance == null)
-			return (McPointContainer.instance = new McPoint(point, valAP, valBC, prgAP, prgBC));
+			return (McPointContainer.instance = new MPoint(point, valAP, valBC, prgAP, prgBC));
 		else if(McPointContainer.instance.isReset)
-			return (McPointContainer.instance = new McPoint(point, valAP, valBC, prgAP, prgBC));
+			return (McPointContainer.instance = new MPoint(point, valAP, valBC, prgAP, prgBC));
 		else
 			return McPointContainer.instance;
 	}
-	public synchronized static McPoint getInstance() { return McPointContainer.instance; }
+	public synchronized static MPoint getInstance() { return McPointContainer.instance; }
 }
 

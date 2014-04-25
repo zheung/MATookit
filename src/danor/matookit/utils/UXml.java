@@ -6,20 +6,20 @@ import java.util.List;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-public class UcXml
+public class UXml
 {
 	private SAXReader xreader = new SAXReader();
 	private File xmlFile;
 	private Element e;
 	
-	public UcXml(File setFile) throws Exception
+	public UXml(File setFile) throws Exception
 	{
 		xmlFile = setFile;
 		if(setFile != null)
 			e = xreader.read(xmlFile).getRootElement();
 	}
 	
-	public UcXml set(Element setElement) throws Exception
+	public UXml set(Element setElement) throws Exception
 	{
 		e = setElement;
 		

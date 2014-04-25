@@ -7,10 +7,12 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-public class FcPack
+import danor.matookit.utils.*;
+
+public class FPack
 {
-	private final FcDataBase db;
-	private final FcLog log;
+	private final UKey db;
+	private final ULog log;
 	
 	private final String url;
 	private final String pakPath;
@@ -21,7 +23,7 @@ public class FcPack
 	protected int cntPack;
 	protected List<File> lstFile = new ArrayList<File>();
 	
-	public FcPack(String url, String pakPath, String subPath, FcDataBase db, FcLog log) throws Exception
+	public FPack(String url, String pakPath, String subPath, UKey db, ULog log) throws Exception
 	{
 		this.url = url;
 		this.db = db;
@@ -32,13 +34,13 @@ public class FcPack
 	
 	private void decompressPack(File pakFile) throws Exception
 	{
-		byte[] bytes = FcUtil.Input(pakFile);
+		byte[] bytes = UUtil.Input(pakFile);
 		
 		List<String> lstFileName = new ArrayList<>();
 		List<Integer> lstFileLength = new ArrayList<>();
 		int cntFile = 0;
 		
-		FcUtil.p("Decompress-Count-" + (cntFile = btoi(bytes[0x11])));
+		UUtil.p("Decompress-Count-" + (cntFile = btoi(bytes[0x11])));
 		
 		int i = 0x16;
 		while(cntFile > 0)
@@ -52,11 +54,11 @@ public class FcPack
 			
 			lstFileName.add(new String(fbs));
 			
-//			if(indent > 0) FcUtil.q(indent + 1, lstFileName.get(lstFileName.size() - 1));
+//			if(indent > 0) UcUtil.q(indent + 1, lstFileName.get(lstFileName.size() - 1));
 			
 			lstFileLength.add(btoi(bytes[i+nl+1], bytes[i+nl+2], bytes[i+nl+3]));
 
-//			if(indent > 0) FcUtil.p(" " + lstFileLength.get(lstFileLength.size() - 1));
+//			if(indent > 0) UcUtil.p(" " + lstFileLength.get(lstFileLength.size() - 1));
 
 			cntFilesLength += lstFileLength.get(lstFileLength.size() - 1);
 			i += nl + 8;
@@ -80,15 +82,15 @@ public class FcPack
 			if(lstFileName.get(j).indexOf("rja") == -1)
 			{
 				File rnf = new File(f.getPath()+".png");
-				FcConvert.decryptAES(fba, rnf, db.Data("Cipher", 1)[2].getBytes());
+				UConvert.decryptAES(fba, rnf, db.Data("Cipher", 1)[2].getBytes());
 			
-				FcUtil.p(lstFileName.get(j)+"-Decrypt");
+				UUtil.p(lstFileName.get(j)+"-Decrypt");
 			}
 			else
 			{
-				FcUtil.Output(f, fba, false);
+				UUtil.Output(f, fba, false);
 				
-				FcUtil.p(lstFileName.get(j)+"-Save");
+				UUtil.p(lstFileName.get(j)+"-Save");
 			}
 			
 			lstFile.add(f);
@@ -101,17 +103,17 @@ public class FcPack
 	{
 		String urlPack = url.replace("(zkd)", "0");
 
-		FcUtil.p("Download-Pack-0");
+		UUtil.p("Download-Pack-0");
 		
 		String[] ps = urlPack.split("/");
 		
-		FcOption option = new FcOption().put("rqtCookie", false).put("typMethod", false)
+		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", urlPack)
 				.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
-		FcConnect connect = new FcConnect(option, db, log);
+		UConnect connect = new UConnect(option, db, log);
 		File pakFile = connect.result;
 		
-		byte[] bytes = FcUtil.Input(pakFile);
+		byte[] bytes = UUtil.Input(pakFile);
 		
 		cntPacksLength = btoi(bytes[0x3], bytes[0x4], bytes[0x5]);
 		
@@ -132,14 +134,14 @@ public class FcPack
 			{
 				urlPack = url.replace("(zkd)", String.valueOf(i));
 				
-				FcUtil.p("Download-Pack-" + i++);
+				UUtil.p("Download-Pack-" + i++);
 				
 				ps = urlPack.split("/");
 				
-				option = new FcOption().put("rqtCookie", false).put("typMethod", false)
+				option = new UOption().put("rqtCookie", false).put("typMethod", false)
 						.put("cookie", (String)null).put("url", urlPack)
 						.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
-				connect = new FcConnect(option, db, log);
+				connect = new UConnect(option, db, log);
 				pakFile = connect.result;
 
 				decompressPack(pakFile);

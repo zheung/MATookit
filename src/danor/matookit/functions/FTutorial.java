@@ -1,8 +1,8 @@
 package danor.matookit.functions;
 
-public class FcTutorial
+public class FTutorial
 {
-	protected static void jump(FcAction action) throws Exception
+	protected static void jump(FAction action) throws Exception
 	{
 		action.Tutorial("7000");
 		action.Tutorial("8000");

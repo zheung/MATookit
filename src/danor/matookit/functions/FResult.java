@@ -1,16 +1,16 @@
 package danor.matookit.functions;
 
-public class FcResult 
+public class FResult 
 {
 	protected final Object object;
 	protected final String error;
 	
-	public FcResult(Object setObject, String setError)
+	public FResult(Object setObject, String setError)
 	{
 		object = setObject;
 		error = setError;
 	}
-	public FcResult(Object setObject)
+	public FResult(Object setObject)
 	{
 		object = setObject;
 		error = null;

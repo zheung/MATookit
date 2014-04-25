@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UcUtil
+public class UUtil
 {
 	
 	public static byte[] Input(File ifile) throws Exception

@@ -8,11 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
-public class UcConnect extends Thread
+public class UConnect extends Thread
 {
-	private final UcOption option;
-	private final UcKey db;
-	private final UcLog log;
+	private final UOption option;
+	private final UKey db;
+	private final ULog log;
 	
 	private int codResponse;
 	public String cookie;
@@ -24,7 +24,7 @@ public class UcConnect extends Thread
 	 *@optionBoolean rqtCookie, typMethod
 	 *@optionString cookie, url, param, path
 	 */
-	public UcConnect(UcOption option, UcKey db, UcLog log) throws Exception
+	public UConnect(UOption option, UKey db, ULog log) throws Exception
 	{
 		this.option = option;
 		this.db = db;
@@ -106,7 +106,7 @@ public class UcConnect extends Thread
 			pakFile = new File(option.getString("path"));
 			pakFile.createNewFile();
 
-			UcUtil.Output(pakFile, baos.toByteArray(), false);
+			UUtil.Output(pakFile, baos.toByteArray(), false);
 		}
 		
 		return pakFile;
@@ -148,7 +148,7 @@ public class UcConnect extends Thread
 //			if(option.getBoolean("rqtDecrypt"))
 //				FcConvert.decryptAES(baos.toByteArray(), pakFile, db.Data("Cipher", 1)[2].getBytes("utf-8"));
 //			else
-				UcUtil.Output(pakFile, baos.toByteArray(), false);
+				UUtil.Output(pakFile, baos.toByteArray(), false);
 			
 			return pakFile;	
 		}
