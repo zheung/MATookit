@@ -48,9 +48,7 @@ public class GMain7
 {
 	private JFrame frmMain;
 	
-	private UConfig config;
 	private TrayIcon tray;
-	private final ULog log = ULog.getInstance();
 	
 	private FAction action;
 	
@@ -119,11 +117,10 @@ public class GMain7
 
 	private JComboBox<String> cbxExpFloor;
 
-	private final String title = "[DanoR MATookit][For.cn][Version.7.2.0][Build.2014.04.25.A]";
+	private final String title = "[DanoR MATookit][For.cn][Version.7.2.4][Build.2014.04.28.C]";
 
 	private void initialize() throws Exception
 	{
-		log.log("System-Start", true);
 //		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
 		UIManager.put("RootPane.setupButtonVisible", false);
@@ -332,20 +329,17 @@ public class GMain7
 		pnlPoint.add(lblBC);
 		
 		valAP = new JLabel("");
-		valAP.setForeground(new Color(255, 255, 255));
 		valAP.setHorizontalAlignment(SwingConstants.CENTER);
 		valAP.setBounds(70, 50, 100, 20);
 		pnlPoint.add(valAP);
 		
 		valBC = new JLabel("");
-		valBC.setForeground(new Color(255, 255, 255));
 		valBC.setHorizontalAlignment(SwingConstants.CENTER);
 		valBC.setBounds(70, 80, 100, 20);
 		pnlPoint.add(valBC);
 		
 		valExgauge = new JLabel("");
 		valExgauge.setHorizontalAlignment(SwingConstants.CENTER);
-		valExgauge.setForeground(Color.WHITE);
 		valExgauge.setBounds(70, 20, 100, 20);
 		pnlPoint.add(valExgauge);
 		
@@ -651,17 +645,19 @@ public class GMain7
 
 	public GMain7() throws Exception //初始化
 	{
+		ULog.getInstance();
+		ULog.log("Gui-Main-Init");
 	//界面加载
 		initialize();
 	//配置预读取
-		config = UConfig.getInstance();
+		UConfig.getInstance();
 		
-		String[] user = config.load("User");
+		String[] user = UConfig.load("User");
 		
 		for(String u:user)
 			iptAcout.addItem(u.split(",")[0]);
 		
-		iptAcout.setSelectedItem(config.load("LastUser")[0]);
+		iptAcout.setSelectedItem(UConfig.load("LastUser")[0]);
 		
 		for(String u:user)
 				if(u.startsWith((String)iptAcout.getSelectedItem()))
@@ -720,7 +716,7 @@ public class GMain7
 						action = new FAction(false, null);
 						action.Login((String) iptAcout.getSelectedItem(), new String(iptPaswd.getPassword()));
 
-						config.save("LastUser", (String)iptAcout.getSelectedItem());
+						UConfig.save("LastUser", (String)iptAcout.getSelectedItem());
 						
 						ifoShow();
 					}

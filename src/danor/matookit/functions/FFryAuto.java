@@ -17,22 +17,24 @@ public class FFryAuto extends TimerTask
 
 	private JTable tblFryList;
 	
-	private final String[] priority = UConfig.getInstance().load("FairyList");
+	private final String[] priority;
 	
 	private TrayIcon tray;
 	
-	public FFryAuto(FAction action, JTable tblFryList, TrayIcon tray)
+	public FFryAuto(FAction action, JTable tblFryList, TrayIcon tray) throws Exception
 	{
 		this.action = action;
 		this.tblFryList = tblFryList;
 		this.tray = tray;
+		
+		priority = UConfig.load("Fairy");
 	}
 
 	public void run()
 	{
 		try
 		{
-			ULog.getInstance().log("Timer-FryAuto", true);
+			ULog.log("Timer-FryAuto");
 		//刷新妖精列表
 			action.FairyList(true);
 		//标志-是否进入过妖精信息界面
@@ -68,7 +70,7 @@ public class FFryAuto extends TimerTask
 				
 				if(f.statAlive().equals("1"))//判断-妖精存活
 				{
-					ULog.getInstance().log(f.name() + "-Lv." + UUtil.Align(f.lv(), "0", 3, 0) + "-" + UUtil.TimeShift(f.restTime()) + "-" + f.finder().name(), true);
+					ULog.log(f.name() + "-Lv." + UUtil.Align(f.lv(), "0", 3, 0) + "-" + UUtil.TimeShift(f.restTime()) + "-" + f.finder().name());
 					
 				//更新妖精信息到显示表
 					if(fr.getRowAt() == -1)
@@ -111,7 +113,9 @@ public class FFryAuto extends TimerTask
 								{
 									if(result.error().equals("0"))//逻辑-是否成功发起战斗
 									{
-										ULog.getInstance().log("Result-Battle-RemainHp-"+result.aftHP(), true);
+										ULog.log("Result-Battle-RemainHp-"+result.aftHP());
+										
+										f.battled(true);
 										fr.rowSave(0, "是");
 										tray.displayMessage("已舔妖精", f.name() + "-Lv." + UUtil.Align(f.lv(), "0", 3, 0) + "-" + f.finder().name() + "\n" + UUtil.TimeShift(f.restTime()) + "-Remain: " + result.aftHP() + " Hp", TrayIcon.MessageType.NONE);
 
@@ -124,9 +128,13 @@ public class FFryAuto extends TimerTask
 											if(action.arthur.friends().now() != action.arthur.friends().max())//逻辑: 本人好友已满
 												action.FairyInfo(f);//获取妖精信息
 										}
+										
+										
 									}
 									else if(result.error().equals("1050"))
-										ULog.getInstance().log("BC不足", true);
+									{
+										ULog.log("BC不足");
+									}
 								}
 							}
 						}

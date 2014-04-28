@@ -36,8 +36,10 @@ public class MPoint
 
 	public static void reset()
 	{
-		McPointContainer.instance.timerAP.cancel();
-		McPointContainer.instance.timerBC.cancel();
+		if(McPointContainer.instance.timerAP != null)
+			McPointContainer.instance.timerAP.cancel();
+		if(McPointContainer.instance.timerBC != null)
+			McPointContainer.instance.timerBC.cancel();
 		
 		McPointContainer.instance.isReset = true;
 	}
@@ -121,9 +123,7 @@ public class MPoint
 	private static class McPointContainer { private static MPoint instance; }
 	public synchronized static MPoint getInstance(NPoint point, JLabel valAP, JLabel valBC, JButton prgAP, JButton prgBC)
 	{
-		if(McPointContainer.instance == null)
-			return (McPointContainer.instance = new MPoint(point, valAP, valBC, prgAP, prgBC));
-		else if(McPointContainer.instance.isReset)
+		if(McPointContainer.instance == null || McPointContainer.instance.isReset)
 			return (McPointContainer.instance = new MPoint(point, valAP, valBC, prgAP, prgBC));
 		else
 			return McPointContainer.instance;

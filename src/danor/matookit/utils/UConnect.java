@@ -12,7 +12,6 @@ public class UConnect extends Thread
 {
 	private final UOption option;
 	private final UKey db;
-	private final ULog log;
 	
 	private int codResponse;
 	public String cookie;
@@ -28,7 +27,6 @@ public class UConnect extends Thread
 	{
 		this.option = option;
 		this.db = db;
-		this.log = log;
 
 		this.start();
 		this.join();
@@ -101,7 +99,7 @@ public class UConnect extends Thread
 			    baos.write(b, 0, len);
 			is.close();
 			
-			log.log("Connect-Post-Success", true);
+			ULog.log("Connect-Post-Success");
 		//输出响应
 			pakFile = new File(option.getString("path"));
 			pakFile.createNewFile();
@@ -139,7 +137,7 @@ public class UConnect extends Thread
 			    baos.write(b, 0, len);
 			is.close();
 			
-			log.log("Connect-Get-Success", true);
+			ULog.log("Connect-Get-Success");
 		//保存响应
 				
 			File pakFile = new File(option.getString("path"));
@@ -154,7 +152,7 @@ public class UConnect extends Thread
 		}
 		else
 		{
-			log.log("Connect-Get-Error-"+codResponse+"-"+(option.getString("url")), true);
+			ULog.log("Connect-Get-Error-"+codResponse+"-"+(option.getString("url")));
 			
 			return null;
 		}

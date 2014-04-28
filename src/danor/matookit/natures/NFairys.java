@@ -27,7 +27,6 @@ public class NFairys extends ArrayList<NFairy>
 				f.nowHP(fairy.nowHP());
 				f.maxHP(fairy.maxHP());
 				
-				f.battled(fairy.battled());
 				f.onList(fairy.onList());
 				
 				return false;

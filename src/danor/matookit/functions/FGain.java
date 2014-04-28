@@ -216,7 +216,7 @@ public class FGain
     	xml.move("attacker_history");
     	for(Object e:xml.list("attacker"))
     	{
-    		NBattleAttacker attacker = new NBattleAttacker(GainMatch((Element)e));
+    		NBattleAttacker attacker = new NBattleAttacker(GainFairyAttacker((Element)e));
     		
     		xml.set((Element)e);
     		attacker.attackHP(xml.value("attack_point"));
@@ -229,6 +229,18 @@ public class FGain
     	}
     	
 	}
+	protected static NMatch GainFairyAttacker(Element e) throws Exception
+	{
+		UXml xml = new UXml(null);
+		xml.set(e);
+		
+		NMatch match = new NMatch(xml.value("user_id"), xml.value("user_name"), xml.value("country_id"));
+		
+		match.statYell(xml.value("status_yell"));
+		match.statFriend(xml.value("status_friend"));
+
+		return match;
+	}
 	protected static NBattleResult GainFairyFight(NFairy fairy, NArthur arthur, File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
@@ -238,7 +250,6 @@ public class FGain
 		if((result.error(GainError(xml))).equals("0"))
 		{
 			GainPoint(xmlFile, arthur);
-			MPoint.reset();
 
 			GainCards(xmlFile, arthur);
 			GainItems(xmlFile, arthur);

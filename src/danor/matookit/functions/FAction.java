@@ -23,7 +23,7 @@ public class FAction
 		this.db = UKey.getInstance();
 		this.log = ULog.getInstance();
 
-		log.log("Action-Init", true);
+		ULog.log("Action-Init");
 		
 		File dir = new File("./wrk/pak");
 		if(!dir.exists()) dir.mkdir();//ToEH
@@ -33,7 +33,7 @@ public class FAction
 
 		if(cookie == null)
 		{
-			log.log("Action-Cookie", true);
+			ULog.log("Action-Cookie");
 			String[] values = db.Data("Action", 0);
 			
 			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true)
@@ -48,7 +48,7 @@ public class FAction
 			
 			this.cookie = connect.cookie;
 
-			log.log("Result-"+this.cookie, true);
+			ULog.log("Result-"+this.cookie);
 		}
 		else
 			this.cookie = cookie;
@@ -102,7 +102,7 @@ public class FAction
 //操作
 	public NArthur Login(String phone, String paswd) throws Exception
 	{
-		log.log("Action-Login-"+phone, true);
+		ULog.log("Action-Login-"+phone);
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
 		File pakFile = Connect(2, option, phone, paswd);
@@ -113,10 +113,10 @@ public class FAction
 		case "0":
 			arthur = FGain.GainArthur(pakFile);
 			
-			log.log("Relust-"+phone+"-Success", true);
+			ULog.log("Relust-"+phone+"-Success");
 			break;
 		case "1000":
-			log.log("Relust-"+phone+"-Failed-Wrong.Phone.or.Password", true);
+			ULog.log("Relust-"+phone+"-Failed-Wrong.Phone.or.Password");
 		}
 		
 		this.arthur = arthur;

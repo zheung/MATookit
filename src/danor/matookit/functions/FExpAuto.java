@@ -54,9 +54,9 @@ public class FExpAuto extends TimerTask
 		
 		try
 		{
-			ULog.getInstance().log("Timer-ExpAuto", true);
-			ULog.getInstance().log("Area-"+area.name(), true);
-			ULog.getInstance().log("Floor-"+idFloor, true);
+			ULog.log("Timer-ExpAuto");
+			ULog.log("Area-"+area.name());
+			ULog.log("Floor-"+idFloor);
 			
 			if(flgFirstExplore)
 			{
@@ -149,7 +149,8 @@ public class FExpAuto extends TimerTask
 			}
 				
 			
-			ULog.getInstance().log(sl, true);
+			ULog.getInstance();
+			ULog.log(sl);
 			((DefaultTableModel)tblLog.getModel()).addRow(st);
 			
 			if(flgWait)

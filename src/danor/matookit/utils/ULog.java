@@ -17,23 +17,21 @@ public class ULog
 		
 		fileLog = new File("./wrk/log/"+timeStart+".log");
 		fileLog.createNewFile();//ToEH NtTE
-		
-		log("Log-Start", true);
 	}
 	
-	public synchronized void log(String content, boolean typPrint) throws Exception
+	public synchronized static void log(String content, boolean typPrint) throws Exception
 	{
 		if(typPrint)
 			UUtil.p(content);
 		
-		UUtil.Output(fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
+		UUtil.Output(FcLogContainer.instance.fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
 	}
 	
-	public synchronized void log(String content) throws Exception
+	public synchronized static void log(String content) throws Exception
 	{
 		UUtil.p(content);
 		
-		UUtil.Output(fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
+		UUtil.Output(FcLogContainer.instance.fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
 	}
 
 	private static class FcLogContainer
@@ -41,7 +39,7 @@ public class ULog
 		private static ULog instance;
 		static
 		{
-			try { instance = new ULog(); }
+			try { instance = new ULog(); log("Log-Init");}
 			catch(Exception e) { e.printStackTrace(); }
 		}
 	}
