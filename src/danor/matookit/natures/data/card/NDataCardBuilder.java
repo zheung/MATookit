@@ -1,6 +1,6 @@
 package danor.matookit.natures.data.card;
 
-public class NDataCardBulider
+public class NDataCardBuilder
 {
 	public String idCard;
 	public String idTown;

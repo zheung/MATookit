@@ -28,14 +28,14 @@ public class FResCard
 		File macFile = new File("./wrk/dat/ctg/ctg-" + version + ".xml");
 		File mdcFile = new File("./wrk/dat/ctg/card-" + version + ".xml");
 		
-		List<NDataCardBulider> list = new ArrayList<>();
+		List<NDataCardBuilder> list = new ArrayList<>();
 	//Read macFile
 		Element r = xreader.read(macFile).getRootElement().element("body").element("master_data").element("master_card_data");
 		
 		for(Iterator<?> i = r.elementIterator("card"); i.hasNext();)
 	    {
 	    	Element e = (Element) i.next();
-	    	NDataCardBulider dc = new NDataCardBulider();
+	    	NDataCardBuilder dc = new NDataCardBuilder();
 			
 			dc.idCard = e.element("master_card_id").getStringValue();
 			dc.idTown = e.element("country_id").getStringValue();
@@ -88,8 +88,8 @@ public class FResCard
 			{
 				String idCard = br.readLine().replaceAll("<.*?>","").replace("\t", "");
 				
-				NDataCardBulider dc = null;
-				for(NDataCardBulider c:list)
+				NDataCardBuilder dc = null;
+				for(NDataCardBuilder c:list)
 					if(c.idCard.equals(idCard))
 					{
 						dc = c;
@@ -123,7 +123,7 @@ public class FResCard
 				}
 				else
 				{
-					dc = new NDataCardBulider();
+					dc = new NDataCardBuilder();
 					
 					dc.idCard = idCard;
 					
@@ -163,7 +163,7 @@ public class FResCard
 		}
 	//Convert
 		NDataCards cards = new NDataCards();
-		for(NDataCardBulider c:list)
+		for(NDataCardBuilder c:list)
 			cards.add(new NDataCard(c));
 	//Create Xml File
 		Document d = DocumentHelper.createDocument();	
@@ -237,7 +237,7 @@ public class FResCard
 	    
 	    for(Iterator<?> i = e.elementIterator("Card"); i.hasNext();)
     	{
-	    	NDataCardBulider dc = new NDataCardBulider();
+	    	NDataCardBuilder dc = new NDataCardBuilder();
 	    	
 	    	Element e2 = (Element) i.next();
 	    	

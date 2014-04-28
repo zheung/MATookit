@@ -1,6 +1,6 @@
 package danor.matookit.natures.data;
 
-import danor.matookit.natures.data.card.NDataCardBulider;
+import danor.matookit.natures.data.card.NDataCardBuilder;
 import danor.matookit.natures.data.card.NDataCardGrow;
 import danor.matookit.natures.data.card.NDataCardSkill;
 
@@ -39,7 +39,7 @@ public class NDataCard
 	private final NDataCardGrow grow;
 	private final NDataCardSkill skill;
 	
-	public NDataCard(NDataCardBulider temp)
+	public NDataCard(NDataCardBuilder temp)
 	{
 		this.idCard = temp.idCard;
 		this.idTown = temp.idTown;

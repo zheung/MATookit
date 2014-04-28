@@ -124,14 +124,14 @@ public class FUpdate
 		File mkcFile = new File("./wrk/dat/ctg/mak-" + version + ".xml");
 		File mdcFile = new File("./wrk/dat/ctg/crd-" + version + ".xml");
 		
-		List<NDataCardBulider> list = new ArrayList<>();
+		List<NDataCardBuilder> list = new ArrayList<>();
 	//Read macFile
 		Element r = xreader.read(macFile).getRootElement().element("body").element("master_data").element("master_card_data");
 		
 		for(Iterator<?> i = r.elementIterator("card"); i.hasNext();)
 	    {
 	    	Element e = (Element) i.next();
-	    	NDataCardBulider dc = new NDataCardBulider();
+	    	NDataCardBuilder dc = new NDataCardBuilder();
 			
 			dc.idCard = e.element("master_card_id").getStringValue();
 			dc.idTown = e.element("country_id").getStringValue();
@@ -182,8 +182,8 @@ public class FUpdate
 			{
 				String idCard = br.readLine().replaceAll("<.*?>","").replace("\t", "");
 				
-				NDataCardBulider dc = null;
-				for(NDataCardBulider c:list)
+				NDataCardBuilder dc = null;
+				for(NDataCardBuilder c:list)
 					if(c.idCard.equals(idCard))
 					{
 						dc = c;
@@ -217,7 +217,7 @@ public class FUpdate
 				}
 				else
 				{
-					dc = new NDataCardBulider();
+					dc = new NDataCardBuilder();
 					
 					dc.idCard = idCard;
 					
@@ -257,7 +257,7 @@ public class FUpdate
 		}
 	//Convert
 		NDataCards cards = new NDataCards();
-		for(NDataCardBulider c:list)
+		for(NDataCardBuilder c:list)
 			cards.add(new NDataCard(c));
 	//Create Xml File
 		Document d = DocumentHelper.createDocument();	
