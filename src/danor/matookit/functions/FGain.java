@@ -382,9 +382,9 @@ public class FGain
 		
     	for(Object e:xml.list("area_info"))
     	{
-    		NArea area = new NArea(xml.value("id"), xml.value("name"), xml.value("area_type").equals("1"));
-    		
     		xml.set((Element)e);
+    		
+    		NArea area = new NArea(xml.value("id"), xml.value("name"), xml.value("area_type").equals("1"));
     		area.prgArea(xml.value("prog_area"));
     		area.prgItem(xml.value("prog_item"));
     		
@@ -436,13 +436,13 @@ public class FGain
     			xml.set((Element)e2);
     			if(xml.value("type").equals("1"))
     			{
-    				idCards[cntCard++] = xml.value("user_card>master_card_id");
-    				unlock[cntCard] = xml.value("unlock").equals("0")?false:true;
+    				idCards[cntCard] = xml.value("user_card>master_card_id");
+    				unlock[cntCard++] = xml.value("unlock").equals("0")?false:true;
     			}
     			else
     			{
     				hasFragment = true;
-    				unlock[3] = xml.value("unlock").equals("0")?false:true;
+    				unlock[2] = xml.value("unlock").equals("0")?false:true;
     			}
     		}
 			
@@ -450,6 +450,7 @@ public class FGain
 		else
 			idCards[0] = xml.value("boss_id");
 		
+		xml.set(e);
     	NFloor floor = new NFloor(xml.value("id"), isNormal, cost, idCards, hasFragment);
     	
     	if(isNormal)

@@ -42,7 +42,7 @@ public class UConfig
 	{
 		FcConfigContainer.instance.xml.move(key);
 		
-		FcConfigContainer.instance.xml.save(null, values[0]);
+		FcConfigContainer.instance.xml.save("", values[0]);
 		
 		FcConfigContainer.instance.xml.move(".");
 		

@@ -34,45 +34,40 @@ public class MPoint
 		this.prgBC = prgBC;
 	}
 
-	public static void reset()
+	public synchronized static void reset()
 	{
-		if(McPointContainer.instance.timerAP != null)
-			McPointContainer.instance.timerAP.cancel();
-		if(McPointContainer.instance.timerBC != null)
-			McPointContainer.instance.timerBC.cancel();
-		
-		McPointContainer.instance.isReset = true;
+		if(McPointContainer.instance != null)
+		{
+			if(McPointContainer.instance.timerAP != null)
+				McPointContainer.instance.timerAP.cancel();
+			if(McPointContainer.instance.timerBC != null)
+				McPointContainer.instance.timerBC.cancel();
+
+			McPointContainer.instance.isReset = true;
+		}
 	}
-	public static void update()
+	public synchronized static void update()
 	{
 		if(McPointContainer.instance == null)
 			return;
 		
-		NPoint point = McPointContainer.instance.point;
-		Timer timerAP = McPointContainer.instance.timerAP;
-		Timer timerBC = McPointContainer.instance.timerBC;
-		JLabel valAP = McPointContainer.instance.valAP;
-		JLabel valBC = McPointContainer.instance.valBC;
-		JButton prgAP = McPointContainer.instance.prgAP;
-		JButton prgBC = McPointContainer.instance.prgBC;
+		if(McPointContainer.instance.timerAP != null)
+			McPointContainer.instance.timerAP.cancel();
 		
-		if(timerAP != null)
-			timerAP.cancel();
-		
-		valAP.setText(point.nowAP() + "/" + point.maxAP());
-		prgAP.setBounds(70, 50, (int)(100*(double)point.nowAP()/point.maxAP()), 20);
-		timerAP = new Timer();
-		timerAP.schedule(new TimerTask()
+		McPointContainer.instance.valAP.setText(McPointContainer.instance.point.nowAP() + "/" + McPointContainer.instance.point.maxAP());
+		McPointContainer.instance.prgAP.setBounds(70, 50, (int)(100*(double)McPointContainer.instance.point.nowAP()/McPointContainer.instance.point.maxAP()), 20);
+		McPointContainer.instance.timerAP = new Timer();
+		McPointContainer.instance.timerAP.schedule(new TimerTask()
 		{
 			public void run()
 			{
-				point.nowAP(point.nowAP()+1);
-				valAP.setText(point.nowAP() + "/" + point.maxAP());
-				prgAP.setBounds(70, 50, (int)(100*(double)point.nowAP()/point.maxAP()), 20);
+				McPointContainer.instance.point.nowAP(McPointContainer.instance.point.nowAP()+1);
+				McPointContainer.instance.valAP.setText(McPointContainer.instance.point.nowAP() + "/" + McPointContainer.instance.point.maxAP());
+				McPointContainer.instance.prgAP.setBounds(70, 50, (int)(100*(double)McPointContainer.instance.point.nowAP()/McPointContainer.instance.point.maxAP()), 20);
 				
 				try
 				{
-					if(point.maxAP() - point.nowAP() < 7)
+					if(McPointContainer.instance.point.maxAP() - McPointContainer.instance.point.nowAP() < 7)
 					{	
 						if(!McPointContainer.instance.alertAP)
 						{
@@ -85,25 +80,25 @@ public class MPoint
 				}
 				catch(Exception e) { e.printStackTrace(); }
 			}
-		}, 180000 - point.revAP() * 1000, 180000);
+		}, 180000 - McPointContainer.instance.point.revAP() * 1000, 180000);
 		
-		if(timerBC != null)
-			timerBC.cancel();
+		if(McPointContainer.instance.timerBC != null)
+			McPointContainer.instance.timerBC.cancel();
 		
-		valBC.setText(point.nowBC() + "/" + point.maxBC());
-		prgBC.setBounds(70, 80, (int)(100*(double)point.nowBC()/point.maxBC()), 20);
-		timerBC = new Timer();
-		timerBC.schedule(new TimerTask()
+		McPointContainer.instance.valBC.setText(McPointContainer.instance.point.nowBC() + "/" + McPointContainer.instance.point.maxBC());
+		McPointContainer.instance.prgBC.setBounds(70, 80, (int)(100*(double)McPointContainer.instance.point.nowBC()/McPointContainer.instance.point.maxBC()), 20);
+		McPointContainer.instance.timerBC = new Timer();
+		McPointContainer.instance.timerBC.schedule(new TimerTask()
 		{
 			public void run()
 			{
-				point.nowBC(point.nowBC()+1);
-				valBC.setText(point.nowBC() + "/" + point.maxBC());
-				prgBC.setBounds(70, 80, (int)(100*(double)point.nowBC()/point.maxBC()), 20);
+				McPointContainer.instance.point.nowBC(McPointContainer.instance.point.nowBC()+1);
+				McPointContainer.instance.valBC.setText(McPointContainer.instance.point.nowBC() + "/" + McPointContainer.instance.point.maxBC());
+				McPointContainer.instance.prgBC.setBounds(70, 80, (int)(100*(double)McPointContainer.instance.point.nowBC()/McPointContainer.instance.point.maxBC()), 20);
 				
 				try
 				{
-					if(point.maxBC() - point.nowBC() < 14)
+					if(McPointContainer.instance.point.maxBC() - McPointContainer.instance.point.nowBC() < 14)
 					{	
 						if(!McPointContainer.instance.alertBC)
 						{
@@ -116,7 +111,7 @@ public class MPoint
 				}
 				catch(Exception e) { e.printStackTrace(); }
 			}
-		}, 60000 - point.revBC() * 1000, 60000);
+		}, 60000 - McPointContainer.instance.point.revBC() * 1000, 60000);
 			
 	}
 

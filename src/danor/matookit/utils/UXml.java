@@ -19,7 +19,7 @@ public class UXml
 	{
 		xmlFile = setFile;
 		if(setFile != null)
-			element = xreader.read(xmlFile).getRootElement();
+			element = xreader.read(setFile).getRootElement();
 	}
 //路径相关
 	public UXml set(Element setElement) throws Exception
@@ -32,7 +32,7 @@ public class UXml
 	{
 		if(xmlPath.startsWith("."))
 		{
-			element = xreader.read(xmlFile).getRootElement();
+			element = element.getDocument().getRootElement();
 			xmlPath = xmlPath.replaceAll("[.]", "");
 		}
 		
@@ -68,7 +68,7 @@ public class UXml
 		
 		if(xmlPath.startsWith("."))
 		{
-			te = xreader.read(xmlFile).getRootElement();
+			te = element.getDocument().getRootElement();
 			xmlPath = xmlPath.replaceAll("[.]", "");
 		}
 		
@@ -102,7 +102,7 @@ public class UXml
 		
 		if(xmlPath.startsWith("."))
 		{
-			te = xreader.read(xmlFile).getRootElement();
+			te = element.getDocument().getRootElement();
 			xmlPath = xmlPath.replaceAll("[.]", "");
 		}
 		
@@ -135,7 +135,7 @@ public class UXml
 
 		if(xmlPath.startsWith("."))
 		{
-			te = xreader.read(xmlFile).getRootElement();
+			te = element.getDocument().getRootElement();
 			xmlPath = xmlPath.replaceAll("[.]", "");
 		}
 		
@@ -165,7 +165,7 @@ public class UXml
 		
 		if(xmlPath.startsWith("."))
 		{
-			te = xreader.read(xmlFile).getRootElement();
+			te = element.getDocument().getRootElement();
 			xmlPath = xmlPath.replaceAll("[.]", "");
 		}
 		
@@ -178,15 +178,18 @@ public class UXml
 			xmlPath = xmlPath.replaceAll("<", "");
 		}
 		
-		String[] fall = xmlPath.split(">");
-		
-		for(String f:fall)
+		if(!xmlPath.equals(""))
 		{
-			if(te == null) break;
+			String[] fall = xmlPath.split(">");
 			
-			te = te.element(f);
+			for(String f:fall)
+			{
+				if(te == null) break;
+				
+				te = te.element(f);
+			}
 		}
-
+		
 		if(te != null)
 			te.setText(value);
 		
@@ -198,7 +201,7 @@ public class UXml
 		ofm.setNewlines(true);
 
 		XMLWriter output = new XMLWriter(new FileOutputStream(xmlFile), ofm);
-		output.write(te);
+		output.write(te.getDocument());
 		output.close();
 	}
 }
