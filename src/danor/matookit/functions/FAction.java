@@ -127,8 +127,15 @@ public class FAction
 	{
 		UUtil.p("Action-Update-"+kind);
 		
-		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		return Connect(3, option, kind, cookie, rev);
+		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", kind.equals("card")?false:true);
+		
+		File pakFile = Connect(3, option, kind, cookie, rev);
+		
+		File renameFile = new File(pakFile.getParent()+"/"+kind+"-"+rev+".xml");
+		
+		pakFile.renameTo(renameFile);
+		
+		return renameFile;
 	}
 	
 	public void Menu() throws Exception

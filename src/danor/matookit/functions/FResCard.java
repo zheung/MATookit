@@ -177,7 +177,7 @@ public class FResCard
 			e.addElement("Name").setText(dc.name());
 			e.addElement("Sex").setText(dc.sex());
 			e.addElement("Country").setText(dc.idTown());
-			e.addElement("Desc").setText(dc.skill().desc()==null?"None":dc.desc());
+			e.addElement("Desc").setText(dc.desc()==null?"None":dc.desc());
 			e.addElement("Illustrator").setText(dc.illustrator());
 			e.addElement("Star").setText(dc.star());
 			e.addElement("FormID").setText(dc.idForm()==null?"None":dc.idForm());
