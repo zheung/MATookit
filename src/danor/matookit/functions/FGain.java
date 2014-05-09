@@ -16,6 +16,7 @@ public class FGain
 	{
 		return xml.value("header>error>code");
 	}
+
 	public static NRevision GainRevision(File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
@@ -66,6 +67,11 @@ public class FGain
 		
 		return rev;
 	}
+	public static String GainImagedl(File xmlFile, String type) throws Exception
+	{
+		return new UXml(xmlFile).value("body>master_data>master_"+type+"_data>imagedl_list");
+	}
+	
 	
 	protected static NArthur GainArthur(File xmlFile) throws Exception
 	{
@@ -190,7 +196,7 @@ public class FGain
 
     		if(fairy == null)
     		{
-    			NMatch match = GainMatch(xml.child("<user"));
+    			NMatch match = GainMatch(xml.find("<user"));
     			fairy = new NFairy(match, idSerial, xml.value("race_type"), xml.value("name"), xml.value("lv"), xml.value("<start_time"));
     		}
     		
@@ -508,13 +514,13 @@ public class FGain
 			break;
 		case "2":
 			result.frdPoint(xml.value("friendship_point"));
-			result.encounter(GainMatch(xml.child("encounter")));
+			result.encounter(GainMatch(xml.find("encounter")));
 			break;
 		case "1":
-			result.fairy(GainFairy(xml.child("fairy"), arthur));
+			result.fairy(GainFairy(xml.find("fairy"), arthur));
 			break;
 		case "3":
-			GainCard(xml.child("user_card"));
+			GainCard(xml.find("user_card"));
 			break;
 		case "15":
 			int i = 0;
