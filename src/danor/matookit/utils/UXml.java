@@ -104,15 +104,11 @@ public class UXml
 		if(xmlPath == null)
 			return element.elements();
 		
-		String[] fall = xmlPath.split(">");
+		Element result = find(xmlPath);
 
-		String xmlPath2 = "";
-		for(int i=0; i<fall.length-1;i++)
-			xmlPath2 += fall[i];
+		String[] fall = xmlPath.split(">");
 		
-		Element result = find(xmlPath2);
-		
-		return result.elements(fall[fall.length - 1]);
+		return (result != null)?result.getParent().elements(fall[fall.length-1].replace(".", "").replace("<", "")):null;
 	}
 //写入相关
 	public void save(String xmlPath, String value) throws Exception

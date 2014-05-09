@@ -15,7 +15,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.dom4j.Document;
-import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
@@ -306,19 +305,11 @@ public class UConvert
 		
 		return aryByte;
 	}
-
 	
 	public static void xmlFormat(File cvtFile) throws Exception
 	{
-		OutputFormat ofm = OutputFormat.createPrettyPrint();
-		ofm.setEncoding("utf-8");
-		ofm.setSuppressDeclaration(false);
-		ofm.setIndent(true);
-		ofm.setIndent("	");
-		ofm.setNewlines(true);
-
 		Document d = new SAXReader().read(cvtFile);
-		XMLWriter output = new XMLWriter(new FileOutputStream(cvtFile), ofm);
+		XMLWriter output = new XMLWriter(new FileOutputStream(cvtFile), UXml.ofm);
 		output.write(d);
 		output.close();
 	}
