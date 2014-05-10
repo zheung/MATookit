@@ -12,9 +12,18 @@
 #No Test Folder
 /bin/
 
+#No Resource Folder
 /wrk/dat/
 /wrk/log/
 /wrk/pak/
 /wrk/ptb/
-/wrk/res/Card
-/wrk/res/Item
+/wrk/res/adv
+/wrk/res/ban
+/wrk/res/bos
+/wrk/res/cmp
+/wrk/res/crd
+/wrk/res/gac
+/wrk/res/itm
+/wrk/res/pvl
+/wrk/res/res
+/wrk/res/sou

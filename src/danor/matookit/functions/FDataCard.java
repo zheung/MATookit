@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,117 +15,22 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import danor.matookit.natures.*;
 import danor.matookit.natures.data.NDataCard;
 import danor.matookit.natures.data.card.*;
-import danor.matookit.utils.*;
 
-public class FUpdate
+public class FDataCard
 {
-	private final FAction action;
+	private static SAXReader xreader = new SAXReader();
 	
-	private final File revFile = new File("./wrk/dat/rev");
-	private final NRevision revN;
-	private final NRevision revF;
-	
-	private SAXReader xreader = new SAXReader();
-	
-	public FUpdate(FAction action) throws Exception
+	public static NDataCards crtCard(int version) throws Exception 
 	{
-		this.action = action;
-		
-		revN = action.Home();
-		
-		if(!revFile.exists())
-		{
-			revF = new NRevision();
-			for(Field f:revF.getClass().getDeclaredFields())
-				f.set(revF,"0");
-		}
-		else
-			revF=load(false);
-	}
-	
-	private void save() throws Exception
-	{
-		NRevision revO = load(true);
-		
-		Field[] fs = revO.getClass().getDeclaredFields();
-		
-		String out = new String();
-		for(Field f:fs)
-		{
-			int revNew = Integer.parseInt((String)revF.getClass().getDeclaredField(f.getName()).get(revF));
-			String[] revOlds = ((String) f.get(revO)).split(",");
-			int revOld = Integer.parseInt(revOlds[revOlds.length-1]);
-			
-			out += f.getName()+":"+f.get(revO)+((revNew > revOld)?","+String.valueOf(revNew):"")+"\r\n";
-		}
-		out = out.replaceAll("\r\n\r\n", "\r\n");
-		
-		UUtil.Output(revFile, out.getBytes(), false);
-	}
-	
-	private NRevision load(boolean ndHistory) throws Exception
-	{
-		if(!revFile.exists())
-		{
-			NRevision rev = new NRevision();
-			for(Field f:rev.getClass().getDeclaredFields())
-				f.set(rev,"0");
-			
-			return rev;
-		}
-		else
-		{
-			NRevision rev = new NRevision();
-			
-			String s = new String(UUtil.Input(revFile));
-			
-			String[] ver  = s.split("\r\n");
-			
-			for(String v:ver)
-			{
-				String[] vf = v.split(":");
-				String[] vv = vf[1].split(",");
-				
-				rev.getClass().getDeclaredField(vf[0]).set(rev, ndHistory?vf[1]:vv[vv.length-1]);
-			}
-				
-			return rev;
-		}
-	}
-
-	public void auto() throws Exception
-	{
-		if(Integer.parseInt(revN.revCardCategory())>Integer.parseInt(revF.revCardCategory()))
-		{
-			dwnCardCategory();
-			revF.revCardCategory(revN.revCardCategory());
-			save();
-		}
-	}
-	
-	public void dwnCardCategory() throws Exception
-	{
-		File ctgFile = new File("./wrk/dat/ctg/ctg-"+revN.revCardCategory()+".xml");
-		
-		String ctg = new String(UUtil.Input(action.Update("card", revN.revCardCategory()))).replaceAll("&#10;", "|").replaceAll("&", "^");
-
-		UUtil.Output(ctgFile, ctg.getBytes("utf-8"), false);
-		
-		crtCard(revN.revCardCategory(), false);
-	}
-	
-	public List<NDataCard> crtCard(String version, boolean hasMkCard) throws Exception 
-	{
-		File macFile = new File("./wrk/dat/ctg/ctg-" + version + ".xml");
-		File mkcFile = new File("./wrk/dat/ctg/mak-" + version + ".xml");
-		File mdcFile = new File("./wrk/dat/ctg/crd-" + version + ".xml");
+		File makFile = new File("./wrk/dat/crd/mak-" + version + ".xml");
+		File crdFile = new File("./wrk/dat/ctg/crd-" + version + ".xml");
+		File cdfFile = new File("./wrk/dat/crd/cdf-" + version + ".xml");
 		
 		List<NDataCardBuilder> list = new ArrayList<>();
 	//Read macFile
-		Element r = xreader.read(macFile).getRootElement().element("body").element("master_data").element("master_card_data");
+		Element r = xreader.read(crdFile).getRootElement().element("body").element("master_data").element("master_card_data");
 		
 		for(Iterator<?> i = r.elementIterator("card"); i.hasNext();)
 	    {
@@ -151,6 +55,7 @@ public class FUpdate
 			dc.idImageNorrmal = e.element("image1_id").getStringValue();
 			dc.idImageArousal = e.element("image2_id").getStringValue();
 			dc.grow = new NDataCardGrow(e.element("grow_type").getStringValue(), e.element("grow_name").getStringValue(), e.element("growth_rate_text").getStringValue());
+			
 			dc.idForm = e.element("form_id").getStringValue();
 			dc.sex = e.element("distinction").getStringValue();
 			dc.version = e.element("card_version").getStringValue();
@@ -169,13 +74,14 @@ public class FUpdate
 				dc.cpdPrices = te.getStringValue();
 			
 			dc.isSync = "1";
+			
 			list.add(dc);
 		}
 		
 	//Read mkcFile
-		if(hasMkCard)
+		if(makFile.exists())
 		{
-			BufferedReader br = new BufferedReader(new FileReader(mkcFile));
+			BufferedReader br = new BufferedReader(new FileReader(makFile));
 			
 			br.readLine();
 			while(br.readLine() != null)
@@ -271,7 +177,7 @@ public class FUpdate
 			e.addElement("Name").setText(dc.name());
 			e.addElement("Sex").setText(dc.sex());
 			e.addElement("Country").setText(dc.idTown());
-			e.addElement("Desc").setText(dc.skill().desc()==null?"None":dc.desc());
+			e.addElement("Desc").setText(dc.desc()==null?"None":dc.desc());
 			e.addElement("Illustrator").setText(dc.illustrator());
 			e.addElement("Star").setText(dc.star());
 			e.addElement("FormID").setText(dc.idForm()==null?"None":dc.idForm());
@@ -308,7 +214,7 @@ public class FUpdate
 			e.addElement("Snyc").setText(dc.isSync());
 		}
 		
-		mdcFile.createNewFile();
+		cdfFile.createNewFile();
 
 		OutputFormat ofm = OutputFormat.createPrettyPrint();
 		ofm.setEncoding("UTF-8"); //设置XML文档的编码类型
@@ -317,10 +223,66 @@ public class FUpdate
 		ofm.setIndent("	"); //以空格方式实现缩进
 		ofm.setNewlines(true); //设置是否换行
 		
-		XMLWriter output = new XMLWriter(new FileOutputStream(mdcFile), ofm);
+		XMLWriter output = new XMLWriter(new FileOutputStream(cdfFile), ofm);
 		output.write(d);
         output.close();
 		
 		return cards;
 	}
+
+	public static NDataCards anlCard(int version) throws Exception
+	{
+	    Element e = xreader.read(new File("./wrk/dat/ctg/card-" + version + ".xml")).getRootElement().element("maCard");
+	    NDataCards list = new NDataCards();
+	    
+	    for(Iterator<?> i = e.elementIterator("Card"); i.hasNext();)
+    	{
+	    	NDataCardBuilder dc = new NDataCardBuilder();
+	    	
+	    	Element e2 = (Element) i.next();
+	    	
+	    	dc.idCard = e2.element("CardID").getStringValue();
+			dc.name = e2.element("Name").getStringValue();
+			dc.sex = e2.element("Sex").getStringValue();
+			dc.idTown = e2.element("Country").getStringValue();
+			dc.desc = e2.element("Desc").getStringValue();
+			dc.illustrator = e2.element("Illustrator").getStringValue();
+			dc.star = e2.element("Star").getStringValue();
+			dc.idForm = e2.element("FormID").getStringValue();
+			dc.version = e2.element("Version").getStringValue();
+			dc.idImageNorrmal = e2.element("BasImage").getStringValue();
+			dc.idImageArousal = e2.element("MaxImage").getStringValue();
+			dc.cpdTarget = e2.element("CompoundTarget").getStringValue();
+			dc.cpdResult = e2.element("CompoundResult").getStringValue();
+			dc.cpdPrices = e2.element("CompoundPrices").getStringValue();
+			dc.salePrice = e2.element("SalePrice").getStringValue();
+			dc.skill.name = e2.element("SkillName").getStringValue();
+			dc.skill.kana = e2.element("SkillKana").getStringValue();
+			dc.skill.desc = e2.element("SkillDesc").getStringValue();
+			dc.skill.eftMin = e2.element("SkillVMin").getStringValue();
+			dc.skill.eftMax = e2.element("SkillVMax").getStringValue();
+			dc.skill.pesc = e2.element("SkillPesc").getStringValue();
+			dc.skill.type = e2.element("SkillType").getStringValue();
+			dc.skill.idSkill = e2.element("SkillID").getStringValue();
+			dc.grow = new NDataCardGrow(e2.element("GrowType").getStringValue(), e2.element("GrowName").getStringValue(), e2.element("GrowDesc").getStringValue());
+			dc.cost = e2.element("Cost").getStringValue();
+			dc.basHP = e2.element("BasicHP").getStringValue();
+			dc.basAK = e2.element("BasicAK").getStringValue();
+			dc.maxHP = e2.element("MaxumHP").getStringValue();
+			dc.maxAK = e2.element("MaxumAK").getStringValue();
+			dc.lmtHP = e2.element("LimitHP").getStringValue();
+			dc.lmtAK = e2.element("LimitAK").getStringValue();
+			dc.maxLV = e2.element("MaxumLV").getStringValue();
+			dc.lmtLV = e2.element("LimitLV").getStringValue();
+			dc.hloMaxLV = e2.element("HoloMaxumLV").getStringValue();
+			dc.hloLmtLV = e2.element("HoloLimitLV").getStringValue();
+			dc.hloEX = e2.element("HoloEX").getStringValue();
+			dc.isSync = e2.element("Snyc").getStringValue();
+	    	
+	    	list.add(new NDataCard(dc));
+    	}
+	    
+		return list;
+	}
+
 }
