@@ -159,7 +159,7 @@ public class FExpAuto extends TimerTask
 	
 	private void LogPrgExplore(NExploreResult result) throws Exception
 	{
-		File log = new File("./wrk/dat/prg/prgArea"+area.idArea()+area.name()+".txt");
+		File log = new File("./wrk.cn/dat/prg/prgArea"+area.idArea()+area.name()+".txt");
 		
 		log.createNewFile();
 		

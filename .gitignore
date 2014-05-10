@@ -13,17 +13,18 @@
 /bin/
 
 #No Resource Folder
-/wrk/dat/
-/wrk/log/
-/wrk/pak/
-/wrk/ptb/
-/wrk/res/adv
-/wrk/res/ban
-/wrk/res/bos
-/wrk/res/cmp
-/wrk/res/crd
-/wrk/res/gac
-/wrk/res/itm
-/wrk/res/pvl
-/wrk/res/res
-/wrk/res/sou
+/wrk.cn/dat/
+/wrk.cn/log/
+/wrk.cn/pak/
+/wrk.cn/ptb/
+/wrk.cn/res/adv
+/wrk.cn/res/ban
+/wrk.cn/res/bos
+/wrk.cn/res/cmp
+/wrk.cn/res/crd
+/wrk.cn/res/gac
+/wrk.cn/res/itm
+/wrk.cn/res/pvl
+/wrk.cn/res/res
+/wrk.cn/res/sou
+/wrk.sg/

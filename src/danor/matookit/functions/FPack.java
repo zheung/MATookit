@@ -74,7 +74,7 @@ public class FPack
 			if(lstFileName.get(j).indexOf("rja") == -1)
 			{
 				File rnf = new File(f.getPath()+".png");
-				UConvert.decryptAES(fba, rnf, UKey.Data("Cipher", 1)[2].getBytes());
+				UConvert.decryptAES(fba, rnf, UKey.Data("CipherAES", "1")[0].getBytes());
 			
 				UUtil.p(lstFileName.get(j)+"-Decrypt");
 			}

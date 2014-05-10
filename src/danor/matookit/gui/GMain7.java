@@ -132,7 +132,7 @@ public class GMain7
 		frmMain.setType(Type.POPUP);
 		frmMain.setAutoRequestFocus(true);
 		frmMain.setTitle(title);
-		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage("./wrk/res/gui/ico.png"));
+		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage("./wrk.cn/res/gui/ico.png"));
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		frmMain.setBounds((d.width - 848) / 2, (d.height - 480) / 2, 848, 480);
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -670,7 +670,7 @@ public class GMain7
 						iptPaswd.setText(u.split(",")[1]);
 		});
 	//设置托盘图标
-		tray = new TrayIcon(new ImageIcon("./wrk/res/gui/ico.png").getImage(), "MATookit");
+		tray = new TrayIcon(new ImageIcon("./wrk.cn/res/gui/ico.png").getImage(), "MATookit");
 		tray.setImageAutoSize(true);
 		
 		SystemTray.getSystemTray().add(tray);
@@ -698,7 +698,7 @@ public class GMain7
 	//登录
 		btnLogin.addActionListener((e)->
 		{
-			File dirPak = new File("./wrk/pak");
+			File dirPak = new File("./wrk.cn/pak");
 			if(!dirPak.exists()) dirPak.mkdirs();
 			
 			new Thread(()->

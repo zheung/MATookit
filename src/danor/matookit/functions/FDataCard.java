@@ -24,9 +24,9 @@ public class FDataCard
 	
 	public static NDataCards crtCard(int version) throws Exception 
 	{
-		File makFile = new File("./wrk/dat/crd/mak-" + version + ".xml");
-		File crdFile = new File("./wrk/dat/ctg/crd-" + version + ".xml");
-		File cdfFile = new File("./wrk/dat/crd/cdf-" + version + ".xml");
+		File makFile = new File("./wrk.cn/dat/crd/mak-" + version + ".xml");
+		File crdFile = new File("./wrk.cn/dat/ctg/crd-" + version + ".xml");
+		File cdfFile = new File("./wrk.cn/dat/crd/cdf-" + version + ".xml");
 		
 		List<NDataCardBuilder> list = new ArrayList<>();
 	//Read macFile
@@ -232,7 +232,7 @@ public class FDataCard
 
 	public static NDataCards anlCard(int version) throws Exception
 	{
-	    Element e = xreader.read(new File("./wrk/dat/ctg/card-" + version + ".xml")).getRootElement().element("maCard");
+	    Element e = xreader.read(new File("./wrk.cn/dat/ctg/card-" + version + ".xml")).getRootElement().element("maCard");
 	    NDataCards list = new NDataCards();
 	    
 	    for(Iterator<?> i = e.elementIterator("Card"); i.hasNext();)

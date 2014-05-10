@@ -7,7 +7,7 @@ import org.dom4j.Element;
 
 public class UConfig
 {
-	private final UXml xml = new UXml(new File("./wrk/dat/cfg.xml"));
+	private final UXml xml = new UXml(new File("./wrk.cn/dat/cfg.xml"));
 	
 	private UConfig() throws Exception
 	{

@@ -284,7 +284,7 @@ public class FGain
 			result.lvUP(xml.value("before_level").equals(xml.value("after_level")));
 			
 			if((xml.value("special_item")) != null)
-				for(Object e:xml.list("attacker"))
+				for(Object e:xml.list("special_item"))
 		    	{
 					xml.set((Element)e);
 		    		boolean flag = false;

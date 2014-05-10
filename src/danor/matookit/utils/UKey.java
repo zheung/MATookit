@@ -11,30 +11,42 @@ public class UKey
 	
 	public UKey() throws Exception
 	{
-		xml = new UXml(new File("./wrk/dat/arb"));
+		xml = new UXml(new File("./wrk.cn/dat/arb.xml"));
 	}
 
-	public static synchronized String[] Data(String form, int id) throws Exception
+	public static synchronized String[] Data(String typKey, String id) throws Exception
 	{
 		getInstance();
 		
-		List<?> r = UKeyContainer.instance.xml.list("."+form);
+		List<?> lstElement = UKeyContainer.instance.xml.list("."+typKey+">Item");
 
-		for(Object e:r)
+		String[] result = null;
+		for(Object e:lstElement)
     	{
 			UKeyContainer.instance.xml.set((Element)e);
-    		if(UKeyContainer.instance.xml.value("ID").equals(String.valueOf(id)))
-    		{
-    			String[] result = new String[((Element)e).elements().size()];
-
-    			List<?> rs = UKeyContainer.instance.xml.list(null);
-    			
-    			int i = 0;
-    			for(Object ee:rs)
-    				result[i++] = UKeyContainer.instance.xml.set((Element)ee).value(null);
-    			
-    			return result;
-    		}
+			
+			if(UKeyContainer.instance.xml.value("ID").equals(id))
+				switch(typKey)
+				{
+				case "Action":
+					result = new String[2];
+					result[0] = UKeyContainer.instance.xml.value("Url");
+					result[1] = UKeyContainer.instance.xml.value("Params");
+					return result;
+				case "CipherAES": case "CipherRSA":
+					result = new String[1];
+					result[0] = UKeyContainer.instance.xml.value("Key");
+					return result;
+				case "Property":
+					result = new String[2];
+					result[0] = UKeyContainer.instance.xml.value("Key");
+					result[1] = UKeyContainer.instance.xml.value("Value");
+					return result;
+				case "Server":
+					result = new String[1];
+					result[0] = UKeyContainer.instance.xml.value("Url");
+					return result;
+				}
     	}
 		
 		return null;

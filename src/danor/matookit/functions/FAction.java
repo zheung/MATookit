@@ -21,24 +21,24 @@ public class FAction
 
 		ULog.log("Action-Init");
 		
-		File dir = new File("./wrk/pak");
+		File dir = new File("./wrk.cn/pak");
 		if(!dir.exists()) dir.mkdir();//ToEH
 
-		header = "./wrk/pak/" + (rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
-		sUrl = UKey.Data("Server", 1)[1];
+		header = "./wrk.cn/pak/" + (rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
+		sUrl = UKey.Data("Server", "CN1")[0];
 
 		if(cookie == null)
 		{
 			ULog.log("Action-Cookie");
-			String[] values = UKey.Data("Action", 0);
 			
 			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true)
-			.put("cookie", (String)null).put("url", sUrl+values[2]).put("param", (String)null).put("path", header+"1Cookie.xml");
+			.put("cookie", (String)null).put("url", sUrl+UKey.Data("Action", "Cookie")[0])
+			.put("param", (String)null).put("path", header+"1Cookie.xml");
 			
 			UConnect connect = new UConnect(option);
 			File pakFile = connect.result;
 			
-			UConvert.decryptAES(null, pakFile, UKey.Data("Cipher", 3)[2].getBytes());
+			UConvert.decryptAES(null, pakFile, UKey.Data("CipherAES", "3")[0].getBytes());
 			UConvert.decodeUrl(null, pakFile);
 			
 			this.cookie = connect.cookie;
@@ -52,13 +52,13 @@ public class FAction
 	/**
 	*@param option typMethod, rqtDecryptParam, rqtDecryptFile, rqtFormatFile
 	*/
-	public File Connect(int typConnect, UOption option, String...prmValues) throws Exception 
+	public File Connect(String typAction, UOption option, String...prmValues) throws Exception 
 	{
-		String[] values = UKey.Data("Action", typConnect);
+		String[] values = UKey.Data("Action", typAction);
 
-		if(typConnect == 3)
+		if(typAction.equals("Update"))
 		{
-			values[2] = values[2].replace("(jiayi)", prmValues[0]);
+			values[0] = values[0].replace("(jiayi)", prmValues[0]);
 			
 			String[] tmpValues = prmValues;
 			
@@ -68,10 +68,10 @@ public class FAction
 				prmValues[i-1] = tmpValues[i];
 		}
 		
-		UParam param = new UParam((typConnect == 2));
-		if(!values[3].equals(""))
+		UParam param = new UParam((typAction.equals("Login")));
+		if(!values[1].equals(""))
 		{
-			String[] prmNames = values[3].split(";");
+			String[] prmNames = values[1].split(";");
 			
 			int i = 0;
 			for(String n:prmNames)
@@ -79,12 +79,12 @@ public class FAction
 		}
 		
 		UOption newOption = new UOption().put("rqtCookie", false).put("typMethod", true)
-		.put("cookie", this.cookie).put("url", sUrl+values[2]).put("param", param.get(option.getBoolean("rqtDecryptParam"))).put("path", header+values[0]+values[1]+".xml");
+		.put("cookie", this.cookie).put("url", sUrl+values[0]).put("param", param.get(option.getBoolean("rqtDecryptParam"))).put("path", header+typAction+".xml");
 		
 		UConnect connect = new UConnect(newOption);
 		
 		if(option.getBoolean("rqtDecryptFile"))
-			UConvert.decryptAES(null, connect.result, UKey.Data("Cipher", 0)[2].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "0")[0].getBytes("utf-8"));
 
 		if(option.getBoolean("rqtFormatFile"))
 			UConvert.xmlFormat(connect.result);
@@ -100,7 +100,7 @@ public class FAction
 		ULog.log("Action-Login-"+phone);
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(2, option, phone, paswd);
+		File pakFile = Connect("Login", option, phone, paswd);
 		
 		NArthur arthur = null;
 		switch(FGain.GainError(new UXml(pakFile)))
@@ -119,15 +119,15 @@ public class FAction
 		return arthur;
 	}
 	
-	public File Update(String kind,String rev) throws Exception
+	public File Update(String typRes,String rev) throws Exception
 	{
-		UUtil.p("Action-Update-"+kind);
+		UUtil.p("Action-Update-"+typRes);
 		
-		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", kind.equals("card")?false:true);
+		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", typRes.equals("card")?false:true);
 		
-		File pakFile = Connect(3, option, kind, cookie, rev);
+		File pakFile = Connect("Update", option, typRes, cookie, rev);
 		
-		File renameFile = new File(pakFile.getParent()+"/"+kind+"-"+rev+".xml");
+		File renameFile = new File(pakFile.getParent()+"/"+typRes+"-"+rev+".xml");
 		
 		pakFile.renameTo(renameFile);
 		
@@ -139,14 +139,14 @@ public class FAction
 		UUtil.p("Action-Menu");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(10, option);
+		Connect("Menu", option);
 	}
 	public NRevision Home() throws Exception
 	{
 		UUtil.p("Action-Home");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(11, option);
+		File pakFile = Connect("Home", option);
 
 		FGain.GainBase(pakFile, arthur);
 		FGain.GainPoint(pakFile, arthur);
@@ -159,42 +159,42 @@ public class FAction
 		UUtil.p("Action-Collection");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(12, option);
+		Connect("Collection", option);
 	}
 	public void Info() throws Exception
 	{
 		UUtil.p("Action-Info");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(13, option, "6", String.valueOf(arthur.base().idArthur()));
+		Connect("Info", option, "6", String.valueOf(arthur.base().idArthur()));
 	}
 	public void PointSet(int addAP, int addBC) throws Exception
 	{
 		UUtil.p("Action-PointSet");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(14, option, String.valueOf(addAP), String.valueOf(addBC));
+		Connect("PointSet", option, String.valueOf(addAP), String.valueOf(addBC));
 	}
 	public void ItemUse(String idItem) throws Exception
 	{
 		UUtil.p("Action-ItemUse-"+idItem);
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(15, option, idItem);
+		Connect("ItemUse", option, idItem);
 	}
 	public void Rank(boolean top, String idRank) throws Exception
 	{
 		UUtil.p("Action-Rank");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(16, option, "1", idRank, top?"1":"0");//1;;0:非最高,1:最高
+		Connect("Rank", option, "1", idRank, top?"1":"0");//1;;0:非最高,1:最高
 	}
 	public List<String[]> RankP(String from, String idRank) throws Exception
 	{
 		UUtil.p("Action-RankP");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(17, option, from, idRank);//最低的iduser...
+		File pakFile = Connect("RankP", option, from, idRank);//最低的iduser...
 		
 		return FGain.GainRankP(pakFile);
 	}
@@ -203,7 +203,7 @@ public class FAction
 		UUtil.p("Action-RankN");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(18, option, from, idRank);//最低的iduser...
+		File pakFile = Connect("RankN", option, from, idRank);//最低的iduser...
 		
 		return FGain.GainRankP(pakFile);
 	}
@@ -213,7 +213,7 @@ public class FAction
 		UUtil.p("Action-FairyList");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(20, option);
+		File pakFile = Connect("FairyList", option);
 		
 		if(isGain)
 			FGain.GainFairyList(pakFile, arthur);
@@ -223,7 +223,7 @@ public class FAction
 		UUtil.p("Action-FairyInfo");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(21, option, "1", fairy.typRace(), fairy.idSerial(), fairy.finder().idArthur());
+		File pakFile = Connect("FairyInfo", option, "1", fairy.typRace(), fairy.idSerial(), fairy.finder().idArthur());
 
 		FGain.GainFairyInfo(pakFile, fairy, arthur);
 	}
@@ -232,7 +232,7 @@ public class FAction
 		UUtil.p("Action-FairyFight");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(22, option, fairy.typRace(), fairy.idSerial(), fairy.finder().idArthur());
+		File pakFile = Connect("FairyFight", option, fairy.typRace(), fairy.idSerial(), fairy.finder().idArthur());
 
 		return FGain.GainFairyFight(fairy, arthur, pakFile);
 	}
@@ -241,7 +241,7 @@ public class FAction
 		UUtil.p("Action-FairyLose");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(23, option, fairy.typRace(), fairy.idSerial(), fairy.finder().idArthur());
+		Connect("FairyLose", option, fairy.typRace(), fairy.idSerial(), fairy.finder().idArthur());
 	}
 	
 	public void RewardList(NArthur arthur) throws Exception
@@ -249,7 +249,7 @@ public class FAction
 		UUtil.p("Action-RewardList");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(30, option);
+		File pakFile = Connect("RewardList", option);
 		
 		FGain.GainRewardList(pakFile, arthur);	
 	}
@@ -258,7 +258,7 @@ public class FAction
 		UUtil.p("Action-RewardGain");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(31, option, ids);
+		Connect("RewardGain", option, ids);
 	}
 
 	public void FriendList(NArthur arthur) throws Exception
@@ -266,7 +266,7 @@ public class FAction
 		UUtil.p("Action-FriendList");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(40, option, "0");
+		File pakFile = Connect("FriendList", option, "0");
 		
 		FGain.GainFairyList(pakFile, arthur);	
 	}
@@ -275,7 +275,7 @@ public class FAction
 		UUtil.p("Action-FriendNotice");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(41, option, "0");
+		File pakFile = Connect("FriendNotice", option, "0");
 		
 		return FGain.GainMatches("body>friend_notice>user_list", pakFile);	
 	}
@@ -284,7 +284,7 @@ public class FAction
 		UUtil.p("Action-FriendInvitation");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(42, option, "0");
+		File pakFile = Connect("FriendInvitation", option, "0");
 		
 		return FGain.GainMatches("body>friend_appstate>user_ex", pakFile);	
 	}
@@ -293,7 +293,7 @@ public class FAction
 		UUtil.p("Action-FriendOtherList");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(43, option);
+		File pakFile = Connect("FriendOtherList", option);
 		
 		return FGain.GainMatches("body/player_search/user_list", pakFile);	
 	}
@@ -302,7 +302,7 @@ public class FAction
 		UUtil.p("Action-FriendSearch");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(44, option, name);
+		File pakFile = Connect("FriendSearch", option, name);
 		
 		return FGain.GainMatches("body/player_search/user_list", pakFile);	
 	}
@@ -311,14 +311,14 @@ public class FAction
 		UUtil.p("Action-FriendInfo");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(45, option, "1", String.valueOf(fUID));
+		Connect("FriendInfo", option, "1", String.valueOf(fUID));
 	}
 	public boolean FriendInvite(String uid) throws Exception
 	{
 		UUtil.p("Action-FriendInvite");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(46, option, "1", String.valueOf(uid));
+		File pakFile = Connect("FriendInvite", option, "1", String.valueOf(uid));
 
 		return FGain.GainFriendInvite(pakFile);
 	}
@@ -327,7 +327,7 @@ public class FAction
 		UUtil.p("Action-FriendApprove");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(47, option, "1", uid);
+		File pakFile = Connect("FriendApprove", option, "1", uid);
 		
 		return FGain.GainFriendInvite(pakFile);	
 	}
@@ -336,7 +336,7 @@ public class FAction
 		UUtil.p("Action-FriendRemove");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(48, option, "1", idFriend);
+		File pakFile = Connect("FriendRemove", option, "1", idFriend);
 		
 		return FGain.GainFriendRemove(pakFile);
 	}
@@ -346,7 +346,7 @@ public class FAction
 		UUtil.p("Action-AreaList");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(50, option);
+		File pakFile = Connect("AreaList", option);
 		
 		FGain.GainAreaList(pakFile, arthur);
 	}
@@ -355,7 +355,7 @@ public class FAction
 		UUtil.p("Action-FloorList");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(51, option, String.valueOf(area.idArea()));
+		File pakFile = Connect("FloorList", option, String.valueOf(area.idArea()));
 		
 		FGain.GainFloors(pakFile, area);
 	}
@@ -364,7 +364,7 @@ public class FAction
 		UUtil.p("Action-Floor");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(52, option, area.idArea(), "1", idFloor);
+		File pakFile = Connect("Floor", option, area.idArea(), "1", idFloor);
 		
 		return FGain.GainFloor(area, pakFile);
 	}
@@ -373,7 +373,7 @@ public class FAction
 		UUtil.p("Action-Explore");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect(53, option, area.idArea(), "1", idFloor);
+		File pakFile = Connect("Explore", option, area.idArea(), "1", idFloor);
 
 		return FGain.GainExplore(arthur, area, pakFile);
 	}
@@ -382,7 +382,7 @@ public class FAction
 		UUtil.p("Action-ExploreJ");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(53, option, area.idArea(), "0", idFloor);
+		Connect("ExploreJ", option, area.idArea(), "0", idFloor);
 	}
 	
 	public void Tutorial(String step) throws Exception
@@ -390,7 +390,7 @@ public class FAction
 		UUtil.p("Action-Tutorial");
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		Connect(90, option, cookie.split("=")[1], step);
+		Connect("Tutorial", option, cookie.split("=")[1], step);
 	}
 
 	public NArthur arthur() { return arthur; }

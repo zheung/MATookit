@@ -12,10 +12,10 @@ public class ULog
 	{
 		timeStart = Long.toString(System.currentTimeMillis());
 		
-		File dir = new File("./wrk/log");
+		File dir = new File("./wrk.cn/log");
 		if(!dir.exists()) dir.mkdir();//ToEH
 		
-		fileLog = new File("./wrk/log/"+timeStart+".log");
+		fileLog = new File("./wrk.cn/log/"+timeStart+".log");
 		fileLog.createNewFile();//ToEH NtTE
 	}
 	

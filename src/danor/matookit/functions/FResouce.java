@@ -14,9 +14,9 @@ public class FResouce
 {
 	private final FAction action;
 	
-	private final File revFile = new File("./wrk/dat/rev.xml");
-	private final File revFolderBos = new File("./wrk/res/bos");
-	private final File revFolderCrd = new File("./wrk/res/crd");
+	private final File revFile = new File("./wrk.cn/dat/rev.xml");
+	private final File revFolderBos = new File("./wrk.cn/res/bos");
+	private final File revFolderCrd = new File("./wrk.cn/res/crd");
 	
 	private final NRevision revClient = new NRevision();
 	private final NRevision revServer;
@@ -119,7 +119,7 @@ public class FResouce
 		File revFolderCrdNew = new File(revFolderCrd, "_new/"+card.idCard);
 		revFolderCrdNew.mkdirs();
 		
-		String rUrl = UKey.Data("Server", 0)[1];
+		String rUrl = UKey.Data("Server", "CN1")[0];
 		
 		UOption option;
 		UConnect connect;
@@ -129,7 +129,7 @@ public class FResouce
 					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("Cipher", 1)[2].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); };
 		
 		
@@ -139,7 +139,7 @@ public class FResouce
 					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("Cipher", 1)[2].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); };
 
 		try {
@@ -148,7 +148,7 @@ public class FResouce
 					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloBac.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("Cipher", 1)[2].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); };
 
 		try {
@@ -157,7 +157,7 @@ public class FResouce
 					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("Cipher", 1)[2].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); };
 		
 		try {
@@ -234,7 +234,7 @@ public class FResouce
 		
 		revFolderBosNew.mkdirs();
 		
-		String rUrl = UKey.Data("Server", 0)[1];
+		String rUrl = UKey.Data("Server", "CN1")[0];
 		
 		UUtil.p("Dowanload-Boss-"+boss.idBoss+"-Pack");
 		FPack pack = new FPack(rUrl+boss.version+"/boss/boss"+boss.idImageBos+"_(zkd).pack?cyt=1", revFolderBosNew.getPath(), "");
@@ -245,7 +245,7 @@ public class FResouce
 
 	public void gainItm() throws Exception
 	{
-		File revFolderItm = new File("./wrk/res/itm");
+		File revFolderItm = new File("./wrk.cn/res/itm");
 		if(revClient.revItm().equals("0"))
 			revFolderItm.mkdirs();
 		
@@ -264,7 +264,7 @@ public class FResouce
 					backup(oldFile);
 					f.renameTo(oldFile);
 				}
-				String rUrl = UKey.Data("Server", 0)[1];
+				String rUrl = UKey.Data("Server", "CN1")[0];
 				
 				UUtil.p("Dowanload-Itm-Pack");
 				FPack pack = new FPack(rUrl+revServer.revItm()+"/item/item_0_(zkd).pack?cyt=1", revFolderItmNew.getPath(), "");
@@ -299,7 +299,7 @@ public class FResouce
 //只有res
 	public void gainRes() throws Exception
 	{
-		File revFolderRes = new File("./wrk/res/res");
+		File revFolderRes = new File("./wrk.cn/res/res");
 		
 		if(revClient.resRes().equals("0"))
 			revFolderRes.mkdirs();
@@ -318,7 +318,7 @@ public class FResouce
 			revFolderResNew = new File(revFolderRes, "_new/"+revServer.resRes());
 			revFolderResNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Res-Pack");
 			FPack pack = new FPack(rUrl+revServer.resRes()+"/res/res0_(zkd).pack?cyt=1", revFolderResNew.getPath(), "");
@@ -329,7 +329,7 @@ public class FResouce
 	}
 	public void gainSou() throws Exception
 	{
-		File revFolderSou = new File("./wrk/res/sou");
+		File revFolderSou = new File("./wrk.cn/res/sou");
 		
 		if(revClient.resSou().equals("0"))
 			revFolderSou.mkdirs();
@@ -348,7 +348,7 @@ public class FResouce
 			revFolderSouNew = new File(revFolderSou, "_new/"+revServer.resSou());
 			revFolderSouNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Sou-Pack");
 			FPack pack = new FPack(rUrl+revServer.resSou()+"/sound/sound0_(zkd).pack?cyt=1", revFolderSouNew.getPath(), "");
@@ -359,7 +359,7 @@ public class FResouce
 	}
 	public void gainAdv() throws Exception
 	{
-		File revFolderAdv = new File("./wrk/res/adv");
+		File revFolderAdv = new File("./wrk.cn/res/adv");
 		
 		if(revClient.resAdv().equals("0"))
 			revFolderAdv.mkdirs();
@@ -378,7 +378,7 @@ public class FResouce
 			revFolderAdvNew = new File(revFolderAdv, "_new/"+revServer.resAdv());
 			revFolderAdvNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Adv-Pack");
 			FPack pack = new FPack(rUrl+revServer.resAdv()+"/advbg/advbg0_(zkd).pack?cyt=1", revFolderAdvNew.getPath(), "");
@@ -389,7 +389,7 @@ public class FResouce
 	}
 	public void gainCmp() throws Exception
 	{
-		File revFolderCmp = new File("./wrk/res/cmp");
+		File revFolderCmp = new File("./wrk.cn/res/cmp");
 		
 		if(revClient.resCmp().equals("0"))
 			revFolderCmp.mkdirs();
@@ -408,7 +408,7 @@ public class FResouce
 			revFolderCmpNew = new File(revFolderCmp, "_new/"+revServer.resCmp());
 			revFolderCmpNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Cmp-Pack");
 			FPack pack = new FPack(rUrl+revServer.resCmp()+"/cmpsheet/cmpsheet0_(zkd).pack?cyt=1", revFolderCmpNew.getPath(), "");
@@ -419,7 +419,7 @@ public class FResouce
 	}
 	public void gainGac() throws Exception
 	{
-		File revFolderGac = new File("./wrk/res/gac");
+		File revFolderGac = new File("./wrk.cn/res/gac");
 		
 		if(revClient.resGac().equals("0"))
 			revFolderGac.mkdirs();
@@ -439,7 +439,7 @@ public class FResouce
 			revFolderGacNew = new File(revFolderGac, "_new/"+revServer.resGac());
 			revFolderGacNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Gac-Pack");
 			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "");
@@ -450,7 +450,7 @@ public class FResouce
 	}
 	public void gainBan() throws Exception
 	{
-		File revFolderBan = new File("./wrk/res/ban");
+		File revFolderBan = new File("./wrk.cn/res/ban");
 		
 		if(revClient.resBan().equals("0"))
 			revFolderBan.mkdirs();
@@ -469,7 +469,7 @@ public class FResouce
 			revFolderBanNew = new File(revFolderBan, "_new/"+revServer.resBan());
 			revFolderBanNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Ban-Pack");
 			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "");
@@ -480,7 +480,7 @@ public class FResouce
 	}
 	public void gainPvl() throws Exception
 	{
-		File revFolderPvl = new File("./wrk/res/pvl");
+		File revFolderPvl = new File("./wrk.cn/res/pvl");
 		
 		if(revClient.resPvl().equals("0"))
 			revFolderPvl.mkdirs();
@@ -499,7 +499,7 @@ public class FResouce
 			revFolderPvlNew = new File(revFolderPvl, "_new/"+revServer.resPvl());
 			revFolderPvlNew.mkdirs();
 			
-			String rUrl = UKey.Data("Server", 0)[1];
+			String rUrl = UKey.Data("Server", "CN1")[0];
 			
 			UUtil.p("Dowanload-Pvl-Pack");
 			FPack pack = new FPack(rUrl+revServer.resPvl()+"/privilege/privilege0_(zkd).pack?cyt=1", revFolderPvlNew.getPath(), "");
@@ -511,7 +511,7 @@ public class FResouce
 	
 	private File gainData(String kind, String revService, String revClient, String rename) throws Exception
 	{
-		File ctgFileRename = new File(new File("./wrk/dat/ctg"), rename+"-"+revService+".xml");
+		File ctgFileRename = new File(new File("./wrk.cn/dat/ctg"), rename+"-"+revService+".xml");
 		
 		if(ctgFileRename.exists())
 			ctgFileRename.delete();
