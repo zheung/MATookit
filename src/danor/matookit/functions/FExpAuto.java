@@ -41,7 +41,7 @@ public class FExpAuto extends TimerTask
 		
 		cbxExpFloor.setEnabled(false);
 		
-		for(NArea a:action.arthur.areas())
+		for(NArea a:action.arthur().areas())
 			if(a.name().equals(nameArea))
 			{
 				this.area = a;
@@ -147,14 +147,12 @@ public class FExpAuto extends TimerTask
 				cbxExpFloor.setEnabled(true);
 				this.cancel();
 			}
-				
 			
-			ULog.getInstance();
 			ULog.log(sl);
 			((DefaultTableModel)tblLog.getModel()).addRow(st);
 			
 			if(flgWait)
-				Thread.sleep((Integer.parseInt(area.floors().get(Integer.parseInt(idFloor) - 1).cost())-action.arthur.point().nowAP())*180000);
+				Thread.sleep((Integer.parseInt(area.floors().get(Integer.parseInt(idFloor) - 1).cost())-action.arthur().point().nowAP())*180000);
 		}
 		catch(Exception e1) { e1.printStackTrace(); }
 	}

@@ -22,64 +22,65 @@ public class NRevision
 	 * resPrivilege = (>filename==privilege),revision|又是特权的版本??? 
 	 */
 	
-	private String revCard;
-	private String revBoss;
-	private String revItem;
-	private String revCardCategory;
-	private String revGacha;
-	private String revPrivilege;
-	private String revCombo;
-	private String revBannner;
+	private String revCrd;
+	private String revBos;
+	private String revItm;
+	private String revCtg;
+	private String revGac;
+	private String revPvl;
+	private String revCmb;
+	private String revBan;
 	
 	private String resRes;
-	private String resSound;
-	private String resAdvbg;
-	private String resCmpsheet;
-	private String resGacha;
-	private String resBannner;
-	private String resPrivilege;
-	public synchronized String revCard() { return revCard; }
-	public synchronized void revCard(String revCard) { this.revCard = revCard; }
+	private String resSou;
+	private String resAdv;
+	private String resCmp;
+	private String resGac;
+	private String resBan;
+	private String resPvl;
+
+	public synchronized String revCrd() { return revCrd; }
+	public synchronized void revCrd(String revCrd) { this.revCrd = revCrd; }
 	
-	public synchronized String revBoss() { return revBoss; }
-	public synchronized void revBoss(String revBoss) { this.revBoss = revBoss; }
+	public synchronized String revBos() { return revBos; }
+	public synchronized void revBos(String revBos) { this.revBos = revBos; }
 	
-	public synchronized String revItem() { return revItem; }
-	public synchronized void revItem(String revItem) { this.revItem = revItem; }
+	public synchronized String revItm() { return revItm; }
+	public synchronized void revItm(String revItm) { this.revItm = revItm; }
 	
-	public synchronized String revCardCategory() { return revCardCategory; }
-	public synchronized void revCardCategory(String revCardCategory) { this.revCardCategory = revCardCategory; }
+	public synchronized String revCtg() { return revCtg; }
+	public synchronized void revCtg(String revCtg) { this.revCtg = revCtg; }
 	
-	public synchronized String revGacha() { return revGacha; }
-	public synchronized void revGacha(String revGacha) { this.revGacha = revGacha; }
+	public synchronized String revGac() { return revGac; }
+	public synchronized void revGac(String revGac) { this.revGac = revGac; }
 	
-	public synchronized String revPrivilege() { return revPrivilege; }
-	public synchronized void revPrivilege(String revPrivilege) { this.revPrivilege = revPrivilege; }
+	public synchronized String revPvl() { return revPvl; }
+	public synchronized void revPvl(String revPvl) { this.revPvl = revPvl; }
 	
-	public synchronized String revCombo() { return revCombo; }
-	public synchronized void revCombo(String revCombo) { this.revCombo = revCombo; }
+	public synchronized String revCmb() { return revCmb; }
+	public synchronized void revCmb(String revCmb) { this.revCmb = revCmb; }
 	
-	public synchronized String revBannner() { return revBannner; }
-	public synchronized void revBannner(String revBannner) { this.revBannner = revBannner; }
+	public synchronized String revBan() { return revBan; }
+	public synchronized void revBan(String revBan) { this.revBan = revBan; }
 	
 	public synchronized String resRes() { return resRes; }
 	public synchronized void resRes(String resRes) { this.resRes = resRes; }
 	
-	public synchronized String resSound() { return resSound; }
-	public synchronized void resSound(String resSound) { this.resSound = resSound; }
+	public synchronized String resSou() { return resSou; }
+	public synchronized void resSou(String resSou) { this.resSou = resSou; }
 	
-	public synchronized String resAdvbg() { return resAdvbg; }
-	public synchronized void resAdvbg(String resAdvbg) { this.resAdvbg = resAdvbg; }
+	public synchronized String resAdv() { return resAdv; }
+	public synchronized void resAdv(String resAdv) { this.resAdv = resAdv; }
 	
-	public synchronized String resCmpsheet() { return resCmpsheet; }
-	public synchronized void resCmpsheet(String resCmpsheet) { this.resCmpsheet = resCmpsheet; }
+	public synchronized String resCmp() { return resCmp; }
+	public synchronized void resCmp(String resCmp) { this.resCmp = resCmp; }
 	
-	public synchronized String resGacha() { return resGacha; }
-	public synchronized void resGacha(String resGacha) { this.resGacha = resGacha; }
+	public synchronized String resGac() { return resGac; }
+	public synchronized void resGac(String resGac) { this.resGac = resGac; }
 	
-	public synchronized String resBannner() { return resBannner; }
-	public synchronized void resBannner(String resBannner) { this.resBannner = resBannner; }
+	public synchronized String resBan() { return resBan; }
+	public synchronized void resBan(String resBan) { this.resBan = resBan; }
 	
-	public synchronized String resPrivilege() { return resPrivilege; }
-	public synchronized void resPrivilege(String resPrivilege) { this.resPrivilege = resPrivilege; }
+	public synchronized String resPvl() { return resPvl; }
+	public synchronized void resPvl(String resPvl) { this.resPvl = resPvl; }
 }

@@ -43,9 +43,9 @@ public class FFryAuto extends TimerTask
 			List<NFairy> lstFairywP = new ArrayList<NFairy>();
 			
 			for(int i = 0; i <= priority.length; i++)
-				for(int j = action.arthur.fairys().size() - 1; j >= 0; j--)//逆序
+				for(int j = action.arthur().fairys().size() - 1; j >= 0; j--)//逆序
 				{
-					NFairy f = action.arthur.fairys().get(j);//提取-妖精
+					NFairy f = action.arthur().fairys().get(j);//提取-妖精
 					
 					if(i < priority.length)//在优先表中
 					{
@@ -125,7 +125,7 @@ public class FFryAuto extends TimerTask
 										{
 											action.FairyLose(f);//获取击退失败界面
 
-											if(action.arthur.friends().now() != action.arthur.friends().max())//逻辑: 本人好友已满
+											if(action.arthur().friends().now() != action.arthur().friends().max())//逻辑: 本人好友已满
 												action.FairyInfo(f);//获取妖精信息
 										}
 										

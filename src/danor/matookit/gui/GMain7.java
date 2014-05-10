@@ -117,7 +117,7 @@ public class GMain7
 
 	private JComboBox<String> cbxExpFloor;
 
-	private final String title = "[DanoR MATookit][For.cn][Version.7.2.6][Build.2014.05.5.B]";
+	private final String title = "[DanoR MATookit][For.cn][Version.7.2.9][Build.2014.05.10.A]";
 
 	private void initialize() throws Exception
 	{
@@ -132,7 +132,7 @@ public class GMain7
 		frmMain.setType(Type.POPUP);
 		frmMain.setAutoRequestFocus(true);
 		frmMain.setTitle(title);
-		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage("./wrk/res/Gui/Ico.png"));
+		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage("./wrk/res/gui/ico.png"));
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		frmMain.setBounds((d.width - 848) / 2, (d.height - 480) / 2, 848, 480);
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -645,7 +645,6 @@ public class GMain7
 
 	public GMain7() throws Exception //初始化
 	{
-		ULog.getInstance();
 		ULog.log("Gui-Main-Init");
 	//界面加载
 		initialize();
@@ -671,7 +670,7 @@ public class GMain7
 						iptPaswd.setText(u.split(",")[1]);
 		});
 	//设置托盘图标
-		tray = new TrayIcon(new ImageIcon("./wrk/res/Gui/ico.png").getImage(), "MATookit");
+		tray = new TrayIcon(new ImageIcon("./wrk/res/gui/ico.png").getImage(), "MATookit");
 		tray.setImageAutoSize(true);
 		
 		SystemTray.getSystemTray().add(tray);
@@ -722,10 +721,10 @@ public class GMain7
 					}
 					catch(Exception e1) { e1.printStackTrace(); }
 					
-					if(action.arthur != null)
+					if(action.arthur() != null)
 					{
-						frmMain.setTitle(frmMain.getTitle()+"["+(String)iptAcout.getSelectedItem()+"]["+action.arthur.base().name()+"]");
-						tray.setToolTip("["+(String)iptAcout.getSelectedItem()+"]["+action.arthur.base().name()+"]");
+						frmMain.setTitle(frmMain.getTitle()+"["+(String)iptAcout.getSelectedItem()+"]["+action.arthur().base().name()+"]");
+						tray.setToolTip("["+(String)iptAcout.getSelectedItem()+"]["+action.arthur().base().name()+"]");
 						
 						btnLogin.setText("登出");
 						btnLogin.setEnabled(true);
@@ -829,8 +828,8 @@ public class GMain7
 				
 				action.AreaList();
 				
-				if(!action.arthur.areas().isEmpty())
-					for(NArea a:action.arthur.areas())
+				if(!action.arthur().areas().isEmpty())
+					for(NArea a:action.arthur().areas())
 						((DefaultTableModel)tblExpArea.getModel()).addRow(new String[] {a.idArea(), a.name(), a.prgArea()+"%", a.prgItem()+"%"});
 			}
 			catch(Exception e1) { e1.printStackTrace(); }
@@ -844,7 +843,7 @@ public class GMain7
 		       {
 		    	   valExpArea.setText((String)tblExpArea.getValueAt(tblExpArea.getSelectedRow(),1));
 		    	   
-					for(NArea a:action.arthur.areas())
+					for(NArea a:action.arthur().areas())
 					{
 						if(a.name().equals(valExpArea.getText()))
 						{
@@ -906,25 +905,25 @@ public class GMain7
 
 	public void ifoShow()
 	{
-		if(action.arthur != null)
+		if(action.arthur() != null)
 		{
-			valIfoName.setText(action.arthur.base().name());
-			valIfoLevel.setText(action.arthur.town().lv());
-			valIfoCountry.setText(new String[]{"剑术之城","技巧之场","魔法之派"}[Integer.parseInt(action.arthur.town().idTown())-1]);
-			valIfoIDUser.setText(action.arthur.base().idArthur());
-			valIfoGoldCoin.setText(action.arthur.base().gold());
-			valIfoMillionCost.setText(action.arthur.shop().mc());
-			valIfoFriendPoint.setText(action.arthur.gacha().pointFriend());
-			valIfoGachaTicket.setText(action.arthur.gacha().ticket());
-			valIfoGachaPoint.setText(action.arthur.gacha().point());
-			valIfoFriendNow.setText(action.arthur.friends().now());
-			valIfoFriendMax.setText(action.arthur.friends().max());
-			valIfoFriendIvt.setText(action.arthur.friends().ivt());
+			valIfoName.setText(action.arthur().base().name());
+			valIfoLevel.setText(action.arthur().town().lv());
+			valIfoCountry.setText(new String[]{"剑术之城","技巧之场","魔法之派"}[Integer.parseInt(action.arthur().town().idTown())-1]);
+			valIfoIDUser.setText(action.arthur().base().idArthur());
+			valIfoGoldCoin.setText(action.arthur().base().gold());
+			valIfoMillionCost.setText(action.arthur().shop().mc());
+			valIfoFriendPoint.setText(action.arthur().gacha().pointFriend());
+			valIfoGachaTicket.setText(action.arthur().gacha().ticket());
+			valIfoGachaPoint.setText(action.arthur().gacha().point());
+			valIfoFriendNow.setText(action.arthur().friends().now());
+			valIfoFriendMax.setText(action.arthur().friends().max());
+			valIfoFriendIvt.setText(action.arthur().friends().ivt());
 			
-			valExgauge.setText(action.arthur.battle().sp()+"%");
-			prgExgauge.setBounds(70, 20, (int)(100*(Double.valueOf(action.arthur.battle().sp())/100.0)), 20);
+			valExgauge.setText(action.arthur().battle().sp()+"%");
+			prgExgauge.setBounds(70, 20, (int)(100*(Double.valueOf(action.arthur().battle().sp())/100.0)), 20);
 			
-			if(action.arthur.town().hasFairy())
+			if(action.arthur().town().hasFairy())
 			{
 				btnHaveFairy.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.red));
 				btnHaveFairy.setText("妖精出现中");
@@ -937,7 +936,7 @@ public class GMain7
 				btnHaveFairy.setForeground(Color.BLACK);
 			}
 			
-			if(action.arthur.town().hasReward())
+			if(action.arthur().town().hasReward())
 			{
 				btnHaveReward.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.red));
 				btnHaveReward.setText("未领取奖励");
@@ -950,7 +949,7 @@ public class GMain7
 				btnHaveReward.setForeground(Color.BLACK);
 			}
 			
-			for(NItem i:action.arthur.items())
+			for(NItem i:action.arthur().items())
 			{
 				switch(i.idItem())
 				{
@@ -965,7 +964,7 @@ public class GMain7
 				}
 			}
 			
-			MPoint.getInstance(action.arthur.point(), valAP, valBC, prgAP, prgBC);
+			MPoint.getInstance(action.arthur().point(), valAP, valBC, prgAP, prgBC);
 			
 			MPoint.update();
 		}

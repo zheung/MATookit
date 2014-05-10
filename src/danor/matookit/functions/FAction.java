@@ -8,20 +8,16 @@ import danor.matookit.utils.*;
 
 public class FAction
 {
-	private final UKey db;
-	private final ULog log;
-
 	private final String header;
 	private final String sUrl;
 
 	public final String cookie;
 	
-	public NArthur arthur;
+	private NArthur arthur;
+	private NRevision rev;
 	
 	public FAction(boolean rqtTime, String cookie) throws Exception
 	{
-		this.db = UKey.getInstance();
-		this.log = ULog.getInstance();
 
 		ULog.log("Action-Init");
 		
@@ -29,21 +25,20 @@ public class FAction
 		if(!dir.exists()) dir.mkdir();//ToEH
 
 		header = "./wrk/pak/" + (rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
-		sUrl = db.Data("Server", 1)[1];
+		sUrl = UKey.Data("Server", 1)[1];
 
 		if(cookie == null)
 		{
 			ULog.log("Action-Cookie");
-			String[] values = db.Data("Action", 0);
+			String[] values = UKey.Data("Action", 0);
 			
 			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true)
 			.put("cookie", (String)null).put("url", sUrl+values[2]).put("param", (String)null).put("path", header+"1Cookie.xml");
 			
-			
-			UConnect connect = new UConnect(option, db, log);
+			UConnect connect = new UConnect(option);
 			File pakFile = connect.result;
 			
-			UConvert.decryptAES(null, pakFile, db.Data("Cipher", 3)[2].getBytes());
+			UConvert.decryptAES(null, pakFile, UKey.Data("Cipher", 3)[2].getBytes());
 			UConvert.decodeUrl(null, pakFile);
 			
 			this.cookie = connect.cookie;
@@ -59,7 +54,7 @@ public class FAction
 	*/
 	public File Connect(int typConnect, UOption option, String...prmValues) throws Exception 
 	{
-		String[] values = db.Data("Action", typConnect);
+		String[] values = UKey.Data("Action", typConnect);
 
 		if(typConnect == 3)
 		{
@@ -73,7 +68,7 @@ public class FAction
 				prmValues[i-1] = tmpValues[i];
 		}
 		
-		UParam param = new UParam((typConnect == 2),db);
+		UParam param = new UParam((typConnect == 2));
 		if(!values[3].equals(""))
 		{
 			String[] prmNames = values[3].split(";");
@@ -86,10 +81,10 @@ public class FAction
 		UOption newOption = new UOption().put("rqtCookie", false).put("typMethod", true)
 		.put("cookie", this.cookie).put("url", sUrl+values[2]).put("param", param.get(option.getBoolean("rqtDecryptParam"))).put("path", header+values[0]+values[1]+".xml");
 		
-		UConnect connect = new UConnect(newOption, db, log);
+		UConnect connect = new UConnect(newOption);
 		
 		if(option.getBoolean("rqtDecryptFile"))
-			UConvert.decryptAES(null, connect.result, db.Data("Cipher", 0)[2].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UKey.Data("Cipher", 0)[2].getBytes("utf-8"));
 
 		if(option.getBoolean("rqtFormatFile"))
 			UConvert.xmlFormat(connect.result);
@@ -112,6 +107,7 @@ public class FAction
 		{
 		case "0":
 			arthur = FGain.GainArthur(pakFile);
+			rev = FGain.GainRevision(pakFile);
 			
 			ULog.log("Relust-"+phone+"-Success");
 			break;
@@ -396,4 +392,7 @@ public class FAction
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
 		Connect(90, option, cookie.split("=")[1], step);
 	}
+
+	public NArthur arthur() { return arthur; }
+	public NRevision rev() { return rev; }
 }

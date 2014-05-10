@@ -11,7 +11,6 @@ import java.net.URL;
 public class UConnect extends Thread
 {
 	private final UOption option;
-	private final UKey db;
 	
 	private int codResponse;
 	public String cookie;
@@ -23,10 +22,9 @@ public class UConnect extends Thread
 	 *@optionBoolean rqtCookie, typMethod
 	 *@optionString cookie, url, param, path
 	 */
-	public UConnect(UOption option, UKey db, ULog log) throws Exception
+	public UConnect(UOption option) throws Exception
 	{
 		this.option = option;
-		this.db = db;
 
 		this.start();
 		this.join();
@@ -65,7 +63,7 @@ public class UConnect extends Thread
 		
 		for(int i=0;i<6;i++) 
 		{
-			String[] kv = db.Data("Property", i);
+			String[] kv = UKey.Data("Property", i);
 			connect.setRequestProperty(kv[1],kv[2].equals(";")?"":kv[2]);
 		}
 	//设置cookie
@@ -121,7 +119,7 @@ public class UConnect extends Thread
 		int[] aryInt = {0,1,3,4}; 
 		for(int i:aryInt) 
 		{
-			String[] kv = db.Data("Property", i);
+			String[] kv = UKey.Data("Property", i);
 			connect.setRequestProperty(kv[1],kv[2].equals(";")?"":kv[2]);
 		}
 	//判断状态

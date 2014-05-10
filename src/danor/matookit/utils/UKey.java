@@ -14,22 +14,24 @@ public class UKey
 		xml = new UXml(new File("./wrk/dat/arb"));
 	}
 
-	public synchronized String[] Data(String form, int id) throws Exception
+	public static synchronized String[] Data(String form, int id) throws Exception
 	{
-		List<?> r = xml.list("."+form);
+		getInstance();
+		
+		List<?> r = UKeyContainer.instance.xml.list("."+form);
 
 		for(Object e:r)
     	{
-			xml.set((Element)e);
-    		if(xml.value("ID").equals(String.valueOf(id)))
+			UKeyContainer.instance.xml.set((Element)e);
+    		if(UKeyContainer.instance.xml.value("ID").equals(String.valueOf(id)))
     		{
     			String[] result = new String[((Element)e).elements().size()];
 
-    			List<?> rs = xml.list(null);
+    			List<?> rs = UKeyContainer.instance.xml.list(null);
     			
     			int i = 0;
     			for(Object ee:rs)
-    				result[i++] = xml.set((Element)ee).value(null);
+    				result[i++] = UKeyContainer.instance.xml.set((Element)ee).value(null);
     			
     			return result;
     		}
@@ -38,7 +40,7 @@ public class UKey
 		return null;
 	}
 
-	private static class FcDataBaseContainer
+	private static class UKeyContainer
 	{
 		private static UKey instance;
 		static
@@ -48,5 +50,5 @@ public class UKey
 		}
 	}
 	
-	public static UKey getInstance() { return FcDataBaseContainer.instance; }
+	private static UKey getInstance() { return UKeyContainer.instance; }
 }

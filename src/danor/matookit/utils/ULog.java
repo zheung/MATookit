@@ -21,20 +21,24 @@ public class ULog
 	
 	public synchronized static void log(String content, boolean typPrint) throws Exception
 	{
+		getInstance();
+		
 		if(typPrint)
 			UUtil.p(content);
 		
-		UUtil.Output(FcLogContainer.instance.fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
+		UUtil.Output(ULogContainer.instance.fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
 	}
 	
 	public synchronized static void log(String content) throws Exception
 	{
+		getInstance();
+		
 		UUtil.p(content);
 		
-		UUtil.Output(FcLogContainer.instance.fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
+		UUtil.Output(ULogContainer.instance.fileLog, (Thread.currentThread().getId()+" "+UUtil.stpShift(System.currentTimeMillis())+" "+content+"\r\n").getBytes("utf-8"), true);//ToEH NtTE
 	}
 
-	private static class FcLogContainer
+	private static class ULogContainer
 	{
 		private static ULog instance;
 		static
@@ -44,5 +48,5 @@ public class ULog
 		}
 	}
 	
-	public static ULog getInstance() { return FcLogContainer.instance; }
+	private static ULog getInstance() { return ULogContainer.instance; }
 }

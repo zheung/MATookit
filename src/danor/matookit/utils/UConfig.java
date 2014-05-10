@@ -16,22 +16,22 @@ public class UConfig
 	
 	public synchronized static String[] load(String key) throws Exception
 	{
-		List<?> elements = FcConfigContainer.instance.xml.list(key+">Item");
+		List<?> elements = UConfigContainer.instance.xml.list(key+">Item");
 		
-		if(elements.size() == 0)
-			return new String[]{FcConfigContainer.instance.xml.value(key)};
+		if(elements == null)
+			return new String[]{UConfigContainer.instance.xml.value(key)};
 		
 		String[] configs = new String[elements.size()];
 		
 		int count = 0;
     	for(Object e:elements)
     	{
-    		FcConfigContainer.instance.xml.set((Element)e);
+    		UConfigContainer.instance.xml.set((Element)e);
     		
-    		configs[count++] = FcConfigContainer.instance.xml.value(null);
+    		configs[count++] = UConfigContainer.instance.xml.value(null);
     	}
 		
-    	FcConfigContainer.instance.xml.move(".");
+    	UConfigContainer.instance.xml.move(".");
     	
 		ULog.log("Config-Load-"+key);
 		
@@ -40,16 +40,16 @@ public class UConfig
 
 	public synchronized static void save(String key, String...values) throws Exception
 	{
-		FcConfigContainer.instance.xml.move(key);
+		UConfigContainer.instance.xml.move(key);
 		
-		FcConfigContainer.instance.xml.save("", values[0]);
+		UConfigContainer.instance.xml.save("", values[0]);
 		
-		FcConfigContainer.instance.xml.move(".");
+		UConfigContainer.instance.xml.move(".");
 		
 		ULog.log("Config-Save-"+key);
 	}
 
-	private static class FcConfigContainer
+	private static class UConfigContainer
 	{
 		private static UConfig instance;
 		static
@@ -59,5 +59,5 @@ public class UConfig
 		}
 	}
 	
-	public static UConfig getInstance() { return FcConfigContainer.instance; }
+	public static UConfig getInstance() { return UConfigContainer.instance; }
 }

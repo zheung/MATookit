@@ -11,23 +11,16 @@ import danor.matookit.utils.*;
 
 public class FPack
 {
-	private final UKey db;
-	private final ULog log;
-	
 	private final String url;
 	private final String pakPath;
 	private final String subPath;
 	
-	protected int cntPacksLength;
-	protected int cntFilesLength = 0;
-	protected int cntPack;
-	protected List<File> lstFile = new ArrayList<File>();
+	private int cntPack;
+	private List<File> lstFile = new ArrayList<File>();
 	
-	public FPack(String url, String pakPath, String subPath, UKey db, ULog log) throws Exception
+	public FPack(String url, String pakPath, String subPath) throws Exception
 	{
 		this.url = url;
-		this.db = db;
-		this.log = log;
 		this.pakPath = pakPath;
 		this.subPath = subPath;
 	}
@@ -54,13 +47,12 @@ public class FPack
 			
 			lstFileName.add(new String(fbs));
 			
-//			if(indent > 0) UcUtil.q(indent + 1, lstFileName.get(lstFileName.size() - 1));
+//			UUtil.p("文件名-"lstFileName.get(lstFileName.size() - 1));
 			
 			lstFileLength.add(btoi(bytes[i+nl+1], bytes[i+nl+2], bytes[i+nl+3]));
 
-//			if(indent > 0) UcUtil.p(" " + lstFileLength.get(lstFileLength.size() - 1));
+//			UUtil.p("长度-" + lstFileLength.get(lstFileLength.size() - 1));
 
-			cntFilesLength += lstFileLength.get(lstFileLength.size() - 1);
 			i += nl + 8;
 			cntFile--;
 		}
@@ -82,7 +74,7 @@ public class FPack
 			if(lstFileName.get(j).indexOf("rja") == -1)
 			{
 				File rnf = new File(f.getPath()+".png");
-				UConvert.decryptAES(fba, rnf, db.Data("Cipher", 1)[2].getBytes());
+				UConvert.decryptAES(fba, rnf, UKey.Data("Cipher", 1)[2].getBytes());
 			
 				UUtil.p(lstFileName.get(j)+"-Decrypt");
 			}
@@ -99,7 +91,7 @@ public class FPack
 		pakFile.delete();
 	}
 	
-	protected List<File> downloadPack() throws Exception
+	public List<File> downloadPack() throws Exception
 	{
 		String urlPack = url.replace("(zkd)", "0");
 
@@ -110,12 +102,12 @@ public class FPack
 		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", urlPack)
 				.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
-		UConnect connect = new UConnect(option, db, log);
+		UConnect connect = new UConnect(option);
 		File pakFile = connect.result;
 		
 		byte[] bytes = UUtil.Input(pakFile);
 		
-		cntPacksLength = btoi(bytes[0x3], bytes[0x4], bytes[0x5]);
+//		UUtil.p("Pack长度-" + btoi(bytes[0x3], bytes[0x4], bytes[0x5]));
 		
 		cntPack = btoi(bytes[0x9]);
 
@@ -141,7 +133,7 @@ public class FPack
 				option = new UOption().put("rqtCookie", false).put("typMethod", false)
 						.put("cookie", (String)null).put("url", urlPack)
 						.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
-				connect = new UConnect(option, db, log);
+				connect = new UConnect(option);
 				pakFile = connect.result;
 
 				decompressPack(pakFile);

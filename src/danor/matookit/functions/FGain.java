@@ -25,14 +25,14 @@ public class FGain
 		
 		NRevision rev = new NRevision();
 		
-		rev.revCard(xml.value("card_rev"));
-		rev.revBoss(xml.value("boss_rev"));
-		rev.revItem(xml.value("item_rev"));
-		rev.revCardCategory(xml.value("card_category_rev"));
-		rev.revGacha(xml.value("gacha_rev"));
-		rev.revPrivilege(xml.value("privilege_rev"));
-		rev.revCombo(xml.value("combo_rev"));
-		rev.revBannner(xml.value("eventbanner_rev"));
+		rev.revCrd(xml.value("card_rev"));
+		rev.revBos(xml.value("boss_rev"));
+		rev.revItm(xml.value("item_rev"));
+		rev.revCtg(xml.value("card_category_rev"));
+		rev.revGac(xml.value("gacha_rev"));
+		rev.revPvl(xml.value("privilege_rev"));
+		rev.revCmb(xml.value("combo_rev"));
+		rev.revBan(xml.value("eventbanner_rev"));
 		
     	for(Object e:xml.list("resource_rev"))
     	{
@@ -46,22 +46,22 @@ public class FGain
     			rev.resRes(resrev);
     			break;
     		case "sound":
-    			rev.resSound(resrev);
+    			rev.resSou(resrev);
     			break;
     		case "advbg":
-    			rev.resAdvbg(resrev);
+    			rev.resAdv(resrev);
     			break;    	
     		case "cmpsheet":
-    			rev.resCmpsheet(resrev);
+    			rev.resCmp(resrev);
     			break;    		
     		case "gacha":
-    			rev.resGacha(resrev);
+    			rev.resGac(resrev);
     			break;
     		case "privilege":
-    			rev.resPrivilege(resrev);
+    			rev.resPvl(resrev);
     			break;
     		case "eventbanner":
-    			rev.resBannner(resrev);
+    			rev.resBan(resrev);
     		}
     	}
 		
@@ -490,7 +490,7 @@ public class FGain
 		
 		result.prog(xml.value("progress"));
 		result.type(xml.value("event_type"));
-		result.hasNextFloor((!xml.value("next_floor").equals(""))&&(!xml.value("next_floor>floor_info>type").equals("1")));
+		result.hasNextFloor((xml.value("next_floor") != null)&&(!xml.value("next_floor>floor_info>type").equals("1")));
 		
 		if(!result.type().equals("6"))
 		{
