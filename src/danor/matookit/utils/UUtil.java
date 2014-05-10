@@ -89,7 +89,7 @@ public class UUtil
 	
 	public static void Sound() throws Exception
 	{
-		Applet.newAudioClip(new File("./wrk/res/Gui/Ring.wav").toURI().toURL()).play();
+		Applet.newAudioClip(new File("./wrk/res/gui/rin.wav").toURI().toURL()).play();
 	}
 	
 	public static <T> List<T> reverse(List<T> list)

@@ -97,7 +97,7 @@ public class UXml
 		
 		Element result = find(xmlPath); 
 		
-		return (result != null)?result.getStringValue():"";
+		return (result != null)?result.getStringValue():null;
 	}
 	public List<?> list(String xmlPath) throws Exception
 	{
