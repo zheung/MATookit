@@ -7,7 +7,7 @@ import danor.matookit.utils.UUtil;
 
 public class FRank
 {
-	protected static void rank(FAction action, String idRank, int rank) throws Exception
+	public static void rank(FAction action, String idRank, int rank) throws Exception
 	{
 		List<String[]> lstRank = action.RankN("2085781", idRank);
 		

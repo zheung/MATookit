@@ -73,7 +73,7 @@ public class FGain
 	}
 	
 	
-	protected static NArthur GainArthur(File xmlFile) throws Exception
+	public static NArthur GainArthur(File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -88,7 +88,7 @@ public class FGain
 		
 		return arthur;
 	}
-	protected static void GainBase(File xmlFile, NArthur arthur) throws Exception
+	public static void GainBase(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -115,7 +115,7 @@ public class FGain
 		
 		UUtil.p("Gain-Base");
 	}
-	protected static void GainCards(File xmlFile, NArthur arthur) throws Exception
+	public static void GainCards(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 
@@ -126,7 +126,7 @@ public class FGain
 	    
 		UUtil.p("Gain-Cards");
 	}
-	protected static void GainItems(File xmlFile, NArthur arthur) throws Exception
+	public static void GainItems(File xmlFile, NArthur arthur) throws Exception
     {
 		UXml xml = new UXml(xmlFile);
 
@@ -145,7 +145,7 @@ public class FGain
     
     	UUtil.p("Gain-Items");
     }
-	protected static void GainPoint(File xmlFile, NArthur arthur) throws Exception
+	public static void GainPoint(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -166,7 +166,7 @@ public class FGain
 		UUtil.p("Gain-Point");
 	}
 
-	protected static void GainFairyList(File xmlFile, NArthur arthur) throws Exception
+	public static void GainFairyList(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -210,7 +210,7 @@ public class FGain
     		arthur.fairys().add(fairy);
     	}
 	}
-	protected static void GainFairyInfo(File xmlFile, NFairy fairy, NArthur arthur) throws Exception
+	public static void GainFairyInfo(File xmlFile, NFairy fairy, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -235,7 +235,7 @@ public class FGain
     	}
     	
 	}
-	protected static NMatch GainFairyAttacker(Element e) throws Exception
+	public static NMatch GainFairyAttacker(Element e) throws Exception
 	{
 		UXml xml = new UXml(null);
 		xml.set(e);
@@ -247,7 +247,7 @@ public class FGain
 
 		return match;
 	}
-	protected static NBattleResult GainFairyFight(NFairy fairy, NArthur arthur, File xmlFile) throws Exception
+	public static NBattleResult GainFairyFight(NFairy fairy, NArthur arthur, File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -312,7 +312,7 @@ public class FGain
 		return null;
 	}
 
-	protected static void GainRewardList(File xmlFile, NArthur arthur) throws Exception
+	public static void GainRewardList(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -345,20 +345,20 @@ public class FGain
     	}
 	}
 
-	protected static boolean GainFriendInvite(File xmlFile) throws Exception
+	public static boolean GainFriendInvite(File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
     	
 		return xml.value("body>friend_act_res>success").equals("1");
 	}
-	protected static void GainFriends(File xmlFile, NArthur arthur) throws Exception
+	public static void GainFriends(File xmlFile, NArthur arthur) throws Exception
 	{
 		NMatches matches = FGain.GainMatches("body/friend_list", xmlFile);
 
 		for(NMatch m:matches)
 			arthur.friends().add(m);
 	}
-	protected static NMatches GainMatches(String xPath, File xmlFile) throws Exception
+	public static NMatches GainMatches(String xPath, File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -375,12 +375,12 @@ public class FGain
 
 		return matches;
 	}
-	protected static boolean GainFriendRemove(File pakFile) throws Exception
+	public static boolean GainFriendRemove(File pakFile) throws Exception
 	{
 		return new UXml(pakFile).value("body>friend_act_res>success").equals("1");
 	}
 	
-	protected static void GainAreaList(File xmlFile, NArthur arthur) throws Exception
+	public static void GainAreaList(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -397,7 +397,7 @@ public class FGain
     		arthur.areas().add(area);
     	}
 	}
-	protected static void GainFloors(File xmlFile, NArea area) throws Exception
+	public static void GainFloors(File xmlFile, NArea area) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -406,7 +406,7 @@ public class FGain
     	for(Object e:xml.list("floor_info"))
     		area.floors().add(GainFloor((Element)e));
 	}
-	protected static NFloor GainFloor(NArea area, File xmlFile) throws Exception
+	public static NFloor GainFloor(NArea area, File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -416,7 +416,7 @@ public class FGain
 		
 		return floor;
 	}
-	protected static NFloor GainFloor(Element e) throws Exception
+	public static NFloor GainFloor(Element e) throws Exception
 	{
 		UXml xml = new UXml(null);
 		
@@ -468,7 +468,7 @@ public class FGain
     	
 		return floor;
 	}
-	protected static NExploreResult GainExplore(NArthur arthur, NArea area, File xmlFile) throws Exception
+	public static NExploreResult GainExplore(NArthur arthur, NArea area, File xmlFile) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
@@ -639,7 +639,7 @@ public class FGain
 		return match;
 	}
 
-	protected static List<String[]> GainRankP(File xmlFile) throws Exception
+	public static List<String[]> GainRankP(File xmlFile) throws Exception
 	{
 		List<String[]> lstRank = new ArrayList<>();
 		

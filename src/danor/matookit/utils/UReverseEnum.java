@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UReverseEnum<T> implements Iterable<T>
 {
-	protected T[] elements;
+	private T[] elements;
 
 	public UReverseEnum(T[] elements)
 	{

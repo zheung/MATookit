@@ -7,7 +7,7 @@ import danor.matookit.utils.*;
 
 public class FDownload
 {
-	protected static void dwnMainbg(String kind) throws Exception
+	public static void dwnMainbg(String kind) throws Exception
 	{
 		UUtil.pp("<Download-Mainbg>");
 		String rUrl = UKey.Data("Server", 0)[1];
@@ -46,7 +46,7 @@ public class FDownload
 		UUtil.pp("</Download-Mainbg>");
 	}
 	
-	protected static void dwnAdvbg(String version) throws Exception
+	public static void dwnAdvbg(String version) throws Exception
 	{
 		UUtil.pp("<Download-Advbg> "+version);
 		
@@ -59,7 +59,7 @@ public class FDownload
 		pack.downloadPack();
 	}
 	
-	protected static void dwnItem(String version) throws Exception
+	public static void dwnItem(String version) throws Exception
 	{
 		UUtil.pp("<Download-Item> "+version);
 		
@@ -72,7 +72,7 @@ public class FDownload
 		pack.downloadPack();
 	}
 
-	protected static void dwnCard(NDataCard dataCard) throws Exception
+	public static void dwnCard(NDataCard dataCard) throws Exception
 	{
 		UUtil.p("<Download-Card> "+dataCard.name()+"-"+dataCard.idCard());
 		

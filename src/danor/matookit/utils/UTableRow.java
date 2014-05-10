@@ -7,7 +7,7 @@ public class UTableRow
 {
 	private int rowAt;
 	private final String[] values;
-	protected final JTable table;
+	private final JTable table;
 	
 	public UTableRow(int rowAt, int colCount, JTable table)
 	{
