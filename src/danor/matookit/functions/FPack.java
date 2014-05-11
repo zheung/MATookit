@@ -14,15 +14,17 @@ public class FPack
 	private final String url;
 	private final String pakPath;
 	private final String subPath;
+	private final FServer server;
 	
 	private int cntPack;
 	private List<File> lstFile = new ArrayList<File>();
 	
-	public FPack(String url, String pakPath, String subPath) throws Exception
+	public FPack(String url, String pakPath, String subPath, FServer server) throws Exception
 	{
 		this.url = url;
 		this.pakPath = pakPath;
 		this.subPath = subPath;
+		this.server = server;
 	}
 	
 	private void decompressPack(File pakFile) throws Exception
@@ -100,7 +102,7 @@ public class FPack
 		String[] ps = urlPack.split("/");
 		
 		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false)
-				.put("cookie", (String)null).put("url", urlPack)
+				.put("cookie", (String)null).put("url", urlPack).put("server", server.toString())
 				.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
 		UConnect connect = new UConnect(option);
 		File pakFile = connect.result;

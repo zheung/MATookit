@@ -21,7 +21,7 @@ public class FDownload
 			if(!fld.exists()) fld.mkdirs();
 	
 			UUtil.pp("DownloadMainbg-"+kind+"-Lv" + (lv<10?"0"+lv:lv));
-			FPack pack = new FPack(rUrl+"2/mainbg/mainbg_"+lv+"_"+kind+"_(zkd).pack?cyt=1", fld.getPath(), "");
+			FPack pack = new FPack(rUrl+"2/mainbg/mainbg_"+lv+"_"+kind+"_(zkd).pack?cyt=1", fld.getPath(), "", null);
 			
 			for(File f:pack.downloadPack())
 				if(f.getName().indexOf("rja") != -1)
@@ -46,33 +46,7 @@ public class FDownload
 		UUtil.pp("</Download-Mainbg>");
 	}
 	
-	public static void dwnAdvbg(String version) throws Exception
-	{
-		UUtil.pp("<Download-Advbg> "+version);
-		
-		String rUrl = UKey.Data("Server", "CN1")[0];
-		
-		File fld = new File("./dat/Advbg/"+version);
-		if(!fld.exists()) fld.mkdirs();
-		
-		FPack pack = new FPack(rUrl+version+"/advbg/advbg0_(zkd).pack?cyt=1", fld.getPath(), "");
-		pack.downloadPack();
-	}
-	
-	public static void dwnItem(String version) throws Exception
-	{
-		UUtil.pp("<Download-Item> "+version);
-		
-		String rUrl = UKey.Data("Server", "CN1")[0];
-		
-		File fld = new File("./dat/Item/"+version);
-		if(!fld.exists()) fld.mkdirs();
-		
-		FPack pack = new FPack(rUrl+version+"/item/item_0_(zkd).pack?cyt=1", fld.getPath(), "");
-		pack.downloadPack();
-	}
-
-	public static void dwnCard(NDataCard dataCard) throws Exception
+	public static void dwnCard(NDataCard dataCard, FServer server) throws Exception
 	{
 		UUtil.p("<Download-Card> "+dataCard.name()+"-"+dataCard.idCard());
 		
@@ -107,7 +81,7 @@ public class FDownload
 		UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
 		
 		UUtil.p("Dowanload-Card-Pack");
-		FPack pack = new FPack(rUrl+dataCard.version()+"/card/card"+dataCard.idCard()+"_(zkd).pack?cyt=1", fld.getPath(), "");
+		FPack pack = new FPack(rUrl+dataCard.version()+"/card/card"+dataCard.idCard()+"_(zkd).pack?cyt=1", fld.getPath(), "", server);
 		pack.downloadPack();
 		
 		new File(fld.getPath()+"/face_"+(dataCard.idImageNorrmal().equals("None")?dataCard.idCard():dataCard.idImageNorrmal())+".png").renameTo(new File(fld.getPath()+"/[" + dataCard.name() + "][头像][普].png"));

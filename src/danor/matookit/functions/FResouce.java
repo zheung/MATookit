@@ -95,7 +95,7 @@ public class FResouce
 			
 			for(String i:FGain.GainImagedl(pakFile, "card").split(","))
 				for(NCrd c:list)
-					if(i.equals(c.idCard) && Integer.parseInt(i)>=161)
+					if(i.equals(c.idCard))
 						downCrd(c);
 			
 			save("revCrd", revServer.revCrd());
@@ -132,8 +132,8 @@ public class FResouce
 		UConnect connect;
 		try {
 			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Nor-Bac");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false)
-					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
+			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png");
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
@@ -141,8 +141,8 @@ public class FResouce
 		
 		try {
 			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Nor-Max");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false)
-					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1")
+			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png");
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
@@ -150,8 +150,8 @@ public class FResouce
 
 		try {
 			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Hlo-Nor");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false)
-					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1")
+			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloBac.png");
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
@@ -159,8 +159,8 @@ public class FResouce
 
 		try {
 			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Hlo-Max");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false)
-					.put("cookie", (String)null).put("url", rUrl+card.version+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1")
+			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png");
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
@@ -168,7 +168,7 @@ public class FResouce
 		
 		try {
 			UUtil.p("Dowanload-Card-Pack");
-			FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1", revFolderCrdNew.getPath(), "");
+			FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1", revFolderCrdNew.getPath(), "", action.server());
 			pack.downloadPack();
 		
 			new File(revFolderCrdNew.getPath()+"/thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_TumNorBac.png"));
@@ -243,7 +243,7 @@ public class FResouce
 		
 		
 		UUtil.p("Dowanload-Boss-"+boss.idBoss+"-Pack");
-		FPack pack = new FPack(rUrl+boss.version+"/boss/boss"+boss.idImageBos+"_(zkd).pack?cyt=1", revFolderBosNew.getPath(), "");
+		FPack pack = new FPack(rUrl+boss.version+"/boss/boss"+boss.idImageBos+"_(zkd).pack?cyt=1", revFolderBosNew.getPath(), "", action.server());
 		pack.downloadPack();
 		
 		new File(revFolderBosNew.getPath()+"/boss_full"+boss.idImageBos+".png").renameTo(new File(revFolderBosNew.getPath()+"/"+boss.idBoss+"_"+boss.idImageBos+".png"));
@@ -273,7 +273,7 @@ public class FResouce
 				
 				
 				UUtil.p("Dowanload-Itm-Pack");
-				FPack pack = new FPack(rUrl+revServer.revItm()+"/item/item_0_(zkd).pack?cyt=1", revFolderItmNew.getPath(), "");
+				FPack pack = new FPack(rUrl+revServer.revItm()+"/item/item_0_(zkd).pack?cyt=1", revFolderItmNew.getPath(), "", action.server());
 				pack.downloadPack();
 
 				for(File f:revFolderItmNew.listFiles())
@@ -327,7 +327,7 @@ public class FResouce
 			
 			
 			UUtil.p("Dowanload-Res-Pack");
-			FPack pack = new FPack(rUrl+revServer.resRes()+"/res/res0_(zkd).pack?cyt=1", revFolderResNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resRes()+"/res/res0_(zkd).pack?cyt=1", revFolderResNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
 			save("resRes", revServer.resRes());
@@ -357,7 +357,7 @@ public class FResouce
 			
 			
 			UUtil.p("Dowanload-Sou-Pack");
-			FPack pack = new FPack(rUrl+revServer.resSou()+"/sound/sound0_(zkd).pack?cyt=1", revFolderSouNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resSou()+"/sound/sound0_(zkd).pack?cyt=1", revFolderSouNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
 			save("resSou", revServer.resSou());
@@ -385,7 +385,7 @@ public class FResouce
 			revFolderAdvNew.mkdirs();
 			
 			UUtil.p("Dowanload-Adv-Pack");
-			FPack pack = new FPack(rUrl+revServer.resAdv()+"/advbg/advbg0_(zkd).pack?cyt=1", revFolderAdvNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resAdv()+"/advbg/advbg0_(zkd).pack?cyt=1", revFolderAdvNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
 			save("resAdv", revServer.resAdv());
@@ -415,7 +415,7 @@ public class FResouce
 			
 			
 			UUtil.p("Dowanload-Cmp-Pack");
-			FPack pack = new FPack(rUrl+revServer.resCmp()+"/cmpsheet/cmpsheet0_(zkd).pack?cyt=1", revFolderCmpNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resCmp()+"/cmpsheet/cmpsheet0_(zkd).pack?cyt=1", revFolderCmpNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
 			save("resCmp", revServer.resCmp());
@@ -446,7 +446,7 @@ public class FResouce
 			
 			
 			UUtil.p("Dowanload-Gac-Pack");
-			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "", action.server());
 			pack.downloadPack();
 
 			save("resGac", revServer.resGac());
@@ -474,7 +474,7 @@ public class FResouce
 			revFolderBanNew.mkdirs();
 			
 			UUtil.p("Dowanload-Ban-Pack");
-			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
 			save("resBan", revServer.resBan());
@@ -502,7 +502,7 @@ public class FResouce
 			revFolderPvlNew.mkdirs();
 			
 			UUtil.p("Dowanload-Pvl-Pack");
-			FPack pack = new FPack(rUrl+revServer.resPvl()+"/privilege/privilege0_(zkd).pack?cyt=1", revFolderPvlNew.getPath(), "");
+			FPack pack = new FPack(rUrl+revServer.resPvl()+"/privilege/privilege0_(zkd).pack?cyt=1", revFolderPvlNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
 			save("resPvl", revServer.resPvl());
@@ -511,7 +511,9 @@ public class FResouce
 	
 	private File gainData(String kind, String revService, String revClient, String rename) throws Exception
 	{
-		File ctgFileRename = new File(new File(action.server().dirDat(), "ctg"), rename+"-"+revService+".xml");
+		File ctgFile = new File(action.server().dirDat(), "ctg");
+		if(!ctgFile.exists()) ctgFile.mkdirs();
+		File ctgFileRename = new File(ctgFile, rename+"-"+revService+".xml");
 		
 		if(ctgFileRename.exists())
 			ctgFileRename.delete();

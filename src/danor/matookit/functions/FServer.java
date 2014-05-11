@@ -27,7 +27,7 @@ public enum FServer
 	}
 
 	public String server() { return server; }
-	public String res() { return server.substring(0, 1)+"R"; }
+	public String res() { return server.substring(0, 2)+"R"; }
 	public File dirPak() { return dirPak; }
 	public File dirDat() { return dirDat; }
 	public File dirPrg() { return dirExp; }

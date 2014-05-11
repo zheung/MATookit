@@ -117,7 +117,7 @@ public class UConnect extends Thread
 		connect.setRequestMethod("GET");
 		connect.setConnectTimeout(1000 * 24);
 		
-		int[] aryInt = {(option.getString("server").indexOf("CN") != -1)?0:6,1,3,4}; 
+		int[] aryInt = {((option.getString("server").indexOf("CN") != -1)?0:6),1,3,4}; 
 		for(int i:aryInt) 
 		{
 			String[] kv = UKey.Data("Property", String.valueOf(i));
