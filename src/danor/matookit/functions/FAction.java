@@ -10,35 +10,36 @@ public class FAction
 {
 	private final String header;
 	private final String sUrl;
+	private final FServer server;
 
 	public final String cookie;
 	
 	private NArthur arthur;
 	private NRevision rev;
 	
-	public FAction(boolean rqtTime, String cookie) throws Exception
+	public FAction(boolean rqtTime, String cookie, FServer server) throws Exception
 	{
 
 		ULog.log("Action-Init");
 		
-		File dir = new File("./wrk.cn/pak");
-		if(!dir.exists()) dir.mkdir();//ToEH
+		if(!server.dirPak().exists()) server.dirPak().mkdir();//ToEH
 
-		header = "./wrk.cn/pak/" + (rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
-		sUrl = UKey.Data("Server", "CN1")[0];
+		header = server.dirPak().getPath() + (rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
+		sUrl = UKey.Data("Server", server.toString())[0];
+		this.server = server;
 
 		if(cookie == null)
 		{
 			ULog.log("Action-Cookie");
 			
-			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true)
+			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true).put("server", server.toString())
 			.put("cookie", (String)null).put("url", sUrl+UKey.Data("Action", "Cookie")[0])
 			.put("param", (String)null).put("path", header+"1Cookie.xml");
 			
 			UConnect connect = new UConnect(option);
 			File pakFile = connect.result;
 			
-			UConvert.decryptAES(null, pakFile, UKey.Data("CipherAES", "3")[0].getBytes());
+			UConvert.decryptAES(null, pakFile, UKey.Data("CipherAES", server.isCN()?"3":"5")[0].getBytes());
 			UConvert.decodeUrl(null, pakFile);
 			
 			this.cookie = connect.cookie;
@@ -68,7 +69,7 @@ public class FAction
 				prmValues[i-1] = tmpValues[i];
 		}
 		
-		UParam param = new UParam((typAction.equals("Login")));
+		UParam param = new UParam((server.isCN() && typAction.equals("Login")));
 		if(!values[1].equals(""))
 		{
 			String[] prmNames = values[1].split(";");
@@ -79,7 +80,8 @@ public class FAction
 		}
 		
 		UOption newOption = new UOption().put("rqtCookie", false).put("typMethod", true)
-		.put("cookie", this.cookie).put("url", sUrl+values[0]).put("param", param.get(option.getBoolean("rqtDecryptParam"))).put("path", header+typAction+".xml");
+				.put("server", server.toString()).put("cookie", this.cookie).put("url", sUrl+values[0])
+				.put("param", param.get(option.getBoolean("rqtDecryptParam"))).put("path", header+typAction+".xml");
 		
 		UConnect connect = new UConnect(newOption);
 		
@@ -100,8 +102,18 @@ public class FAction
 		ULog.log("Action-Login-"+phone);
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
-		File pakFile = Connect("Login", option, phone, paswd);
 		
+		File pakFile = null;
+		if(server.isCN())
+			pakFile = Connect("Login", option, phone, paswd);
+		else
+		{
+			String param = "35";
+			for(int i=0; i<10; i++) param+=(int)(10*(Math.random()));
+			
+			pakFile = Connect("Login", option, phone, paswd, param);
+		}
+
 		NArthur arthur = null;
 		switch(FGain.GainError(new UXml(pakFile)))
 		{
@@ -395,4 +407,5 @@ public class FAction
 
 	public NArthur arthur() { return arthur; }
 	public NRevision rev() { return rev; }
+	public FServer server() { return server; }
 }

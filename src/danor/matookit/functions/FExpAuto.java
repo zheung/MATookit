@@ -70,7 +70,7 @@ public class FExpAuto extends TimerTask
 			String sl = "Floor-"+idFloor+" Progress-"+result.prog()+"% ";
 			st[0] = idFloor;
 			st[1] = result.prog()+"%";
-			st[2] = result.getExp();
+			st[2] = result.getExp()+"/"+result.restExp();
 			st[3] = result.getGold();
 			
 			LogPrgExplore(result);
@@ -159,7 +159,8 @@ public class FExpAuto extends TimerTask
 	
 	private void LogPrgExplore(NExploreResult result) throws Exception
 	{
-		File log = new File("./wrk.cn/dat/prg/prgArea"+area.idArea()+area.name()+".txt");
+		if(!action.server().dirPrg().exists()) action.server().dirPrg().mkdirs();
+		File log = new File(action.server().dirPrg(), area.idArea()+area.name()+".txt");
 		
 		log.createNewFile();
 		

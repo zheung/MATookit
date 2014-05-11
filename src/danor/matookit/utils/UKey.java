@@ -5,13 +5,15 @@ import java.util.List;
 
 import org.dom4j.Element;
 
+import danor.matookit.functions.FServer;
+
 public class UKey
 {
 	private final UXml xml;
 	
 	public UKey() throws Exception
 	{
-		xml = new UXml(new File("./wrk.cn/dat/arb.xml"));
+		xml = new UXml(new File(FServer.dirDatAll, "arb.xml"));
 	}
 
 	public static synchronized String[] Data(String typKey, String id) throws Exception

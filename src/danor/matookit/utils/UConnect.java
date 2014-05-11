@@ -60,8 +60,9 @@ public class UConnect extends Thread
 		connect.setDoOutput(true);
 		connect.setDoInput(true);
 		connect.setConnectTimeout(1000 * 24);
-		
-		for(int i=0;i<6;i++) 
+
+		int[] aryInt = {(option.getString("server").indexOf("CN") != -1)?0:6,1,2,3,4,5}; 
+		for(int i:aryInt)
 		{
 			String[] kv = UKey.Data("Property", String.valueOf(i));
 			connect.setRequestProperty(kv[0],kv[1].equals(";")?"":kv[1]);
@@ -116,7 +117,7 @@ public class UConnect extends Thread
 		connect.setRequestMethod("GET");
 		connect.setConnectTimeout(1000 * 24);
 		
-		int[] aryInt = {0,1,3,4}; 
+		int[] aryInt = {(option.getString("server").indexOf("CN") != -1)?0:6,1,3,4}; 
 		for(int i:aryInt) 
 		{
 			String[] kv = UKey.Data("Property", String.valueOf(i));

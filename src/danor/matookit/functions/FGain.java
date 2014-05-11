@@ -132,16 +132,18 @@ public class FGain
 
     	xml.move("header>your_data");
     	
-    	for(Object e:xml.list("itemlist"))
-    	{
-    		xml.set((Element)e);
-    		
-    		NItem item = new NItem(xml.value("item_id"));
-    		
-    		item.now(xml.value("num"));
-    		
-    		arthur.items().add(item);
-    	}
+    	List<?> el = xml.list("itemlist");
+    	if(el != null)
+	    	for(Object e:el)
+	    	{
+	    		xml.set((Element)e);
+	    		
+	    		NItem item = new NItem(xml.value("item_id"));
+	    		
+	    		item.now(xml.value("num"));
+	    		
+	    		arthur.items().add(item);
+	    	}
     
     	UUtil.p("Gain-Items");
     }
@@ -507,10 +509,11 @@ public class FGain
 			result.recover(xml.value("recover"));
 			break;
 		case "19":
-			if(!(result.idItem(xml.value("special_item>item_id"))).equals(""))
-				result.getItem(String.valueOf(Integer.parseInt(xml.value("special_item>after_count")) - Integer.parseInt(xml.value("special_item>before_count"))));
-			else
-				result.type("0");
+			if(xml.value("special_item") != null)
+				if(!(result.idItem(xml.value("special_item>item_id"))).equals(""))
+					result.getItem(String.valueOf(Integer.parseInt(xml.value("special_item>after_count")) - Integer.parseInt(xml.value("special_item>before_count"))));
+				else
+					result.type("0");
 			break;
 		case "2":
 			result.frdPoint(xml.value("friendship_point"));
@@ -545,7 +548,7 @@ public class FGain
 		}
 	
 		if((xml.value("special_item")) != null)
-			for(Object e:xml.list("attacker"))
+			for(Object e:xml.list("special_item"))
 			{
 				xml.set((Element)e);
 				boolean flag = false;

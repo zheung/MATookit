@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.dom4j.Element;
 
+import danor.matookit.functions.FServer;
+
 public class UConfig
 {
-	private final UXml xml = new UXml(new File("./wrk.cn/dat/cfg.xml"));
+	private final UXml xml = new UXml(new File(FServer.dirDatAll, "cfg.xml"));
 	
 	private UConfig() throws Exception
 	{

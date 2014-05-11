@@ -2,6 +2,8 @@ package danor.matookit.utils;
 
 import java.io.File;
 
+import danor.matookit.functions.FServer;
+
 public class ULog
 {
 	private final String timeStart;
@@ -12,10 +14,9 @@ public class ULog
 	{
 		timeStart = Long.toString(System.currentTimeMillis());
 		
-		File dir = new File("./wrk.cn/log");
-		if(!dir.exists()) dir.mkdir();//ToEH
+		if(!FServer.dirLogAll.exists()) FServer.dirLogAll.mkdir();//ToEH
 		
-		fileLog = new File("./wrk.cn/log/"+timeStart+".log");
+		fileLog = new File(FServer.dirLogAll, timeStart+".log");
 		fileLog.createNewFile();//ToEH NtTE
 	}
 	

@@ -17,7 +17,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.Timer;
 
 import javax.swing.ImageIcon;
@@ -54,6 +53,8 @@ public class GMain7
 	
 	private JComboBox<String> iptAcout;
 	private JPasswordField iptPaswd;
+	private JComboBox<String> iptServer;
+	private JComboBox<String> iptJumpto;
 	
 	private JButton btnLogin;
 	private JTextField iptFryInterval;
@@ -74,13 +75,9 @@ public class GMain7
 	private JLabel valIfoFriendMax;
 	private JLabel valIfoFriendIvt;
 	private JButton btnIfoCopyName;
-
-	private JCheckBox cbxAutoLogin;
-	private JCheckBox cbxAutoJump;
 	private JCheckBox cbxRemAcount;
 	private JCheckBox cbxRemPasswd;
 
-	private JComboBox<String> cbbJump;
 
 	private JLabel valAP;
 	private JLabel valBC;
@@ -117,7 +114,9 @@ public class GMain7
 
 	private JComboBox<String> cbxExpFloor;
 
-	private final String title = "[DanoR MATookit][For.cn][Version.7.2.9][Build.2014.05.10.A]";
+	private final String title = "[DanoR MATookit][Version.7.3.0][Build.2014.05.11.A]";
+
+	private FServer server;
 
 	private void initialize() throws Exception
 	{
@@ -132,7 +131,7 @@ public class GMain7
 		frmMain.setType(Type.POPUP);
 		frmMain.setAutoRequestFocus(true);
 		frmMain.setTitle(title);
-		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage("./wrk.cn/res/gui/ico.png"));
+		frmMain.setIconImage(Toolkit.getDefaultToolkit().getImage(FServer.dirGuiAll.getPath()+"/ico.png"));
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		frmMain.setBounds((d.width - 848) / 2, (d.height - 480) / 2, 848, 480);
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -259,13 +258,21 @@ public class GMain7
 		pnlInfo.add(pnlLogin);
 		pnlLogin.setLayout(null);
 		
-		JLabel lblAcout = new JLabel("帐号:");
+		JLabel lblAcout = new JLabel("帐号");
 		lblAcout.setBounds(10, 20, 45, 20);
 		pnlLogin.add(lblAcout);
 		
-		JLabel lblPaswd = new JLabel("密码:");
+		JLabel lblPaswd = new JLabel("密码");
 		lblPaswd.setBounds(10, 50, 45, 20);
 		pnlLogin.add(lblPaswd);
+		
+		JLabel lblServer = new JLabel("服务器");
+		lblServer.setBounds(10, 80, 45, 20);
+		pnlLogin.add(lblServer);
+		
+		JLabel lblJumpto = new JLabel("跳转到");
+		lblJumpto.setBounds(165, 80, 45, 20);
+		pnlLogin.add(lblJumpto);
 		
 		iptAcout = new JComboBox<String>();
 		iptAcout.setBounds(65, 20, 130, 20);
@@ -277,19 +284,16 @@ public class GMain7
 		pnlLogin.add(iptPaswd);
 		iptPaswd.setEchoChar((char)0);
 		
-		btnLogin = new JButton("登录");
-		btnLogin.setBounds(205, 20, 125, 50);
-		pnlLogin.add(btnLogin);
+		iptServer = new JComboBox<String>();
+		iptServer.setModel(new DefaultComboBoxModel<String>(new String[] {"国服一", "国服二", "国服三", "海服一"}));
+		iptServer.setBounds(65, 80, 90, 20);
+		pnlLogin.add(iptServer);
 		
-		cbxAutoLogin = new JCheckBox("自动登录");
-		cbxAutoLogin.setEnabled(false);
-		cbxAutoLogin.setBounds(10, 80, 90, 20);
-		pnlLogin.add(cbxAutoLogin);
-		
-		cbxAutoJump = new JCheckBox("自动跳转:");
-		cbxAutoJump.setEnabled(false);
-		cbxAutoJump.setBounds(100, 80, 90, 20);
-		pnlLogin.add(cbxAutoJump);
+		iptJumpto = new JComboBox<String>();
+		iptJumpto.setEnabled(false);
+		iptJumpto.setModel(new DefaultComboBoxModel<String>(new String[] {"智能舔怪", "智能探索"}));
+		iptJumpto.setBounds(220, 80, 90, 20);
+		pnlLogin.add(iptJumpto);
 		
 		cbxRemAcount = new JCheckBox("记住帐号");
 		cbxRemAcount.setEnabled(false);
@@ -298,14 +302,12 @@ public class GMain7
 		
 		cbxRemPasswd = new JCheckBox("记住密码");
 		cbxRemPasswd.setEnabled(false);
-		cbxRemPasswd.setBounds(100, 110, 90, 20);
+		cbxRemPasswd.setBounds(105, 110, 90, 20);
 		pnlLogin.add(cbxRemPasswd);
 		
-		cbbJump = new JComboBox<String>();
-		cbbJump.setEnabled(false);
-		cbbJump.setModel(new DefaultComboBoxModel<String>(new String[] {"智能舔怪"}));
-		cbbJump.setBounds(190, 80, 90, 20);
-		pnlLogin.add(cbbJump);
+		btnLogin = new JButton("登录");
+		btnLogin.setBounds(205, 20, 125, 50);
+		pnlLogin.add(btnLogin);
 		
 		JPanel pnlPoint = new JPanel();
 		pnlPoint.setLayout(null);
@@ -373,22 +375,22 @@ public class GMain7
 		prgBCButton.setBounds(70, 79, 100, 22);
 		pnlPoint.add(prgBCButton);
 		
-		valItmAP = new JLabel("剩余:100瓶");
+		valItmAP = new JLabel("");
 		valItmAP.setHorizontalAlignment(SwingConstants.CENTER);
 		valItmAP.setBounds(20, 110, 70, 20);
 		pnlPoint.add(valItmAP);
 		
-		valItmAPHalf = new JLabel("剩余:100瓶");
+		valItmAPHalf = new JLabel("");
 		valItmAPHalf.setHorizontalAlignment(SwingConstants.CENTER);
 		valItmAPHalf.setBounds(100, 110, 70, 20);
 		pnlPoint.add(valItmAPHalf);
 		
-		valItmBC = new JLabel("剩余:100瓶");
+		valItmBC = new JLabel("");
 		valItmBC.setHorizontalAlignment(SwingConstants.CENTER);
 		valItmBC.setBounds(20, 180, 70, 20);
 		pnlPoint.add(valItmBC);
 		
-		valItmBCHalf = new JLabel("剩余:100瓶");
+		valItmBCHalf = new JLabel("");
 		valItmBCHalf.setHorizontalAlignment(SwingConstants.CENTER);
 		valItmBCHalf.setBounds(100, 180, 70, 20);
 		pnlPoint.add(valItmBCHalf);
@@ -660,17 +662,53 @@ public class GMain7
 		
 		for(String u:user)
 				if(u.startsWith((String)iptAcout.getSelectedItem()))
+				{
 					iptPaswd.setText(u.split(",")[1]);
+					
+					switch(u.split(",")[2])
+					{
+					case "CN1": iptServer.setSelectedIndex(0); server = FServer.CN1; break;
+					case "CN2": iptServer.setSelectedIndex(1); server = FServer.CN2; break;
+					case "CN3": iptServer.setSelectedIndex(2); server = FServer.CN3; break;
+					case "SG1": iptServer.setSelectedIndex(3); server = FServer.SG1; break;
+					}
+				}
 	//选择用户时同步密码到密码框
 		iptAcout.addItemListener((e)->
 		{
 			if(e.getStateChange() == ItemEvent.SELECTED)
-				for(String u:user)
-					if(u.startsWith((String)iptAcout.getSelectedItem()))
-						iptPaswd.setText(u.split(",")[1]);
+				try
+				{
+					for(String u:UConfig.load("User"))
+						if(u.startsWith((String)iptAcout.getSelectedItem()))
+						{
+							iptPaswd.setText(u.split(",")[1]);
+							
+							switch(u.split(",")[2])
+							{
+							case "CN1": iptServer.setSelectedIndex(0); server = FServer.CN1; break;
+							case "CN2": iptServer.setSelectedIndex(1); server = FServer.CN2; break;
+							case "CN3": iptServer.setSelectedIndex(2); server = FServer.CN3; break;
+							case "SG1": iptServer.setSelectedIndex(3); server = FServer.SG1; break;
+							}
+							
+						}
+				} catch (Exception e1) { e1.printStackTrace(); }
+		});
+	//选择大区时同步server属性
+		iptServer.addItemListener((e)->
+		{
+			if(e.getStateChange() == ItemEvent.SELECTED)
+				switch((String)iptServer.getSelectedItem())
+				{
+				case "国服一区": server = FServer.CN1; break;
+				case "国服二区": server = FServer.CN2; break;
+				case "国服三区": server = FServer.CN3; break;
+				case "海服一区": server = FServer.SG1; break;
+				}
 		});
 	//设置托盘图标
-		tray = new TrayIcon(new ImageIcon("./wrk.cn/res/gui/ico.png").getImage(), "MATookit");
+		tray = new TrayIcon(new ImageIcon(FServer.dirGuiAll +"/ico.png").getImage(), "MATookit");
 		tray.setImageAutoSize(true);
 		
 		SystemTray.getSystemTray().add(tray);
@@ -698,8 +736,7 @@ public class GMain7
 	//登录
 		btnLogin.addActionListener((e)->
 		{
-			File dirPak = new File("./wrk.cn/pak");
-			if(!dirPak.exists()) dirPak.mkdirs();
+			if(!server.dirPak().exists()) server.dirPak().mkdirs();
 			
 			new Thread(()->
 			{
@@ -710,9 +747,11 @@ public class GMain7
 
 					iptAcout.setEnabled(false);
 					iptPaswd.setEnabled(false);
+					iptServer.setEnabled(false);
 					try
 					{
-						action = new FAction(false, null);
+						action = new FAction(false, null, server);
+						
 						action.Login((String) iptAcout.getSelectedItem(), new String(iptPaswd.getPassword()));
 
 						UConfig.save("LastUser", (String)iptAcout.getSelectedItem());
@@ -723,7 +762,7 @@ public class GMain7
 					
 					if(action.arthur() != null)
 					{
-						frmMain.setTitle(frmMain.getTitle()+"["+(String)iptAcout.getSelectedItem()+"]["+action.arthur().base().name()+"]");
+						frmMain.setTitle(frmMain.getTitle()+"["+server.toString()+"]["+(String)iptAcout.getSelectedItem()+"]["+action.arthur().base().name()+"]");
 						tray.setToolTip("["+(String)iptAcout.getSelectedItem()+"]["+action.arthur().base().name()+"]");
 						
 						btnLogin.setText("登出");
@@ -736,6 +775,7 @@ public class GMain7
 						btnLogin.setText("登录");
 						iptAcout.setEnabled(true);
 						iptPaswd.setEnabled(true);
+						iptServer.setEnabled(true);
 						
 						action = null;
 					}
@@ -749,6 +789,7 @@ public class GMain7
 					btnLogin.setText("登录");
 					iptAcout.setEnabled(true);
 					iptPaswd.setEnabled(true);
+					iptServer.setEnabled(true);
 					
 					frmMain.setTitle(title);
 					tray.setToolTip("[DanoR MATookit]");

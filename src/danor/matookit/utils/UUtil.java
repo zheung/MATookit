@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import danor.matookit.functions.FServer;
+
 public class UUtil
 {
 	
@@ -89,7 +91,7 @@ public class UUtil
 	
 	public static void Sound() throws Exception
 	{
-		Applet.newAudioClip(new File("./wrk.cn/res/gui/rin.wav").toURI().toURL()).play();
+		Applet.newAudioClip(new File(FServer.dirGuiAll, "rin.wav").toURI().toURL()).play();
 	}
 	
 	public static <T> List<T> reverse(List<T> list)
