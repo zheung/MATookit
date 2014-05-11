@@ -121,10 +121,10 @@ public class FAction
 			arthur = FGain.GainArthur(pakFile);
 			rev = FGain.GainRevision(pakFile);
 			
-			ULog.log("Relust-"+phone+"-Success");
+			ULog.log("Reulst-"+phone+"-Success");
 			break;
 		case "1000":
-			ULog.log("Relust-"+phone+"-Failed-Wrong.Phone.or.Password");
+			ULog.log("Reulst-"+phone+"-Failed-Wrong.Phone.or.Password");
 		}
 		
 		this.arthur = arthur;

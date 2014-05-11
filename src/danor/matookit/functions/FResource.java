@@ -10,7 +10,7 @@ import org.dom4j.Element;
 import danor.matookit.natures.NRevision;
 import danor.matookit.utils.*;
 
-public class FResouce
+public class FResource
 {
 	private final FAction action;
 	
@@ -23,7 +23,7 @@ public class FResouce
 
 	private final String rUrl;
 	
-	public FResouce(FAction action) throws Exception
+	public FResource(FAction action) throws Exception
 	{
 		this.action = action;
 		revServer = action.rev();
@@ -96,7 +96,8 @@ public class FResouce
 			for(String i:FGain.GainImagedl(pakFile, "card").split(","))
 				for(NCrd c:list)
 					if(i.equals(c.idCard))
-						downCrd(c);
+//					if(i.equals(c.idCard) && Integer.parseInt(i) > 301)
+						doadCrd(c);
 			
 			save("revCrd", revServer.revCrd());
 		}
@@ -122,7 +123,7 @@ public class FResouce
 		}
 		return list;
 	}
-	private void downCrd(NCrd card) throws Exception
+	private void doadCrd(NCrd card) throws Exception
 	{
 		File revFolderCrdNew = new File(revFolderCrd, "_new/"+card.idCard);
 		revFolderCrdNew.mkdirs();
@@ -131,7 +132,7 @@ public class FResouce
 		UOption option;
 		UConnect connect;
 		try {
-			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Nor-Bac");
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Bac");
 			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
 					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png");
@@ -140,7 +141,7 @@ public class FResouce
 		} catch(Exception e) { ULog.log(e.toString()); };
 		
 		try {
-			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Nor-Max");
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max");
 			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
 					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png");
@@ -149,7 +150,7 @@ public class FResouce
 		} catch(Exception e) { ULog.log(e.toString()); };
 
 		try {
-			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Hlo-Nor");
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Nor");
 			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
 					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloBac.png");
@@ -158,7 +159,7 @@ public class FResouce
 		} catch(Exception e) { ULog.log(e.toString()); };
 
 		try {
-			UUtil.p("Dowanload-Card"+card.idCard+"-Ful-Hlo-Max");
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max");
 			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
 					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1")
 					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png");
@@ -167,7 +168,7 @@ public class FResouce
 		} catch(Exception e) { ULog.log(e.toString()); };
 		
 		try {
-			UUtil.p("Dowanload-Card-Pack");
+			ULog.log("Doad-Crd-"+card.idCard+"-Pack");
 			FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1", revFolderCrdNew.getPath(), "", action.server());
 			pack.downloadPack();
 		
