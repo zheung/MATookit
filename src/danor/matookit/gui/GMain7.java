@@ -17,6 +17,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 import java.util.Timer;
 
 import javax.swing.ImageIcon;
@@ -29,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JCheckBox;
@@ -42,6 +44,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+
+import java.awt.Font;
 
 public class GMain7
 {
@@ -125,6 +129,13 @@ public class GMain7
 		UIManager.put("RootPane.setupButtonVisible", false);
 
         org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+        
+		for(Enumeration<?> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();)
+		{
+			Object key = keys.nextElement();
+			if(UIManager.get(key) instanceof FontUIResource)
+				UIManager.put(key, new FontUIResource(new Font("Arial Unicode MS", Font.PLAIN, 12)));
+		}
 
 		frmMain = new JFrame();
 		frmMain.setResizable(false);
@@ -285,7 +296,7 @@ public class GMain7
 		iptPaswd.setEchoChar((char)0);
 		
 		iptServer = new JComboBox<String>();
-		iptServer.setModel(new DefaultComboBoxModel<String>(new String[] {"国服一", "国服二", "国服三", "海服一"}));
+		iptServer.setModel(new DefaultComboBoxModel<String>(new String[] {"国服一区", "国服二区", "国服三区", "海服一区","韩服一区"}));
 		iptServer.setBounds(65, 80, 90, 20);
 		pnlLogin.add(iptServer);
 		
@@ -644,7 +655,7 @@ public class GMain7
 		tabMain.addTab("卡牌选择", null, panel_12, null);
 //		tabMain.setSelectedIndex(1);
 	}
-
+	
 	public GMain7() throws Exception //初始化
 	{
 		ULog.log("Gui-Main-Init");
@@ -671,6 +682,7 @@ public class GMain7
 					case "CN2": iptServer.setSelectedIndex(1); server = FServer.CN2; break;
 					case "CN3": iptServer.setSelectedIndex(2); server = FServer.CN3; break;
 					case "SG1": iptServer.setSelectedIndex(3); server = FServer.SG1; break;
+					case "KR1": iptServer.setSelectedIndex(4); server = FServer.KR1; break;
 					}
 				}
 	//选择用户时同步密码到密码框
@@ -690,6 +702,7 @@ public class GMain7
 							case "CN2": iptServer.setSelectedIndex(1); server = FServer.CN2; break;
 							case "CN3": iptServer.setSelectedIndex(2); server = FServer.CN3; break;
 							case "SG1": iptServer.setSelectedIndex(3); server = FServer.SG1; break;
+							case "KR1": iptServer.setSelectedIndex(4); server = FServer.KR1; break;
 							}
 							
 						}
@@ -705,6 +718,7 @@ public class GMain7
 				case "国服二区": server = FServer.CN2; break;
 				case "国服三区": server = FServer.CN3; break;
 				case "海服一区": server = FServer.SG1; break;
+				case "韩服一区": server = FServer.KR1; break;
 				}
 		});
 	//设置托盘图标

@@ -222,19 +222,20 @@ public class FGain
     	fairy.maxHP(xml.value("hp_max"));
 
     	xml.move("attacker_history");
-    	for(Object e:xml.list("attacker"))
-    	{
-    		NBattleAttacker attacker = new NBattleAttacker(GainFairyAttacker((Element)e));
-    		
-    		xml.set((Element)e);
-    		attacker.attackHP(xml.value("attack_point"));
-    		attacker.attackNow(xml.value("attack_times"));
-    		
-    		if(attacker.match().idArthur().equals(arthur.base().idArthur()))
-    			fairy.battled(true);
-    		
-    		fairy.battleAttackers().add(attacker);
-    	}
+    	if((xml.value("attacker")) != null)
+	    	for(Object e:xml.list("attacker"))
+	    	{
+	    		NBattleAttacker attacker = new NBattleAttacker(GainFairyAttacker((Element)e));
+	    		
+	    		xml.set((Element)e);
+	    		attacker.attackHP(xml.value("attack_point"));
+	    		attacker.attackNow(xml.value("attack_times"));
+	    		
+	    		if(attacker.match().idArthur().equals(arthur.base().idArthur()))
+	    			fairy.battled(true);
+	    		
+	    		fairy.battleAttackers().add(attacker);
+	    	}
     	
 	}
 	public static NMatch GainFairyAttacker(Element e) throws Exception

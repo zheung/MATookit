@@ -109,7 +109,7 @@ public class FAction
 //操作
 	public NArthur Login(String phone, String paswd) throws Exception
 	{
-		ULog.log("Action-Login-"+phone);
+		ULog.log("Action-Login-"+server.toString()+"-"+phone);
 		
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
 		
