@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.dom4j.Element;
+
 import danor.matookit.functions.FServer;
 
 public class UUtil
@@ -77,18 +79,6 @@ public class UUtil
 		return original;
 	}
 
-//	public static void Sound() throws Exception
-//	{
-//		File audioFile = new File("./res/Ring.mp3");
-//		Player audioPlayer = Manager.createRealizedPlayer(audioFile.toURI().toURL());
-//		
-//		audioPlayer.start();
-//		Thread.currentThread();
-//		Thread.sleep((long)(int)(audioPlayer.getDuration().getSeconds() * 1000) + 500);
-//		audioPlayer.stop();
-//		audioPlayer.close();
-//	}
-	
 	public static void Sound() throws Exception
 	{
 		Applet.newAudioClip(new File(FServer.dirGuiAll, "rin.wav").toURI().toURL()).play();
@@ -99,5 +89,43 @@ public class UUtil
 		List<T> lstReverse = new ArrayList<T>(list);
 		Collections.reverse(lstReverse);
 		return lstReverse;
+	}
+
+	public static synchronized String[] Key(File fileArb, String typKey, String id) throws Exception
+	{
+		UXml xml = new UXml(fileArb);
+		
+		List<?> lstElement = xml.list("."+typKey+">Item");
+
+		String[] result = null;
+		for(Object e:lstElement)
+    	{
+			xml.set((Element)e);
+			
+			if(xml.value("ID").equals(id))
+				switch(typKey)
+				{
+				case "Action":
+					result = new String[2];
+					result[0] = xml.value("Url");
+					result[1] = xml.value("Params");
+					return result;
+				case "Cipher":
+					result = new String[1];
+					result[0] = xml.value("Key");
+					return result;
+				case "Property":
+					result = new String[2];
+					result[0] = xml.value("Key");
+					result[1] = xml.value("Value");
+					return result;
+				case "Server":
+					result = new String[1];
+					result[0] = xml.value("Url");
+					return result;
+				}
+    	}
+		
+		return null;
 	}
 }

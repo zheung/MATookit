@@ -7,10 +7,10 @@ import danor.matookit.utils.*;
 
 public class FDownload
 {
-	public static void dwnMainbg(String kind) throws Exception
+	public static void dwnMainbg(String kind, FServer server) throws Exception
 	{
 		UUtil.pp("<Download-Mainbg>");
-		String rUrl = UKey.Data("Server", "CN1")[0];
+		String rUrl = UUtil.Key(server.fileArb(), "Server", "CN1")[0];
 		
 //		int[] levels = {1,5,10,20,30,40,50,60,70,80,90,100};
 		int[] levels = {5,10,20,30,40,50,60,70,80,90,100};
@@ -50,7 +50,7 @@ public class FDownload
 	{
 		UUtil.p("<Download-Card> "+dataCard.name()+"-"+dataCard.idCard());
 		
-		String rUrl = UKey.Data("Server", "CN1")[0];
+		String rUrl = UUtil.Key(server.fileArb(), "Server", "CN1")[0];
 		
 		File fld = new File("./dat/Card/"+dataCard.version()+"/"+dataCard.name());
 		if(!fld.exists()) fld.mkdirs();
@@ -59,26 +59,34 @@ public class FDownload
 		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", rUrl+dataCard.version()+"/card_full/full_thumbnail_chara_"+(dataCard.idImageNorrmal().equals("None")?dataCard.idCard():dataCard.idImageNorrmal())+"?cyt=1")
 				.put("param", (String)null).put("path", fld.getPath()+"\\[" + dataCard.name() + "][普卡][普].png");
+		
+		int i=0;
+		String[][] pp = new String[4][2];
+		for(int ii:new int[]{0,1,3,4}) pp[i++] = UUtil.Key(server.fileArb(), "Property", ii+"");
+		option.put("property", pp);
+		
 		UConnect connect = new UConnect(option);
-		UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
+		UConvert.decryptAES(null, connect.result, UUtil.Key(server.fileArb(), "CipherAES", "1")[0].getBytes("utf-8"));
 		UUtil.p("Dowanload-Card-Full-Max");
 		option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", rUrl+dataCard.version()+"/card_full_max/full_thumbnail_chara_"+(dataCard.idImageNorrmal().equals("None")?"5"+dataCard.idCard():dataCard.idImageArousal())+"?cyt=1")
 				.put("param", (String)null).put("path", fld.getPath()+"\\[" + dataCard.name() + "][普卡][满].png");
+		
+		
 		connect = new UConnect(option);
-		UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
+		UConvert.decryptAES(null, connect.result, UUtil.Key(server.fileArb(), "CipherAES", "1")[0].getBytes("utf-8"));
 		UUtil.p("Dowanload-Card-Full-Hlo-Bac");
 		option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", rUrl+dataCard.version()+"/card_full_h/full_thumbnail_chara_"+(dataCard.idImageNorrmal().equals("None")?dataCard.idCard():dataCard.idImageNorrmal())+"_horo?cyt=1")
 				.put("param", (String)null).put("path", fld.getPath()+"\\[" + dataCard.name() + "][闪卡][普].png");
 		connect = new UConnect(option);
-		UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
+		UConvert.decryptAES(null, connect.result, UUtil.Key(server.fileArb(), "CipherAES", "1")[0].getBytes("utf-8"));
 		UUtil.p("Dowanload-Card-Full-Hlo-Max");
 		option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", rUrl+dataCard.version()+"/card_full_h_max/full_thumbnail_chara_"+(dataCard.idImageNorrmal().equals("None")?"5"+dataCard.idCard():dataCard.idImageArousal())+"_horo?cyt=1")
 				.put("param", (String)null).put("path", fld.getPath()+"\\[" + dataCard.name() + "][闪卡][满].png");
 		connect = new UConnect(option);
-		UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
+		UConvert.decryptAES(null, connect.result, UUtil.Key(server.fileArb(), "CipherAES", "1")[0].getBytes("utf-8"));
 		
 		UUtil.p("Dowanload-Card-Pack");
 		FPack pack = new FPack(rUrl+dataCard.version()+"/card/card"+dataCard.idCard()+"_(zkd).pack?cyt=1", fld.getPath(), "", server);

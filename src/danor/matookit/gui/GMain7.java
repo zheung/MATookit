@@ -114,7 +114,7 @@ public class GMain7
 
 	private JComboBox<String> cbxExpFloor;
 
-	private final String title = "[DanoR MATookit][Version.7.3.0][Build.2014.05.11.A]";
+	private final String title = "[DanoR MATookit][Version.7.3.2][Build.2014.05.12.A]";
 
 	private FServer server;
 

@@ -61,12 +61,8 @@ public class UConnect extends Thread
 		connect.setDoInput(true);
 		connect.setConnectTimeout(1000 * 24);
 
-		int[] aryInt = {(option.getString("server").indexOf("CN") != -1)?0:6,1,2,3,4,5}; 
-		for(int i:aryInt)
-		{
-			String[] kv = UKey.Data("Property", String.valueOf(i));
-			connect.setRequestProperty(kv[0],kv[1].equals(";")?"":kv[1]);
-		}
+		for(String[] ss:option.getStrings("property"))
+			connect.setRequestProperty(ss[0],ss[1].equals(";")?"":ss[1]);
 	//设置cookie
 		if(option.getString("cookie") != null)
 		{
@@ -117,12 +113,8 @@ public class UConnect extends Thread
 		connect.setRequestMethod("GET");
 		connect.setConnectTimeout(1000 * 24);
 		
-		int[] aryInt = {((option.getString("server").indexOf("CN") != -1)?0:6),1,3,4}; 
-		for(int i:aryInt) 
-		{
-			String[] kv = UKey.Data("Property", String.valueOf(i));
-			connect.setRequestProperty(kv[0],kv[1].equals(";")?"":kv[1]);
-		}
+		for(String[] ss:option.getStrings("property"))
+			connect.setRequestProperty(ss[0],ss[1].equals(";")?"":ss[1]);
 	//判断状态
 		codResponse = connect.getResponseCode();
 		if(codResponse == 200)
@@ -142,10 +134,7 @@ public class UConnect extends Thread
 			File pakFile = new File(option.getString("path"));
 			pakFile.createNewFile();
 			
-//			if(option.getBoolean("rqtDecrypt"))
-//				FcConvert.decryptAES(baos.toByteArray(), pakFile, db.Data("CipherAES", "1")[0].getBytes("utf-8"));
-//			else
-				UUtil.Output(pakFile, baos.toByteArray(), false);
+			UUtil.Output(pakFile, baos.toByteArray(), false);
 			
 			return pakFile;	
 		}

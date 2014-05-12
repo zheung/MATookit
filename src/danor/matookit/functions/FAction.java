@@ -24,8 +24,8 @@ public class FAction
 		
 		if(!server.dirPak().exists()) server.dirPak().mkdir();//ToEH
 
-		header = server.dirPak().getPath() + (rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
-		sUrl = UKey.Data("Server", server.toString())[0];
+		header = server.dirPak().getPath()+"/"+(rqtTime?(Long.toString(System.currentTimeMillis()) + "-"):"");
+		sUrl = UUtil.Key(server.fileArb(), "Server", server.toString())[0];
 		this.server = server;
 
 		if(cookie == null)
@@ -33,13 +33,18 @@ public class FAction
 			ULog.log("Action-Cookie");
 			
 			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true).put("server", server.toString())
-			.put("cookie", (String)null).put("url", sUrl+UKey.Data("Action", "Cookie")[0])
+			.put("cookie", (String)null).put("url", sUrl+UUtil.Key(server.fileArb(), "Action", "Cookie")[0])
 			.put("param", (String)null).put("path", header+"1Cookie.xml");
+			
+			String[][] pp = new String[6][2];
+			for(int i=0;i<6;i++)
+				pp[i] = UUtil.Key(server.fileArb(), "Property", i+"");
+			option.put("property", pp);
 			
 			UConnect connect = new UConnect(option);
 			File pakFile = connect.result;
 			
-			UConvert.decryptAES(null, pakFile, UKey.Data("CipherAES", server.isCN()?"3":"5")[0].getBytes());
+			UConvert.decryptAES(null, pakFile, UUtil.Key(server.fileArb(), "Cipher", "Cok")[0].getBytes());
 			UConvert.decodeUrl(null, pakFile);
 			
 			this.cookie = connect.cookie;
@@ -55,7 +60,7 @@ public class FAction
 	*/
 	public File Connect(String typAction, UOption option, String...prmValues) throws Exception 
 	{
-		String[] values = UKey.Data("Action", typAction);
+		String[] values = UUtil.Key(server.fileArb(), "Action", typAction);
 
 		if(typAction.equals("Update"))
 		{
@@ -69,7 +74,7 @@ public class FAction
 				prmValues[i-1] = tmpValues[i];
 		}
 		
-		UParam param = new UParam((server.isCN() && typAction.equals("Login")));
+		UParam param = new UParam((server.isCN() && typAction.equals("Login")), UUtil.Key(server.fileArb(), "Cipher", "Prm")[0]);
 		if(!values[1].equals(""))
 		{
 			String[] prmNames = values[1].split(";");
@@ -83,10 +88,15 @@ public class FAction
 				.put("server", server.toString()).put("cookie", this.cookie).put("url", sUrl+values[0])
 				.put("param", param.get(option.getBoolean("rqtDecryptParam"))).put("path", header+typAction+".xml");
 		
+		String[][] pp = new String[6][2];
+		for(int i=0;i<6;i++)
+			pp[i] = UUtil.Key(server.fileArb(), "Property", i+"");
+		newOption.put("property", pp);
+		
 		UConnect connect = new UConnect(newOption);
 		
 		if(option.getBoolean("rqtDecryptFile"))
-			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "0")[0].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UUtil.Key(server.fileArb(), "Cipher", "Pak")[0].getBytes("utf-8"));
 
 		if(option.getBoolean("rqtFormatFile"))
 			UConvert.xmlFormat(connect.result);
@@ -121,23 +131,25 @@ public class FAction
 			arthur = FGain.GainArthur(pakFile);
 			rev = FGain.GainRevision(pakFile);
 			
-			ULog.log("Reulst-"+phone+"-Success");
+			ULog.log("Result-"+phone+"-Success");
 			break;
 		case "1000":
-			ULog.log("Reulst-"+phone+"-Failed-Wrong.Phone.or.Password");
+			ULog.log("Result-"+phone+"-Failed-Wrong.Phone.or.Password");
 		}
 		
 		this.arthur = arthur;
 		return arthur;
 	}
 	
-	public File Update(String typRes,String rev) throws Exception
+	public File Update(String typRes,String rev)
 	{
 		UUtil.p("Action-Update-"+typRes);
 		
-		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", typRes.equals("card")?false:true);
+		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
 		
-		File pakFile = Connect("Update", option, typRes, cookie, rev);
+		File pakFile = null;
+		try	{ pakFile = Connect("Update", option, typRes, cookie, rev); }
+		catch (Exception e) { e.printStackTrace(); }
 		
 		File renameFile = new File(pakFile.getParent()+"/"+typRes+"-"+rev+".xml");
 		

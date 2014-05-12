@@ -76,7 +76,7 @@ public class FPack
 			if(lstFileName.get(j).indexOf("rja") == -1)
 			{
 				File rnf = new File(f.getPath()+".png");
-				UConvert.decryptAES(fba, rnf, UKey.Data("CipherAES", "1")[0].getBytes());
+				UConvert.decryptAES(fba, rnf, UUtil.Key(server.fileArb(), "CipherAES", "1")[0].getBytes());
 			
 				UUtil.p(lstFileName.get(j)+"-Decrypt");
 			}
@@ -107,6 +107,11 @@ public class FPack
 		UConnect connect = new UConnect(option);
 		File pakFile = connect.result;
 		
+		int i = 0;
+		String[][] pp = new String[4][2];
+		for(int ii:new int[]{0,1,3,4}) pp[i++] = UUtil.Key(server.fileArb(), "Property", ii+"");
+		option.put("property", pp);
+		
 		byte[] bytes = UUtil.Input(pakFile);
 		
 //		UUtil.p("Pack长度-" + btoi(bytes[0x3], bytes[0x4], bytes[0x5]));
@@ -115,14 +120,14 @@ public class FPack
 
 		if(cntPack == 1)
 		{
-			if(btoi(bytes[0x11]) != 0)
+			if(btoi(bytes[0x11]) != 0 && pakFile.getName().indexOf("sound") == -1)
 				decompressPack(pakFile);
 		}
 		else
 		{
 			pakFile.delete();
 			
-			int i = 1;
+			i = 1;
 			
 			while(i < cntPack)
 			{
@@ -133,7 +138,7 @@ public class FPack
 				ps = urlPack.split("/");
 				
 				option = new UOption().put("rqtCookie", false).put("typMethod", false)
-						.put("cookie", (String)null).put("url", urlPack)
+						.put("cookie", (String)null).put("url", urlPack).put("server", server.toString())
 						.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
 				connect = new UConnect(option);
 				pakFile = connect.result;

@@ -308,6 +308,9 @@ public class UConvert
 	
 	public static void xmlFormat(File cvtFile) throws Exception
 	{
+		String content = new String(UUtil.Input(cvtFile), "utf-8").replaceAll("&#10;", "|").replaceAll("&", "^");
+		UUtil.Output(cvtFile, content.getBytes("utf-8"), false);
+		
 		Document d = new SAXReader().read(cvtFile);
 		XMLWriter output = new XMLWriter(new FileOutputStream(cvtFile), UXml.ofm);
 		output.write(d);

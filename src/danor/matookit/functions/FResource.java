@@ -32,7 +32,7 @@ public class FResource
 		revFolderBos = new File(action.server().dirRes(), "bos");
 		revFolderCrd = new File(action.server().dirRes(), "crd");
 		
-		rUrl = UKey.Data("Server", action.server().res())[0];
+		rUrl = UUtil.Key(action.server().fileArb(), "Server", action.server().res())[0];
 		
 		if(!revFile.exists())
 		{
@@ -66,7 +66,7 @@ public class FResource
 		}
 	}
 //rev+res
-	public void gainCrd() throws Exception
+	public void gainCrd(int form) throws Exception
 	{
 		if(revClient.revCrd().equals("0"))
 			revFolderCrd.mkdirs();
@@ -74,9 +74,6 @@ public class FResource
 		if(Integer.parseInt(revServer.revCrd()) > Integer.parseInt(revClient.revCrd()))
 		{
 			File pakFile = gainData("card", revServer.revCrd(), revClient.revCrd(), "crd");
-			String content = new String(UUtil.Input(pakFile), "utf-8").replaceAll("&#10;", "|").replaceAll("&", "^");
-			UUtil.Output(pakFile, content.getBytes("utf-8"), false);
-			UConvert.xmlFormat(pakFile);
 			
 			List<NCrd> list = readCrd(pakFile);
 			
@@ -95,8 +92,7 @@ public class FResource
 			
 			for(String i:FGain.GainImagedl(pakFile, "card").split(","))
 				for(NCrd c:list)
-					if(i.equals(c.idCard))
-//					if(i.equals(c.idCard) && Integer.parseInt(i) > 301)
+					if(i.equals(c.idCard) && Integer.parseInt(i) >= form)
 						doadCrd(c);
 			
 			save("revCrd", revServer.revCrd());
@@ -128,44 +124,50 @@ public class FResource
 		File revFolderCrdNew = new File(revFolderCrd, "_new/"+card.idCard);
 		revFolderCrdNew.mkdirs();
 		
-		
 		UOption option;
 		UConnect connect;
-		try {
-			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Bac");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
-					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
-					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png");
-			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
-		} catch(Exception e) { ULog.log(e.toString()); };
+		
+		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Bac");
+		option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+				.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
+				.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png");
+
+		int i=0;
+		String[][] pp = new String[4][2];
+		for(int ii:new int[]{0,1,3,4}) pp[i++] = UUtil.Key(action.server().fileArb(), "Property", ii+"");
+		option.put("property", pp);
 		
 		try {
-			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
-					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1")
-					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
-		} catch(Exception e) { ULog.log(e.toString()); };
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
+		
+		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max");
+		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png")
+		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1");
+				
+		try {
+			connect = new UConnect(option);
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
+
+		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Nor");
+		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloBac.png")
+		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1");
 
 		try {
-			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Nor");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
-					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1")
-					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloBac.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
-		} catch(Exception e) { ULog.log(e.toString()); };
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 
+		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max");
+		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png")
+		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1");
+		
 		try {
-			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max");
-			option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
-					.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1")
-					.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png");
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UKey.Data("CipherAES", "1")[0].getBytes("utf-8"));
-		} catch(Exception e) { ULog.log(e.toString()); };
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 		
 		try {
 			ULog.log("Doad-Crd-"+card.idCard+"-Pack");
@@ -180,10 +182,10 @@ public class FResource
 			new File(revFolderCrdNew.getPath()+"/face_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_FacMax.png"));
 			new File(revFolderCrdNew.getPath()+"/adv_chara"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_AdvBac.png"));
 			new File(revFolderCrdNew.getPath()+"/adv_chara"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_AdvMax.png"));
-		} catch(Exception e) { ULog.log(e.toString()); };
+		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 	}
 	
-	public void gainBos() throws Exception
+	public void gainBos(int form) throws Exception
 	{
 		if(revClient.revBos().equals("0"))
 			revFolderBos.mkdirs();
@@ -208,8 +210,8 @@ public class FResource
 				
 				for(String i:FGain.GainImagedl(pakFile, "boss").split(","))
 					for(NBos b:list)
-						if(i.equals(b.idBoss))
-							downBos(b);
+						if(i.equals(b.idBoss) && Integer.parseInt(i) >= form)
+							doadBos(b);
 			}
 
 			save("revBos", revServer.revBos());
@@ -235,15 +237,12 @@ public class FResource
 		}
 		return list;
 	}
-	private void downBos(NBos boss) throws Exception
+	private void doadBos(NBos boss) throws Exception
 	{
 		File revFolderBosNew = new File(revFolderBos, "_new");
-		
 		revFolderBosNew.mkdirs();
 		
-		
-		
-		UUtil.p("Dowanload-Boss-"+boss.idBoss+"-Pack");
+		ULog.log("Doad-Bos-"+boss.idBoss+"-Pack");
 		FPack pack = new FPack(rUrl+boss.version+"/boss/boss"+boss.idImageBos+"_(zkd).pack?cyt=1", revFolderBosNew.getPath(), "", action.server());
 		pack.downloadPack();
 		
@@ -272,8 +271,7 @@ public class FResource
 					f.renameTo(oldFile);
 				}
 				
-				
-				UUtil.p("Dowanload-Itm-Pack");
+				ULog.log("Doad-Itm-Pack");
 				FPack pack = new FPack(rUrl+revServer.revItm()+"/item/item_0_(zkd).pack?cyt=1", revFolderItmNew.getPath(), "", action.server());
 				pack.downloadPack();
 
@@ -289,6 +287,7 @@ public class FResource
 	{
 		if(Integer.parseInt(revServer.revCtg()) > Integer.parseInt(revClient.revCtg()))
 		{
+			ULog.log("Doad-Ctg");
 			gainData("card_category", revServer.revCtg(), revClient.revCtg(), "ctg");
 			
 			save("revCtg", revServer.revCtg());
@@ -298,6 +297,7 @@ public class FResource
 	{
 		if(Integer.parseInt(revServer.revCmb()) > Integer.parseInt(revClient.revCmb()))
 		{
+			ULog.log("Doad-Cmb");
 			gainData("combo", revServer.revCmb(), revClient.revCmb(), "cmb");
 			
 			save("revCmb", revServer.revCmb());
@@ -325,9 +325,7 @@ public class FResource
 			revFolderResNew = new File(revFolderRes, "_new/"+revServer.resRes());
 			revFolderResNew.mkdirs();
 			
-			
-			
-			UUtil.p("Dowanload-Res-Pack");
+			ULog.log("Doad-Res-Pack");
 			FPack pack = new FPack(rUrl+revServer.resRes()+"/res/res0_(zkd).pack?cyt=1", revFolderResNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
@@ -385,7 +383,7 @@ public class FResource
 			revFolderAdvNew = new File(revFolderAdv, "_new/"+revServer.resAdv());
 			revFolderAdvNew.mkdirs();
 			
-			UUtil.p("Dowanload-Adv-Pack");
+			ULog.log("Doad-Adv-Pack");
 			FPack pack = new FPack(rUrl+revServer.resAdv()+"/advbg/advbg0_(zkd).pack?cyt=1", revFolderAdvNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
@@ -415,7 +413,7 @@ public class FResource
 			
 			
 			
-			UUtil.p("Dowanload-Cmp-Pack");
+			ULog.log("Doad-Cmp-Pack");
 			FPack pack = new FPack(rUrl+revServer.resCmp()+"/cmpsheet/cmpsheet0_(zkd).pack?cyt=1", revFolderCmpNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
@@ -446,7 +444,7 @@ public class FResource
 			
 			
 			
-			UUtil.p("Dowanload-Gac-Pack");
+			ULog.log("Doad-Gac-Pack");
 			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "", action.server());
 			pack.downloadPack();
 
@@ -474,7 +472,7 @@ public class FResource
 			revFolderBanNew = new File(revFolderBan, "_new/"+revServer.resBan());
 			revFolderBanNew.mkdirs();
 			
-			UUtil.p("Dowanload-Ban-Pack");
+			ULog.log("Doad-Ban-Pack");
 			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
@@ -502,7 +500,7 @@ public class FResource
 			revFolderPvlNew = new File(revFolderPvl, "_new/"+revServer.resPvl());
 			revFolderPvlNew.mkdirs();
 			
-			UUtil.p("Dowanload-Pvl-Pack");
+			ULog.log("Doad-Pvl-Pack");
 			FPack pack = new FPack(rUrl+revServer.resPvl()+"/privilege/privilege0_(zkd).pack?cyt=1", revFolderPvlNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
@@ -519,7 +517,8 @@ public class FResource
 		if(ctgFileRename.exists())
 			ctgFileRename.delete();
 		
-		action.Update(kind, revClient).renameTo(ctgFileRename);
+		File pakFile = action.Update(kind, revClient);
+		pakFile.renameTo(ctgFileRename);
 		
 		return ctgFileRename;
 	}
@@ -535,6 +534,7 @@ public class FResource
 		
 		UXml xml = new UXml(revFile);
 		
+		ULog.log("Save-Rev-"+revName+"-"+revNew);
 		xml.save("Newest>"+revName, revNew);
 	}
 	public static void backup(File file)

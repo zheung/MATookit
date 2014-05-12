@@ -16,6 +16,7 @@ public enum FServer
 	private final File dirDat;
 	private final File dirExp;
 	private final File dirRes;
+	private final File fileArb;
 	
 	FServer(String name)
 	{
@@ -24,6 +25,7 @@ public enum FServer
 		dirDat = new File("./wrk/dat/"+name.toLowerCase());
 		dirExp = new File("./wrk/dat/"+name.toLowerCase()+"/exp");
 		dirRes = new File("./wrk/res/"+name.toLowerCase());
+		fileArb = new File("./wrk/dat/"+name.toLowerCase()+"/arb.xml");
 	}
 
 	public String server() { return server; }
@@ -32,6 +34,7 @@ public enum FServer
 	public File dirDat() { return dirDat; }
 	public File dirPrg() { return dirExp; }
 	public File dirRes() { return dirRes; }
+	public File fileArb() { return fileArb; }
 	
 	public boolean isCN()
 	{

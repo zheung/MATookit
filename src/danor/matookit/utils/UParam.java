@@ -13,10 +13,12 @@ public class UParam
 {
 	public final Map<String, byte[]> map = new TreeMap<String, byte[]>();
 	public final boolean isLogin;
+	public final String strkeyRSA;
 	
-	public UParam(boolean isLogin)
+	public UParam(boolean isLogin, String strkeyRSA)
 	{
 		this.isLogin = isLogin;
+		this.strkeyRSA = strkeyRSA;
 	}
 	
 	public UParam put(String pKey, byte[] pValue)
@@ -27,8 +29,7 @@ public class UParam
 	public String get() throws Exception
 	{
 		byte[] keyAES = UConvert.generateKeyAES();
-		String strKeyRSA = UKey.Data("CipherRSA", "2")[0];
-		byte[] keyRSA = (strKeyRSA).getBytes();
+		byte[] keyRSA = (strkeyRSA).getBytes();
 		Cipher cipherRSA = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 		cipherRSA.init(Cipher.ENCRYPT_MODE, KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(UConvert.decodeBase64(keyRSA, null))));
 		

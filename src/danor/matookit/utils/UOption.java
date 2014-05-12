@@ -7,6 +7,7 @@ public class UOption
 {
 	private final Map<String, String> optString = new TreeMap<String, String>();
 	private final Map<String, Boolean> optBoolean = new TreeMap<String, Boolean>();
+	private final Map<String, String[][]> optStrings = new TreeMap<String, String[][]>();
 	
 	public UOption put(String pKey, String pValue)
 	{
@@ -18,6 +19,11 @@ public class UOption
 		optBoolean.put(pKey, pValue);
 		return this;
 	}
+	public UOption put(String pKey, String[][] pValue)
+	{
+		optStrings.put(pKey, pValue);
+		return this;
+	}
 
 	public String getString(String gKey) throws Exception
 	{
@@ -27,5 +33,10 @@ public class UOption
 	{
 		return optBoolean.get(gKey);
 	}
+	public String[][] getStrings(String gKey) throws Exception
+	{
+		return optStrings.get(gKey);
+	}
+
 }
 
