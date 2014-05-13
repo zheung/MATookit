@@ -64,6 +64,10 @@ public class FGain
     			rev.resBan(resrev);
     		}
     	}
+    	
+    	String pn = xml.value(".header>mainbg>pack_name");
+    	if(pn != null)
+    		rev.resMbg(pn.split("_")[pn.split("_").length-1]);
 		
 		return rev;
 	}

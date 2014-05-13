@@ -1,9 +1,12 @@
 package danor.matookit.functions;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.dom4j.Element;
 
@@ -65,8 +68,23 @@ public class FResource
 			}
 		}
 	}
+
+	private File gainData(String kind, String revService, String revClient, String rename) throws Exception
+	{
+		File ctgFile = new File(action.server().dirDat(), "ctg");
+		if(!ctgFile.exists()) ctgFile.mkdirs();
+		File ctgFileRename = new File(ctgFile, rename+"-"+revService+".xml");
+		
+		if(!ctgFileRename.exists())
+		{
+			File pakFile = action.Update(kind, revClient);
+			pakFile.renameTo(ctgFileRename);
+		}
+		
+		return ctgFileRename;
+	}
 //rev+res
-	public void gainCrd(int form) throws Exception
+	public void gainCrd(int from, int to) throws Exception
 	{
 		if(revClient.revCrd().equals("0"))
 			revFolderCrd.mkdirs();
@@ -77,7 +95,7 @@ public class FResource
 			
 			List<NCrd> list = readCrd(pakFile);
 			
-			if(!FGain.GainImagedl(pakFile, "card").equals(""))
+			if(!FGain.GainImagedl(pakFile, "card").equals("") && from==0)
 			{
 				File revFolderCrdNew = new File(revFolderCrd, "_new");
 				
@@ -92,10 +110,12 @@ public class FResource
 			
 			for(String i:FGain.GainImagedl(pakFile, "card").split(","))
 				for(NCrd c:list)
-					if(i.equals(c.idCard) && Integer.parseInt(i) >= form)
+					if(i.equals(c.idCard) && Integer.parseInt(i) >= from &&
+					((to==0)?true:Integer.parseInt(i)<=to))
 						doadCrd(c);
 			
-			save("revCrd", revServer.revCrd());
+			if(to==0)
+				save("revCrd", revServer.revCrd());
 		}
 	}
 	private List<NCrd> readCrd(File pakFile) throws Exception
@@ -486,6 +506,7 @@ public class FResource
 		
 		File revFolderPvlNew = new File(revFolderPvl, "_new");
 		revFolderPvlNew.mkdirs();
+
 		if(Integer.parseInt(revServer.resPvl()) > Integer.parseInt(revClient.resPvl()))
 		{
 			for(File f:revFolderPvlNew.listFiles())
@@ -506,22 +527,100 @@ public class FResource
 		}
 	}
 	
-	private File gainData(String kind, String revService, String revClient, String rename) throws Exception
+	public void gainMbg() throws Exception
 	{
-		File ctgFile = new File(action.server().dirDat(), "ctg");
-		if(!ctgFile.exists()) ctgFile.mkdirs();
-		File ctgFileRename = new File(ctgFile, rename+"-"+revService+".xml");
 		
-		if(ctgFileRename.exists())
-			ctgFileRename.delete();
-		
-		File pakFile = action.Update(kind, revClient);
-		pakFile.renameTo(ctgFileRename);
-		
-		return ctgFileRename;
-	}
+		File revFolderMbg = new File(action.server().dirRes(), "mbg");
+		if(revClient.resMbg().equals("0"))
+			revFolderMbg.mkdirs();
 
-	public void save(String revName, String revNew) throws Exception
+		int[] levels = {1,5,10,20,30,40,50,60,70,80,90,100};
+
+		if(!revServer.resMbg().equals(revClient.resMbg()))
+		{
+			File revFolderMbgNew = new File(revFolderMbg, "_new");
+			revFolderMbgNew.mkdirs();
+			
+			for(File f:revFolderMbgNew.listFiles())
+			{
+				File oldFile = new File(revFolderMbg, f.getName());
+				backup(oldFile);
+				f.renameTo(oldFile);
+			}
+			
+			revFolderMbgNew = new File(revFolderMbg, "_new/"+revServer.resMbg());
+			revFolderMbgNew.mkdirs();
+			
+			for(int lv:levels)
+			{
+				ULog.log("Doad-Mbg-"+revServer.resMbg()+"-Lv-" + (lv<10?"0"+lv:lv));
+				
+				try {
+					FPack pack = new FPack(rUrl+"2/mainbg/mainbg_"+lv+"_"+revServer.resMbg()+"_(zkd).pack?cyt=1", revFolderMbgNew.getPath(), "", action.server());
+				
+					for(File f:pack.downloadPack())
+						if(f.getName().indexOf("rja") != -1)
+							f.delete();
+					
+					String[][] typMainbg = {{"an","Ann"},{"mg","Non"},{"nn","Bnn"},{"nt","Mon"}};
+					
+					for(String[] t:typMainbg)
+					{
+						File picStr = new File(revFolderMbgNew, (lv<10?"0"+lv:lv)+"_"+t[1]+"Str.png");
+						File picSur = new File(revFolderMbgNew, (lv<10?"0"+lv:lv)+"_"+t[1]+"Sur.png");
+						File picFul = new File(revFolderMbgNew, (lv<10?"0"+lv:lv)+"_"+t[1]+"Ful.png");
+						
+						new File(revFolderMbgNew.getPath() + "/mainbg_"+t[0]+"_0.png").renameTo(picStr);
+						new File(revFolderMbgNew.getPath() + "/mainbg_"+t[0]+"_1.png").renameTo(picSur);
+						
+						ULog.log("merg-Mbg-"+revServer.resMbg()+"-Lv-" + (lv<10?"0"+lv:lv));
+						mrgMbg(picStr, picSur, picFul);
+					}
+				} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
+			}
+		}
+		
+		save("resMbg", revServer.resMbg());
+	}
+	public static void mrgMbg(File picTop,File picBtm, File picDst) throws Exception
+	{
+		BufferedImage imgTop = ImageIO.read(picTop);
+		BufferedImage imgBtm = ImageIO.read(picBtm);
+		
+		int wid = imgTop.getWidth();
+		int heiTop = imgTop.getHeight()-16;
+		int heiBtm = imgBtm.getHeight();
+		
+	//读取RGB
+		int[] imgTopArray = imgTop.getRGB(0, 0, wid, heiTop, null, 0, wid);
+		int[] imgBtmArray = imgBtm.getRGB(0, 0, wid, heiBtm, null, 0, wid);
+
+	//生成新图片
+		BufferedImage ImageNew = new BufferedImage(wid, heiTop + heiBtm, 2);
+		ImageNew.setRGB(0, 0, wid, heiTop, imgTopArray, 0, wid);
+		ImageNew.setRGB(0, heiTop, wid, heiBtm, imgBtmArray, 0, wid);
+
+	//写图片
+		ImageIO.write(ImageNew, "png", picDst);
+	}
+	
+	
+	public void diff() throws Exception
+	{
+		for(Field f:revClient.getClass().getDeclaredFields())
+		{
+			f.setAccessible(true);
+			String rc = (String) f.get(revClient);
+			
+			Field fs = revClient.getClass().getDeclaredField(f.getName());
+			fs.setAccessible(true);
+			String rs = (String) fs.get(revServer);
+			
+			if(!rc.equals(rs))
+				UUtil.pp("New-"+f.getName()+"-"+rs+"-Old-"+rc);
+		}
+	}
+	private void save(String revName, String revNew) throws Exception
 	{
 		for(Field f:revClient.getClass().getDeclaredFields())
 		{
@@ -544,7 +643,7 @@ public class FResource
 				break;
 			}
 	}
-
+	
 	class NCrd
 	{
 		private String idCard;

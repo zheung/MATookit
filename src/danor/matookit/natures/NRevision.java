@@ -39,6 +39,8 @@ public class NRevision
 	private String resBan;
 	private String resPvl;
 
+	private String resMbg;
+
 	public synchronized String revCrd() { return revCrd; }
 	public synchronized void revCrd(String revCrd) { this.revCrd = revCrd; }
 	
@@ -83,4 +85,7 @@ public class NRevision
 	
 	public synchronized String resPvl() { return resPvl; }
 	public synchronized void resPvl(String resPvl) { this.resPvl = resPvl; }
+
+	public synchronized String resMbg() { return resMbg; }
+	public synchronized void resMbg(String resMbg) { this.resMbg = resMbg; }
 }

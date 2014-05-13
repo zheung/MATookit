@@ -1,11 +1,8 @@
 package danor.matookit.functions;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import danor.matookit.utils.*;
 
@@ -159,27 +156,5 @@ public class FPack
 			value += (aryByte[i] & 0x000000FF) << shift;
 		}
 		return value;
-	}
-
-	public static void mrgMainbg(File picTop,File picBtm, File picDst) throws Exception
-	{
-		BufferedImage imgTop = ImageIO.read(picTop);
-		BufferedImage imgBtm = ImageIO.read(picBtm);
-		
-		int wid = imgTop.getWidth();
-		int heiTop = imgTop.getHeight()-16;
-		int heiBtm = imgBtm.getHeight();
-		
-	//读取RGB
-		int[] imgTopArray = imgTop.getRGB(0, 0, wid, heiTop, null, 0, wid);
-		int[] imgBtmArray = imgBtm.getRGB(0, 0, wid, heiBtm, null, 0, wid);
-
-	//生成新图片
-		BufferedImage ImageNew = new BufferedImage(wid, heiTop + heiBtm, 2);
-		ImageNew.setRGB(0, 0, wid, heiTop, imgTopArray, 0, wid);
-		ImageNew.setRGB(0, heiTop, wid, heiBtm, imgBtmArray, 0, wid);
-
-	//写图片
-		ImageIO.write(ImageNew, "png", picDst);
 	}
 }

@@ -34,7 +34,7 @@ public class FAction
 			
 			UOption option = new UOption().put("rqtCookie", true).put("typMethod", true).put("server", server.toString())
 			.put("cookie", (String)null).put("url", sUrl+UUtil.Key(server.fileArb(), "Action", "Cookie")[0])
-			.put("param", (String)null).put("path", header+"1Cookie.xml");
+			.put("param", (String)null).put("path", header+"Cookie.xml");
 			
 			String[][] pp = new String[6][2];
 			for(int i=0;i<6;i++)
