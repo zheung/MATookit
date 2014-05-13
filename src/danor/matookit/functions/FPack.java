@@ -76,7 +76,7 @@ public class FPack
 			if(lstFileName.get(j).indexOf("rja") == -1)
 			{
 				File rnf = new File(f.getPath()+".png");
-				UConvert.decryptAES(fba, rnf, UUtil.Key(server.fileArb(), "CipherAES", "1")[0].getBytes());
+				UConvert.decryptAES(fba, rnf, UUtil.Key(server.fileArb(), "Cipher", "Res")[0].getBytes());
 			
 				UUtil.p(lstFileName.get(j)+"-Decrypt");
 			}
@@ -104,13 +104,14 @@ public class FPack
 		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false)
 				.put("cookie", (String)null).put("url", urlPack).put("server", server.toString())
 				.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
-		UConnect connect = new UConnect(option);
-		File pakFile = connect.result;
 		
 		int i = 0;
 		String[][] pp = new String[4][2];
 		for(int ii:new int[]{0,1,3,4}) pp[i++] = UUtil.Key(server.fileArb(), "Property", ii+"");
 		option.put("property", pp);
+
+		UConnect connect = new UConnect(option);
+		File pakFile = connect.result;
 		
 		byte[] bytes = UUtil.Input(pakFile);
 		
@@ -137,9 +138,8 @@ public class FPack
 				
 				ps = urlPack.split("/");
 				
-				option = new UOption().put("rqtCookie", false).put("typMethod", false)
-						.put("cookie", (String)null).put("url", urlPack).put("server", server.toString())
-						.put("param", (String)null).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
+				option.put("url", urlPack).put("path", pakPath+"\\"+ps[ps.length - 1].replace("?cyt=1", ""));
+				
 				connect = new UConnect(option);
 				pakFile = connect.result;
 

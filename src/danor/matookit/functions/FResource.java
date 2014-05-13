@@ -139,7 +139,7 @@ public class FResource
 		
 		try {
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 		
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max");
@@ -148,7 +148,7 @@ public class FResource
 				
 		try {
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Nor");
@@ -157,7 +157,7 @@ public class FResource
 
 		try {
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max");
@@ -166,7 +166,7 @@ public class FResource
 		
 		try {
 			connect = new UConnect(option);
-			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "CipherAES", "Res")[0].getBytes("utf-8"));
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 		
 		try {
@@ -441,8 +441,6 @@ public class FResource
 			
 			revFolderGacNew = new File(revFolderGac, "_new/"+revServer.resGac());
 			revFolderGacNew.mkdirs();
-			
-			
 			
 			ULog.log("Doad-Gac-Pack");
 			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "", action.server());
