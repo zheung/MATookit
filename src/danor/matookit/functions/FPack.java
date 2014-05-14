@@ -125,7 +125,15 @@ public class FPack
 		{
 			pakFile.delete();
 			
-			i = 1;
+			File logFile = new File(pakFile.getParent(), "itr.log");
+			
+			if(logFile.exists())
+				i = Integer.parseInt(new String(UUtil.Input(logFile)));
+			else
+			{
+				UUtil.Output(logFile, (""+1).getBytes(), false);
+				i = 1;
+			}
 			
 			while(i < cntPack)
 			{
@@ -141,7 +149,12 @@ public class FPack
 				pakFile = connect.result;
 
 				decompressPack(pakFile);
+
+				UUtil.Output(logFile, (""+i).getBytes(), false);
 			}
+			
+			if(i == cntPack)
+				logFile.delete();
 		}
 		
 		return lstFile;

@@ -108,7 +108,7 @@ public class FResource
 					}
 			}
 			
-			for(String i:FGain.GainImagedl(pakFile, "card").split(","))
+			for(String i:new UReverseEnum<String>(FGain.GainImagedl(pakFile, "card").split(",")))
 				for(NCrd c:list)
 					if(i.equals(c.idCard) && Integer.parseInt(i) >= from &&
 					((to==0)?true:Integer.parseInt(i)<=to))
@@ -164,7 +164,7 @@ public class FResource
 		
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max");
 		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png")
-		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"?cyt=1");
+		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?(Integer.parseInt(card.idCard)+5000):card.idImageArousal)+"?cyt=1");
 				
 		try {
 			connect = new UConnect(option);
@@ -182,7 +182,7 @@ public class FResource
 
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max");
 		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png")
-		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo?cyt=1");
+		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?(Integer.parseInt(card.idCard)+5000):card.idImageArousal)+"_horo?cyt=1");
 		
 		try {
 			connect = new UConnect(option);
@@ -302,6 +302,117 @@ public class FResource
 			save("revItm", revServer.revItm());
 		}
 	}
+
+	public void gainGac() throws Exception
+	{
+		if(Integer.parseInt(revServer.revGac()) > Integer.parseInt(revClient.revGac()))
+		{
+			ULog.log("Doad-Gac");
+			gainData("gacha", revServer.revGac(), revClient.revGac(), "gac");
+			
+			save("revGac", revServer.revGac());
+		}
+		
+		File revFolderGac = new File(action.server().dirRes(), "gac");
+		
+		if(revClient.resGac().equals("0"))
+			revFolderGac.mkdirs();
+		
+		File revFolderGacNew = new File(revFolderGac, "_new");
+		revFolderGacNew.mkdirs();
+		
+		if(Integer.parseInt(revServer.resGac()) > Integer.parseInt(revClient.resGac()))
+		{
+			for(File f:revFolderGacNew.listFiles())
+			{
+				File oldFile = new File(revFolderGac, f.getName());
+				backup(oldFile);
+				f.renameTo(oldFile);
+			}
+			
+			revFolderGacNew = new File(revFolderGac, "_new/"+revServer.resGac());
+			revFolderGacNew.mkdirs();
+			
+			ULog.log("Doad-Gac-Pack");
+			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "", action.server());
+			pack.downloadPack();
+
+			save("resGac", revServer.resGac());
+		}
+	}
+	public void gainBan() throws Exception
+	{
+		if(!action.server().equals(FServer.KR1) && Integer.parseInt(revServer.revBan()) > Integer.parseInt(revClient.revBan()))
+		{
+			ULog.log("Doad-Ban");
+			gainData("eventbanner", revServer.revBan(), revClient.revBan(), "ban");
+			
+			save("revBan", revServer.revBan());
+		}
+		
+		File revFolderBan = new File(action.server().dirRes(), "ban");
+		
+		if(revClient.resBan().equals("0"))
+			revFolderBan.mkdirs();
+		
+		File revFolderBanNew = new File(revFolderBan, "_new");
+		revFolderBanNew.mkdirs();
+		if(Integer.parseInt(revServer.resBan()) > Integer.parseInt(revClient.resBan()))
+		{
+			for(File f:revFolderBanNew.listFiles())
+			{
+				File oldFile = new File(revFolderBan, f.getName());
+				backup(oldFile);
+				f.renameTo(oldFile);
+			}
+			
+			revFolderBanNew = new File(revFolderBan, "_new/"+revServer.resBan());
+			revFolderBanNew.mkdirs();
+			
+			ULog.log("Doad-Ban-Pack");
+			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "", action.server());
+			pack.downloadPack();
+			
+			save("resBan", revServer.resBan());
+		}
+	}
+	public void gainPvl() throws Exception
+	{
+		if(Integer.parseInt(revServer.revPvl()) > Integer.parseInt(revClient.revPvl()))
+		{
+			ULog.log("Doad-Pvl");
+			gainData("privilege", revServer.revPvl(), revClient.revPvl(), "pvl");
+			
+			save("revPvl", revServer.revPvl());
+		}
+		
+		File revFolderPvl = new File(action.server().dirRes(), "pvl");
+		
+		if(revClient.resPvl().equals("0"))
+			revFolderPvl.mkdirs();
+		
+		File revFolderPvlNew = new File(revFolderPvl, "_new");
+		revFolderPvlNew.mkdirs();
+
+		if(Integer.parseInt(revServer.resPvl()) > Integer.parseInt(revClient.resPvl()))
+		{
+			for(File f:revFolderPvlNew.listFiles())
+			{
+				File oldFile = new File(revFolderPvl, f.getName());
+				backup(oldFile);
+				f.renameTo(oldFile);
+			}
+			
+			revFolderPvlNew = new File(revFolderPvl, "_new/"+revServer.resPvl());
+			revFolderPvlNew.mkdirs();
+			
+			ULog.log("Doad-Pvl-Pack");
+			FPack pack = new FPack(rUrl+revServer.resPvl()+"/privilege/privilege0_(zkd).pack?cyt=1", revFolderPvlNew.getPath(), "", action.server());
+			pack.downloadPack();
+			
+			save("resPvl", revServer.resPvl());
+		}
+	}
 //只有rev
 	public void gainCtg() throws Exception
 	{
@@ -393,12 +504,13 @@ public class FResource
 		revFolderAdvNew.mkdirs();
 		if(Integer.parseInt(revServer.resAdv()) > Integer.parseInt(revClient.resAdv()))
 		{
-			for(File f:revFolderAdvNew.listFiles())
-			{
-				File oldFile = new File(revFolderAdv, f.getName());
-				backup(oldFile);
-				f.renameTo(oldFile);
-			}
+			if(!new File(revFolderAdvNew, "itr.log").exists())
+				for(File f:revFolderAdvNew.listFiles())
+				{
+					File oldFile = new File(revFolderAdv, f.getName());
+					backup(oldFile);
+					f.renameTo(oldFile);
+				}
 			
 			revFolderAdvNew = new File(revFolderAdv, "_new/"+revServer.resAdv());
 			revFolderAdvNew.mkdirs();
@@ -440,93 +552,7 @@ public class FResource
 			save("resCmp", revServer.resCmp());
 		}
 	}
-	public void gainGac() throws Exception
-	{
-		File revFolderGac = new File(action.server().dirRes(), "gac");
-		
-		if(revClient.resGac().equals("0"))
-			revFolderGac.mkdirs();
-		
-		File revFolderGacNew = new File(revFolderGac, "_new");
-		revFolderGacNew.mkdirs();
-		
-		if(Integer.parseInt(revServer.resGac()) > Integer.parseInt(revClient.resGac()))
-		{
-			for(File f:revFolderGacNew.listFiles())
-			{
-				File oldFile = new File(revFolderGac, f.getName());
-				backup(oldFile);
-				f.renameTo(oldFile);
-			}
-			
-			revFolderGacNew = new File(revFolderGac, "_new/"+revServer.resGac());
-			revFolderGacNew.mkdirs();
-			
-			ULog.log("Doad-Gac-Pack");
-			FPack pack = new FPack(rUrl+revServer.resGac()+"/gacha/gacha0_(zkd).pack?cyt=1", revFolderGacNew.getPath(), "", action.server());
-			pack.downloadPack();
-
-			save("resGac", revServer.resGac());
-		}
-	}
-	public void gainBan() throws Exception
-	{
-		File revFolderBan = new File(action.server().dirRes(), "ban");
-		
-		if(revClient.resBan().equals("0"))
-			revFolderBan.mkdirs();
-		
-		File revFolderBanNew = new File(revFolderBan, "_new");
-		revFolderBanNew.mkdirs();
-		if(Integer.parseInt(revServer.resBan()) > Integer.parseInt(revClient.resBan()))
-		{
-			for(File f:revFolderBanNew.listFiles())
-			{
-				File oldFile = new File(revFolderBan, f.getName());
-				backup(oldFile);
-				f.renameTo(oldFile);
-			}
-			
-			revFolderBanNew = new File(revFolderBan, "_new/"+revServer.resBan());
-			revFolderBanNew.mkdirs();
-			
-			ULog.log("Doad-Ban-Pack");
-			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "", action.server());
-			pack.downloadPack();
-			
-			save("resBan", revServer.resBan());
-		}
-	}
-	public void gainPvl() throws Exception
-	{
-		File revFolderPvl = new File(action.server().dirRes(), "pvl");
-		
-		if(revClient.resPvl().equals("0"))
-			revFolderPvl.mkdirs();
-		
-		File revFolderPvlNew = new File(revFolderPvl, "_new");
-		revFolderPvlNew.mkdirs();
-
-		if(Integer.parseInt(revServer.resPvl()) > Integer.parseInt(revClient.resPvl()))
-		{
-			for(File f:revFolderPvlNew.listFiles())
-			{
-				File oldFile = new File(revFolderPvl, f.getName());
-				backup(oldFile);
-				f.renameTo(oldFile);
-			}
-			
-			revFolderPvlNew = new File(revFolderPvl, "_new/"+revServer.resPvl());
-			revFolderPvlNew.mkdirs();
-			
-			ULog.log("Doad-Pvl-Pack");
-			FPack pack = new FPack(rUrl+revServer.resPvl()+"/privilege/privilege0_(zkd).pack?cyt=1", revFolderPvlNew.getPath(), "", action.server());
-			pack.downloadPack();
-			
-			save("resPvl", revServer.resPvl());
-		}
-	}
-	
+//无版本号
 	public void gainMbg() throws Exception
 	{
 		
