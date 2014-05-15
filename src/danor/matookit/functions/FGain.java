@@ -33,6 +33,11 @@ public class FGain
 		rev.revPvl(xml.value("privilege_rev"));
 		rev.revCmb(xml.value("combo_rev"));
 		rev.revBan(xml.value("eventbanner_rev"));
+
+		rev.revJob(xml.value("job_rev"));
+		rev.revJbs(xml.value("jobskill_rev"));
+		
+		rev.revBan(xml.value("eventbanner_rev"));
 		
     	for(Object e:xml.list("resource_rev"))
     	{
@@ -62,6 +67,8 @@ public class FGain
     			break;
     		case "eventbanner":
     			rev.resBan(resrev);
+    		case "treasurebox":
+    			rev.resTsb(resrev);
     		}
     	}
     	
@@ -76,17 +83,24 @@ public class FGain
 		return new UXml(xmlFile).value("body>master_data>master_"+type+"_data>imagedl_list");
 	}
 	
-	
-	public static NArthur GainArthur(File xmlFile) throws Exception
+	public static NArthur GainArthur(File xmlFile, NArthur arthur) throws Exception
 	{
 		UXml xml = new UXml(xmlFile);
 		
-		NArthur arthur = new NArthur(
+		if(arthur == null)
+		{
+			arthur = new NArthur(
 				new NBase(xml.value("body>login>user_id"), xml.value("header>your_data>name")),
 				new NTown(xml.value("header>your_data>country_id")));
+
+		}
+		else
+			GainCards(xmlFile, arthur);
+		
+		arthur.guild().idGuild(xml.value("header>your_data>guild_id"));
+		arthur.guild().name(xml.value("header>your_data>guild_name"));
 		
 		GainBase(xmlFile, arthur);
-		GainCards(xmlFile, arthur);
 		GainItems(xmlFile, arthur);
 		GainPoint(xmlFile, arthur);
 		
@@ -671,4 +685,49 @@ public class FGain
 		
 		return lstRank;
 	}
+
+	public static void GainInfo(File xmlFile, NArthur arthur) throws Exception
+	{
+		UXml xml = new UXml(xmlFile);
+		
+		xml.move("body>player_info>user");
+		
+		arthur.battle().win(xml.value("results>win"));
+		arthur.battle().lose(xml.value("results>lose"));
+		arthur.town().lv(xml.value("town_level"));
+		arthur.town().exp(xml.value("next_exp"));
+		arthur.friends().now(xml.value("friends"));
+		arthur.friends().max(xml.value("friend_max"));
+		arthur.battle().sp(xml.value("ex_gage"));
+		arthur.guild().idGuild(xml.value("guild_id"));
+		arthur.guild().name(xml.value("guild_name"));
+		
+		arthur.friends().cmt(xml.value("<default_comment>coment"));
+	}
+	public static NArthur GainHome(File xmlFile, NArthur arthur, boolean isInit) throws Exception
+	{
+		UXml xml = new UXml(xmlFile);
+		
+		xml.move("header>your_data");
+		
+		if(isInit)
+			arthur = new NArthur(
+					new NBase(xml.value("id"), xml.value("name")),
+					new NTown(xml.value("country_id")));
+		
+		arthur.battle().win(xml.value("results>win"));
+		arthur.battle().lose(xml.value("results>lose"));
+		arthur.town().lv(xml.value("town_level"));
+		arthur.town().exp(xml.value("next_exp"));
+		arthur.friends().now(xml.value("friends"));
+		arthur.friends().max(xml.value("friend_max"));
+		arthur.battle().sp(xml.value("ex_gage"));
+		arthur.guild().idGuild(xml.value("guild_id"));
+		arthur.guild().name(xml.value("guild_name"));
+		
+		arthur.friends().cmt(xml.value("<default_comment>coment"));
+		
+		return arthur;
+	}
+
 }

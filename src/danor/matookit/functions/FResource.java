@@ -26,10 +26,19 @@ public class FResource
 
 	private final String rUrl;
 	
-	public FResource(FAction action) throws Exception
+	public FResource(FAction action, File pakFile) throws Exception
 	{
 		this.action = action;
-		revServer = action.rev();
+		
+		if(pakFile != null)
+		{
+//			UConvert.decryptAES(null, pakFile, UUtil.Key(action.server().fileArb(), "Cipher", "Pak")[0].getBytes("utf-8"));
+//			UConvert.xmlFormat(pakFile);
+			
+			revServer = FGain.GainRevision(pakFile);
+		}
+		else
+			revServer = action.rev();
 		
 		revFile = new File(action.server().dirDat(), "rev.xml");
 		revFolderBos = new File(action.server().dirRes(), "bos");
@@ -97,22 +106,48 @@ public class FResource
 			
 			if(!FGain.GainImagedl(pakFile, "card").equals("") && from==0)
 			{
-				File revFolderCrdNew = new File(revFolderCrd, "_new");
-				
-				if(revFolderCrdNew.exists())
-					for(File f:revFolderCrdNew.listFiles())
+				if(action.server()==FServer.MY1)
+				{
+					File[] revFolderCrdNew = new File[]{ new File(revFolderCrd, "kor/_new/"),
+							new File(revFolderCrd, "twn/_new/"), new File(revFolderCrd, "eng/_new/")};
+					
+					for(File f:revFolderCrdNew)
 					{
-						File oldFile = new File(revFolderCrd, f.getName());
-						backup(oldFile);
-						f.renameTo(oldFile);
+						if(f.exists())
+							for(File ff:f.listFiles())
+							{
+								File oldFile = new File(f.getParentFile(), ff.getName());
+								backup(oldFile);
+								f.renameTo(oldFile);
+							}
+						else
+							f.mkdirs();
 					}
-			}
+				}
+				else
+				{
+					File revFolderCrdNew = new File(revFolderCrd, "_new");
+					
+					if(revFolderCrdNew.exists())
+						for(File f:revFolderCrdNew.listFiles())
+						{
+							File oldFile = new File(revFolderCrd, f.getName());
+							backup(oldFile);
+							f.renameTo(oldFile);
+						}
+					else
+						revFolderCrdNew.mkdirs();
+				}
+		}
 			
-			for(String i:new UReverseEnum<String>(FGain.GainImagedl(pakFile, "card").split(",")))
+			for(String i:FGain.GainImagedl(pakFile, "card").split(","))
 				for(NCrd c:list)
 					if(i.equals(c.idCard) && Integer.parseInt(i) >= from &&
 					((to==0)?true:Integer.parseInt(i)<=to))
-						doadCrd(c);
+						if(action.server()==FServer.MY1)
+							doadCrdMY(c);
+						else
+							doadCrd(c);
 			
 			if(to==0)
 				save("revCrd", revServer.revCrd());
@@ -132,30 +167,88 @@ public class FResource
 			
 			dc.idCard = e.element("master_card_id").getStringValue();
 			dc.idImageNorrmal = e.element("image1_id").getStringValue();
-			dc.idImageArousal = e.element("image2_id").getStringValue();
+			dc.idImageArousal(e.element("image2_id").getStringValue());
 			dc.version = e.element("card_version").getStringValue();
 			
 			list.add(dc);
 		}
 		return list;
 	}
+	private void doadCrdMY(NCrd card) throws Exception
+	{
+		File[] revFolderCrdNew = new File[]{ new File(revFolderCrd, "kor/_new/"+card.idCard),
+				new File(revFolderCrd, "twn/_new/"+card.idCard), new File(revFolderCrd, "eng/_new/"+card.idCard)};
+		
+		String[][] ss = new String[][] {{"Kor","contents"},{"Twn","contents_tw"},{"Eng","contents_en"}};
+	//创建参数
+		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+				.put("cookie", (String)null).put("param", (String)null);
+		
+		String[][] pp = new String[4][2];
+		for(int ii:new int[]{0,1,3,4}) pp[ii>2?ii-1:ii] = UUtil.Key(action.server().fileArb(), "Property", ii+"");
+		option.put("property", pp);
+
+		for(int i=0;i<3;i++)
+		{
+		//大图-普卡-基本
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Bac-"+ss[i][0]);
+			doadCrd(option, revFolderCrdNew[i].getPath()+"/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"FulNorBac.png",
+					rUrl.replace("contents", ss[i][1])+"card_full/full_thumbnail_chara_"+card.idImageNorrmal+".dat?cyt=1");
+		//大图-普卡-满级
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max-"+ss[i][0]);
+			doadCrd(option, revFolderCrdNew[i].getPath()+"/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"FulNorMax.png",
+					rUrl.replace("contents",ss[i][1])+"card_full_max/full_thumbnail_chara_"+card.idImageArousal+".dat?cyt=1");
+		//大图-闪卡-基本
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Bac-"+ss[i][0]);
+			doadCrd(option, revFolderCrdNew[i].getPath()+"/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"FulHloBac.png",
+					rUrl.replace("contents",ss[i][1])+"card_full_h/full_thumbnail_chara_"+card.idImageNorrmal+"_horo.dat?cyt=1");
+		//大图-闪卡-满级
+			ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max-"+ss[i][0]);
+			doadCrd(option, revFolderCrdNew[i].getPath()+"/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"FulHloMax.png",
+					rUrl.replace("contents",ss[i][1])+"card_full_h_max/full_thumbnail_chara_"+card.idImageArousal+"_horo.dat?cyt=1");
+		//头像-小图-立绘
+			ULog.log("Doad-Crd-"+card.idCard+"-Pack-"+ss[i][0]);
+			try {
+				FPack pack = new FPack(rUrl.replace("contents", ss[i][1])+"2/card/card"+card.idCard+"_(zkd).pack?cyt=1",
+						revFolderCrdNew[i].getPath(), "", action.server());
+				pack.downloadPack();
+			
+				new File(revFolderCrdNew[i], "thumbnail_chara_"+card.idImageNorrmal+".png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"TumNorBac.png"));
+				new File(revFolderCrdNew[i], "thumbnail_chara_"+card.idImageArousal+".png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"TumNorMax.png"));
+				new File(revFolderCrdNew[i], "thumbnail_chara_"+card.idImageNorrmal+"_horo.png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"TumHloBac.png"));
+				new File(revFolderCrdNew[i], "thumbnail_chara_"+card.idImageArousal+"_horo.png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"TumHloMax.png"));
+				new File(revFolderCrdNew[i], "face_"+card.idImageNorrmal+".png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"FacBac.png"));
+				new File(revFolderCrdNew[i], "face_"+card.idImageArousal+".png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"FacMax.png"));
+				new File(revFolderCrdNew[i], "adv_chara"+card.idImageNorrmal+".png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"AdvBac.png"));
+				new File(revFolderCrdNew[i], "adv_chara"+card.idImageArousal+".png")
+				.renameTo(new File(revFolderCrdNew[i], "/"+ss[i][0].toLowerCase()+"/"+card.idCard+"_"+ss[i][0]+"AdvMax.png"));
+			} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
+		}
+	}
 	private void doadCrd(NCrd card) throws Exception
 	{
 		File revFolderCrdNew = new File(revFolderCrd, "_new/"+card.idCard);
 		revFolderCrdNew.mkdirs();
 		
-		UOption option;
+		UOption option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
+				.put("cookie", (String)null).put("param", (String)null);
+		
+		String[][] pp = new String[4][2];
+		for(int ii:new int[]{0,1,3,4}) pp[ii>2?ii-1:ii] = UUtil.Key(action.server().fileArb(), "Property", ii+"");
+		option.put("property", pp);
+
 		UConnect connect;
 		
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Bac");
-		option = new UOption().put("rqtCookie", false).put("typMethod", false).put("server", action.server().toString())
-				.put("cookie", (String)null).put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"?cyt=1")
-				.put("param", (String)null).put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png");
-
-		int i=0;
-		String[][] pp = new String[4][2];
-		for(int ii:new int[]{0,1,3,4}) pp[i++] = UUtil.Key(action.server().fileArb(), "Property", ii+"");
-		option.put("property", pp);
+		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorBac.png")
+		.put("url", rUrl+"card_full/full_thumbnail_chara_"+card.idImageNorrmal+"?cyt=1");
 		
 		try {
 			connect = new UConnect(option);
@@ -164,46 +257,63 @@ public class FResource
 		
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Nor-Max");
 		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulNorMax.png")
-		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?(Integer.parseInt(card.idCard)+5000):card.idImageArousal)+"?cyt=1");
-				
+		.put("url", rUrl+"card_full_max/full_thumbnail_chara_"+card.idImageArousal+"?cyt=1");
+		
 		try {
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
-
+		
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Nor");
 		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloBac.png")
-		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo?cyt=1");
-
+		.put("url", rUrl+"card_full_h/full_thumbnail_chara_"+card.idImageNorrmal+"_horo?cyt=1");
+		
 		try {
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
-
+	//大图-闪卡-满级
 		ULog.log("Doad-Crd-"+card.idCard+"-Ful-Hlo-Max");
 		option.put("path", revFolderCrdNew.getPath()+"/" + card.idCard + "_FulHloMax.png")
-		.put("url", rUrl+(action.server().isCN()?card.version:"2")+"/card_full_h_max/full_thumbnail_chara_"+(card.idImageNorrmal.equals("None")?(Integer.parseInt(card.idCard)+5000):card.idImageArousal)+"_horo?cyt=1");
+		.put("url", rUrl+"card_full_h_max/full_thumbnail_chara_"+card.idImageArousal+"_horo?cyt=1");
 		
 		try {
 			connect = new UConnect(option);
 			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
-		
+	//头像-小图-立绘	
 		try {
 			ULog.log("Doad-Crd-"+card.idCard+"-Pack");
 			FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1", revFolderCrdNew.getPath(), "", action.server());
 			pack.downloadPack();
 		
-			new File(revFolderCrdNew.getPath()+"/thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_TumNorBac.png"));
-			new File(revFolderCrdNew.getPath()+"/thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_TumNorMax.png"));
-			new File(revFolderCrdNew.getPath()+"/thumbnail_chara_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+"_horo.png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_TumHloBac.png"));
-			new File(revFolderCrdNew.getPath()+"/thumbnail_chara_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+"_horo.png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_TumHloMax.png"));
-			new File(revFolderCrdNew.getPath()+"/face_"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_FacBac.png"));
-			new File(revFolderCrdNew.getPath()+"/face_"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_FacMax.png"));
-			new File(revFolderCrdNew.getPath()+"/adv_chara"+(card.idImageNorrmal.equals("None")?card.idCard:card.idImageNorrmal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_AdvBac.png"));
-			new File(revFolderCrdNew.getPath()+"/adv_chara"+(card.idImageNorrmal.equals("None")?"5"+card.idCard:card.idImageArousal)+".png").renameTo(new File(revFolderCrdNew.getPath()+"/" + card.idCard + "_AdvMax.png"));
+			new File(revFolderCrdNew, "thumbnail_chara_"+card.idImageNorrmal+".png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_TumNorBac.png"));
+			new File(revFolderCrdNew, "thumbnail_chara_"+card.idImageArousal+".png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_TumNorMax.png"));
+			new File(revFolderCrdNew, "thumbnail_chara_"+card.idImageNorrmal+"_horo.png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_TumHloBac.png"));
+			new File(revFolderCrdNew, "thumbnail_chara_"+card.idImageArousal+"_horo.png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_TumHloMax.png"));
+			new File(revFolderCrdNew, "face_"+card.idImageNorrmal+".png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_FacBac.png"));
+			new File(revFolderCrdNew, "face_"+card.idImageArousal+".png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_FacMax.png"));
+			new File(revFolderCrdNew, "adv_chara"+card.idImageNorrmal+".png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_AdvBac.png"));
+			new File(revFolderCrdNew, "adv_chara"+card.idImageArousal+".png")
+			.renameTo(new File(revFolderCrdNew, card.idCard+"_AdvMax.png"));
 		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
 	}
+	private void doadCrd(UOption option, String path, String url) throws Exception
+	{
+		option.put("path", path).put("url", url);
+		try {
+			UConnect connect = new UConnect(option);
+			UConvert.decryptAES(null, connect.result, UUtil.Key(action.server().fileArb(), "Cipher", "Res")[0].getBytes("utf-8"));
+		} catch(Exception e) { ULog.log(e.toString()); e.printStackTrace(); };
+	}
+	
 	
 	public void gainBos(int form) throws Exception
 	{
@@ -676,6 +786,14 @@ public class FResource
 		private String idImageNorrmal;
 		private String idImageArousal;
 		private String version;
+		
+		public void idImageArousal(String idImageArousal)
+		{
+			if(idImageArousal == null || idImageArousal.equals(idImageNorrmal))
+				this.idImageArousal = (Integer.parseInt(idImageNorrmal)+5000)+"";
+			else
+				this.idImageArousal = idImageArousal;
+		}
 	}
 	class NBos
 	{

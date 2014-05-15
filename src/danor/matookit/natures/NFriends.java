@@ -8,6 +8,8 @@ public class NFriends extends NMatches
 	private String max;//header>you_data>friend_max
 	private String ivt;//header>you_data>friends_invitations
 	
+	private String cmt;
+	
 	public synchronized String now() { return now; }
 	public synchronized void now(String now) { this.now = now; }
 
@@ -16,4 +18,7 @@ public class NFriends extends NMatches
 
 	public synchronized String ivt() { return ivt; }
 	public synchronized void ivt(String ivt) { this.ivt = ivt; }
+
+	public synchronized String cmt() { return cmt; }
+	public synchronized void cmt(String cmt) { this.cmt = cmt; }
 }

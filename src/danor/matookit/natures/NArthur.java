@@ -9,6 +9,7 @@ public class NArthur
 	private final NGacha gacha = new NGacha();
 	private final NShop shop = new NShop();
 	private final NRevision rev = new NRevision();
+	private final NGuild guild = new NGuild();
 	
 	private final NFriends friends = new NFriends();
 	private final NCards cards = new NCards();
@@ -30,6 +31,7 @@ public class NArthur
 	public synchronized NGacha gacha() { return gacha; }
 	public synchronized NShop shop() { return shop; }
 	public synchronized NRevision rev() { return rev; }
+	public synchronized NGuild guild() { return guild; }
 
 	public synchronized NFriends friends() { return friends; }
 	public synchronized NCards cards() { return cards; }
