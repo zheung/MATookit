@@ -77,7 +77,14 @@ public class FResource
 			for(Field f:revClient.getClass().getDeclaredFields())
 			{
 				f.setAccessible(true);
-				f.set(revClient, xml.value("Newest>"+f.getName()));
+				f.set(revClient, xml.value("Newest>"+f.getName())==null?"1":xml.value("Newest>"+f.getName()));
+			}
+			
+			for(Field f:revServer.getClass().getDeclaredFields())
+			{
+				f.setAccessible(true);
+				if(f.get(revServer)==null)
+					f.set(revServer, "1");
 			}
 		}
 		
@@ -93,7 +100,7 @@ public class FResource
 	{
 		File ctgFile = new File(action.server().dirDat(), "ctg");
 		if(!ctgFile.exists()) ctgFile.mkdirs();
-		File ctgFileRename = new File(ctgFile, rename+"-"+revService+".xml");
+		File ctgFileRename = new File(ctgFile, rename+"-"+revClient+"-"+revService+".xml");
 		
 		if(!ctgFileRename.exists())
 		{
@@ -109,7 +116,7 @@ public class FResource
 		if(revClient.revCrd().equals("0"))
 			revFolderCrd.mkdirs();
 		
-		if(Integer.parseInt(revServer.revCrd()) > Integer.parseInt(revClient.revCrd()))
+		if(Integer.parseInt(revServer.revCrd()) >= Integer.parseInt(revClient.revCrd()))
 		{
 			File pakFile = gainData("card", revServer.revCrd(), revClient.revCrd(), "crd");
 			
@@ -148,7 +155,7 @@ public class FResource
 							{
 								File pgsOldFile = new File(ff,"pgs.xml");
 								if(pgsOldFile.exists() && UUtil.Input(pgsOldFile).length==27 &&
-										Integer.parseInt(ff.getName()) < Integer.parseInt(new String(UUtil.Input(pgsFile))))
+										Integer.parseInt(ff.getName()) <= Integer.parseInt(new String(UUtil.Input(pgsFile))))
 								{
 									pgsOldFile.delete();
 
@@ -190,6 +197,8 @@ public class FResource
 
 						UUtil.Output(pgsFile, c.idCard.getBytes(), false);
 					}
+			
+			pgsFile.delete();
 			
 			if(to==0)
 				save("revCrd", revServer.revCrd());
@@ -284,7 +293,7 @@ public class FResource
 					ULog.log("Doad-Crd-Ful-"+nh+"-"+bm+"-"+card.idCard);
 					try {
 						doadCrd(option, revFolderCrdNew.getPath()+"/"+card.idCard+"_Ful"+nh+bm+".png",
-								rUrl+(action.server().isCN()?card.version:"2")+"card_full"+(nh.equals("Hlo")?"_h":"")+(bm.equals("Max")?"_max":"")+
+								rUrl+(action.server().isCN()?card.version:"2")+"/card_full"+(nh.equals("Hlo")?"_h":"")+(bm.equals("Max")?"_max":"")+
 								"/full_thumbnail_chara_"+(bm.equals("Max")?card.idImageArousal:card.idImageNorrmal)+
 							(nh.equals("Hlo")?"_horo":"")+"?cyt=1");
 
@@ -297,7 +306,7 @@ public class FResource
 		{
 			ULog.log("Doad-Crd-Pak-"+card.idCard);
 			try {
-				FPack pack = new FPack(rUrl+"2/card/card"+card.idCard+"_(zkd).pack?cyt=1",
+				FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1",
 						revFolderCrdNew.getPath(), "", action.server());
 				pack.downloadPack();
 			
@@ -375,7 +384,7 @@ public class FResource
 					for(NBos b:list)
 						if(i.equals(b.idBoss) && Integer.parseInt(i) >= form)
 						{
-							ULog.log("Doad-Bos-"+"-Pack"+b.idBoss);
+							ULog.log("Doad-Bos-"+"Pak-"+b.idBoss);
 							FPack pack = new FPack(rUrl+b.version+"/boss/boss"+b.idImageBos+"_(zkd).pack?cyt=1", revFolderBosNew.getPath(), "", action.server());
 							pack.downloadPack();
 							
@@ -416,7 +425,13 @@ public class FResource
 				pack.downloadPack();
 
 				for(File f:revFolderItmNew.listFiles())
-					f.renameTo(new File(revFolderItmNew.getParent()+"/"+f.getName().replace("item_", "")));
+				{
+					File pFile = new File(revFolderItmNew.getParent()+"/"+f.getName().replace("item_", ""));
+					if(pFile.exists())
+						pFile.delete();
+					else
+						f.renameTo(pFile);
+				}
 			}
 
 			save("revItm", revServer.revItm());
@@ -462,13 +477,13 @@ public class FResource
 	}
 	public void gainBan() throws Exception
 	{
-		if(!action.server().equals(FServer.KR1) && Integer.parseInt(revServer.revBan()) > Integer.parseInt(revClient.revBan()))
-		{
-			ULog.log("Doad-Ban");
-			gainData("eventbanner", revServer.revBan(), revClient.revBan(), "ban");
-			
-			save("revBan", revServer.revBan());
-		}
+//		if(!action.server().equals(FServer.KR1) && Integer.parseInt(revServer.revBan()) > Integer.parseInt(revClient.revBan()))
+//		{
+//			ULog.log("Doad-Ban");
+//			gainData("eventbanner", revServer.revBan(), revClient.revBan(), "ban");
+//			
+//			save("revBan", revServer.revBan());
+//		}
 		
 		File revFolderBan = new File(action.server().dirRes(), "ban");
 		
@@ -493,6 +508,7 @@ public class FResource
 			FPack pack = new FPack(rUrl+revServer.resBan()+"/eventbanner/eventbanner0_(zkd).pack?cyt=1", revFolderBanNew.getPath(), "", action.server());
 			pack.downloadPack();
 			
+			save("revBan", revServer.revBan());
 			save("resBan", revServer.resBan());
 		}
 	}
@@ -594,17 +610,16 @@ public class FResource
 		revFolderSouNew.mkdirs();
 		if(Integer.parseInt(revServer.resSou()) > Integer.parseInt(revClient.resSou()))
 		{
-			for(File f:revFolderSouNew.listFiles())
-			{
-				File oldFile = new File(revFolderSou, f.getName());
-				backup(oldFile);
-				f.renameTo(oldFile);
-			}
+			if(!new File(revFolderSouNew,revServer.resSou()+"/itr.log").exists())
+				for(File f:revFolderSouNew.listFiles())
+				{
+					File oldFile = new File(revFolderSou, f.getName());
+					backup(oldFile);
+					f.renameTo(oldFile);
+				}
 			
 			revFolderSouNew = new File(revFolderSou, "_new/"+revServer.resSou());
 			revFolderSouNew.mkdirs();
-			
-			
 			
 			UUtil.p("Dowanload-Sou-Pack");
 			FPack pack = new FPack(rUrl+revServer.resSou()+"/sound/sound0_(zkd).pack?cyt=1", revFolderSouNew.getPath(), "", action.server());
@@ -750,9 +765,9 @@ public class FResource
 		ImageIO.write(ImageNew, "png", picDst);
 	}
 	
-	
 	public void diff() throws Exception
 	{
+		UUtil.p("");
 		for(Field f:revClient.getClass().getDeclaredFields())
 		{
 			f.setAccessible(true);
@@ -762,9 +777,21 @@ public class FResource
 			fs.setAccessible(true);
 			String rs = (String) fs.get(revServer);
 			
-			if(!rc.equals(rs))
-				UUtil.pp("New-"+f.getName()+"-"+rs+"-Old-"+rc);
+			String st = null;
+			if(!f.getName().equals("resMbg"))
+			{
+				if(Integer.parseInt(rc) == Integer.parseInt(rs)) st ="Sam"; 
+				else if(Integer.parseInt(rc) < Integer.parseInt(rs)) st ="New"; 
+				else if(Integer.parseInt(rc) > Integer.parseInt(rs)) st ="Old"; 
+			}
+			else
+			{
+				if(rc.equals(rs)) st ="Sam"; 
+				else st ="Dif";
+			}
+			UUtil.p(f.getName()+"-"+st+"-Client-"+rc+"-Server-"+rs);
 		}
+		UUtil.p("");
 	}
 	private void save(String revName, String revNew) throws Exception
 	{

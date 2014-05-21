@@ -67,6 +67,7 @@ public class FGain
     			break;
     		case "eventbanner":
     			rev.resBan(resrev);
+    			break;
     		case "treasurebox":
     			rev.resTsb(resrev);
     		}

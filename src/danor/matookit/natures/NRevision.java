@@ -31,9 +31,6 @@ public class NRevision
 	private String revCmb;
 	private String revBan;
 	
-	private String revJob;
-	private String revJbs;
-
 	private String resRes;
 	private String resSou;
 	private String resAdv;
@@ -45,6 +42,9 @@ public class NRevision
 	private String resTsb;
 
 	private String resMbg;
+
+	private String revJob;
+	private String revJbs;
 
 	public synchronized String revCrd() { return revCrd; }
 	public synchronized void revCrd(String revCrd) { this.revCrd = revCrd; }
@@ -66,12 +66,6 @@ public class NRevision
 	
 	public synchronized String revCmb() { return revCmb; }
 	public synchronized void revCmb(String revCmb) { this.revCmb = revCmb; }
-
-	public synchronized String revJob() { return revJob; }
-	public synchronized void revJob(String revJob) { this.revJob = revJob; }
-
-	public synchronized String revJbs() { return revJbs; }
-	public synchronized void revJbs(String revJbs) { this.revJbs = revJbs; }
 	
 	public synchronized String revBan() { return revBan; }
 	public synchronized void revBan(String revBan) { this.revBan = revBan; }
@@ -102,4 +96,10 @@ public class NRevision
 
 	public synchronized String resMbg() { return resMbg; }
 	public synchronized void resMbg(String resMbg) { this.resMbg = resMbg; }
+	
+	public synchronized String revJob() { return revJob; }
+	public synchronized void revJob(String revJob) { this.revJob = revJob; }
+
+	public synchronized String revJbs() { return revJbs; }
+	public synchronized void revJbs(String revJbs) { this.revJbs = revJbs; }
 }

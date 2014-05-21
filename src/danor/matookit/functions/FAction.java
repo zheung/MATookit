@@ -79,7 +79,7 @@ public class FAction
 				prmValues[i-1] = tmpValues[i];
 		}
 		
-		UParam param = new UParam((server.isCN() && typAction.equals("Login")), UUtil.Key(server.fileArb(), "Cipher", "Prm")[0]);
+		UParam param = new UParam(((server.isCN() || server == FServer.TW1) && typAction.equals("Login")), UUtil.Key(server.fileArb(), "Cipher", "Prm")[0]);
 		if(!values[1].equals(""))
 		{
 			String[] prmNames = values[1].split(";");
@@ -159,7 +159,7 @@ public class FAction
 		return null;
 	}
 	
-	public File Update(String typRes,String rev)
+	public File Update(String typRes, String rev)
 	{
 		UUtil.p("Action-Update-"+typRes);
 		
@@ -169,7 +169,7 @@ public class FAction
 		try	{ pakFile = Connect("Update", option, typRes.getBytes(), cookie.getBytes(), rev.getBytes()); }
 		catch (Exception e) { e.printStackTrace(); }
 		
-		File renameFile = new File(pakFile.getParent()+"/"+typRes+"-"+rev+".xml");
+		File renameFile = new File(pakFile.getParentFile(), typRes+"-"+rev+".xml");
 		
 		pakFile.renameTo(renameFile);
 		

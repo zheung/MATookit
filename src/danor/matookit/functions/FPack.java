@@ -123,7 +123,8 @@ public class FPack
 		}
 		else
 		{
-			pakFile.delete();
+			if(pakFile.getName().indexOf("sound") == -1)
+				pakFile.delete();
 			
 			File logFile = new File(pakFile.getParent(), "itr.log");
 			
@@ -148,7 +149,8 @@ public class FPack
 				connect = new UConnect(option);
 				pakFile = connect.result;
 
-				decompressPack(pakFile);
+				if(pakFile.getName().indexOf("sound") == -1)
+					decompressPack(pakFile);
 
 				UUtil.Output(logFile, (""+i).getBytes(), false);
 			}

@@ -22,10 +22,9 @@ public class FDataCard
 {
 	private static SAXReader xreader = new SAXReader();
 	
-	public static NDataCards crtCard(int version) throws Exception 
+	public static NDataCards crtCard(int version, File crdFile) throws Exception 
 	{
 		File makFile = new File(FServer.CN1.dirDat(), "/crd/mak-" + version + ".xml");
-		File crdFile = new File(FServer.CN1.dirDat(), "/ctg/crd-" + version + ".xml");
 		File cdfFile = new File(FServer.CN1.dirDat(), "/crd/cdf-" + version + ".xml");
 		
 		List<NDataCardBuilder> list = new ArrayList<>();

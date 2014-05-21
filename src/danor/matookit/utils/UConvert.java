@@ -164,6 +164,19 @@ public class UConvert
 		if(aryByte == null && cvtFile != null)
 			aryByte = UUtil.Input(cvtFile);
 		
+		if(keyCBC == null)
+		{
+			keyCBC = new byte[16];
+			byte[] oldByte = aryByte;
+			aryByte = new byte[aryByte.length-16];
+			
+			for(int i = 0; i<16; i++)
+				keyCBC[i] = oldByte[i];
+			
+			for(int i = 16; i<oldByte.length; i++)
+				aryByte[i-16] = oldByte[i];
+		}
+		
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyAES, "AES"),new IvParameterSpec(keyCBC));
 		aryByte = cipher.doFinal(aryByte);
