@@ -69,11 +69,11 @@ public class FOther
 			}
 	}
 //旧版资源重名到新版
-	public static void rr() throws Exception
+	public static void renameCardFile1(int rev) throws Exception
 	{
-		File rf = new File("./wrk/res/o");
+		File rf = new File("./wrk/res/cns/crd/_new");
 		
-		List<NDataCard> cl = FDataCard.anlCard(238);
+		List<NDataCard> cl = FDataCard.anlCard(rev);
 		
 		for(File f:rf.listFiles())
 		{
@@ -97,6 +97,52 @@ public class FOther
 					f.renameTo(new File(f.getParentFile(), c.idCard()));
 					break;
 				}
+		}
+	}
+//新版资源重名到旧版
+	public static void renameCardFile2(int rev) throws Exception
+	{
+		File fld = new File(FServer.CN1.dirRes(), "/crd/_new");
+		List<NDataCard> cl = FDataCard.anlCard(rev);
+		
+		for(File fc:fld.listFiles())
+		{
+			NDataCard cc = null;
+			for(NDataCard c:cl)
+				if(c.idCard().equals(fc.getName()))
+				{
+					cc = c;
+					String head = "["+c.name()+"]";
+					for(File f:fc.listFiles())
+					{
+						String type = "[a][b]";
+						if(f.getName().indexOf("Adv") != -1)
+							type = type.replace("a", "立绘");
+						else if(f.getName().indexOf("Fac") != -1)
+							type = type.replace("a", "头像");
+						else
+						{
+							if(f.getName().indexOf("Nor") != -1)
+								type = type.replace("a", "a普c");
+							else if(f.getName().indexOf("Hlo") != -1)
+								type = type.replace("a", "a闪c");
+
+							if(f.getName().indexOf("Ful") != -1)
+								type = type.replace("c", "卡").replace("a", "");
+							else if(f.getName().indexOf("Tum") != -1)
+								type = type.replace("a", "临").replace("c", "");
+						}
+						
+						if(f.getName().indexOf("Bac") != -1)
+							type = type.replace("b", "普");
+						else if(f.getName().indexOf("Max") != -1)
+							type = type.replace("b", "满");
+						
+						f.renameTo(new File(f.getParentFile(), head+type+".png"));
+					}
+				}
+			
+			fc.renameTo(new File(fc.getParentFile(), cc.name()));
 		}
 	}
 //跳过教程

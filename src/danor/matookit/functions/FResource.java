@@ -429,8 +429,8 @@ public class FResource
 					File pFile = new File(revFolderItmNew.getParent()+"/"+f.getName().replace("item_", ""));
 					if(pFile.exists())
 						pFile.delete();
-					else
-						f.renameTo(pFile);
+					
+					f.renameTo(pFile);
 				}
 			}
 

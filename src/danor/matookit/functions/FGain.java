@@ -12,6 +12,10 @@ import java.util.List;
 
 public class FGain
 {
+	public static String GainCookie(File xmlFile) throws Exception
+	{
+		return "S="+(new UXml(xmlFile).value("header>session_id"));
+	}
 	public static String GainError(UXml xml) throws Exception
 	{
 		return xml.value("header>error>code");
