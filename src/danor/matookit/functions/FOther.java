@@ -69,7 +69,7 @@ public class FOther
 			}
 	}
 //旧版资源重名到新版
-	public static void renameCardFile1(int rev) throws Exception
+	public static void renameCardFileToNew(int rev) throws Exception
 	{
 		File rf = new File("./wrk/res/cns/crd/_new");
 		
@@ -100,7 +100,7 @@ public class FOther
 		}
 	}
 //新版资源重名到旧版
-	public static void renameCardFile2(int rev) throws Exception
+	public static void renameCardFileToOld(int rev) throws Exception
 	{
 		File fld = new File(FServer.CN1.dirRes(), "/crd/_new");
 		List<NDataCard> cl = FDataCard.anlCard(rev);

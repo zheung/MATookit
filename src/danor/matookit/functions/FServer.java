@@ -4,13 +4,13 @@ import java.io.File;
 
 public enum FServer
 {
+	JP1("JPS"), KR1("KRS"), TW1("TWS"),
 	CN1("CNS"), CN2("CNS"), CN3("CNS"),
-	SG1("SGS"), TW1("TWS"), JP1("JPS"),
-	KR1("KRS"), KRK("KRS"), MY1("MYS");
+	KRK("KRS"), SG1("SGS"), MY1("MYS");
 	
-	public static final File dirGuiAll = new File("./wrk/res/gui");
-	public static final File dirLogAll = new File("./wrk/log");
-	public static final File dirDatAll = new File("./wrk/dat");
+	public static final File dirGuiAll = new File("./wrk/all/gui");
+	public static final File dirLogAll = new File("./wrk/all/log");
+	public static final File dirDatAll = new File("./wrk/all/dat");
 	private final String server;
 	private final File dirPak;
 	private final File dirDat;
@@ -21,11 +21,11 @@ public enum FServer
 	FServer(String name)
 	{
 		this.server = name;
-		dirPak = new File("./wrk/pak/"+name.toLowerCase());
-		dirDat = new File("./wrk/dat/"+name.toLowerCase());
-		dirExp = new File("./wrk/dat/"+name.toLowerCase()+"/exp");
-		dirRes = new File("./wrk/res/"+name.toLowerCase());
-		fileArb = new File("./wrk/dat/"+name.toLowerCase()+"/arb.xml");
+		dirPak = new File("./wrk/"+name.toLowerCase()+"/pak/");
+		dirDat = new File("./wrk/"+name.toLowerCase()+"/dat/");
+		dirExp = new File("./wrk/"+name.toLowerCase()+"/dat/exp");
+		dirRes = new File("./wrk/"+name.toLowerCase()+"/res/");
+		fileArb = new File("./wrk/"+name.toLowerCase()+"/dat/arb.xml");
 	}
 
 	public String server() { return server; }

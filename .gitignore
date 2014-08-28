@@ -1,6 +1,9 @@
 #No Jar File
 *.jar
 
+#Include Lib Folder
+!/lib/
+
 #No Eclipse Setting
 .classpath
 .project
@@ -9,16 +12,15 @@
 #No sensitive Source
 /src/danor/matookit/test
 
-#No Test Folder
+#No Bin Folder
 /bin/
 
-#No Resource Folder
-/wrk/dat/
-/wrk/log/
-/wrk/pak/
-/wrk/ptb/
-/wrk/res/cns/
-/wrk/res/sgs/
-/wrk/res/krs/
-/wrk/res/mys/
-/wrk/res/tws/
+#No Work Folder
+/wrk/all/dat/
+/wrk/all/log/
+/wrk/all/ptb/
+/wrk/cns/
+/wrk/krs/
+/wrk/mys/
+/wrk/sgs/
+/wrk/tws/

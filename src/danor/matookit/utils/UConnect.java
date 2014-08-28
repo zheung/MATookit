@@ -60,9 +60,11 @@ public class UConnect extends Thread
 		connect.setDoOutput(true);
 		connect.setDoInput(true);
 		connect.setConnectTimeout(1000 * 24);
+		connect.setReadTimeout(1000 * 34);
 
 		for(String[] ss:option.getStrings("property"))
 			connect.setRequestProperty(ss[0],ss[1].equals(";")?"":ss[1]);
+		
 	//设置cookie
 		if(option.getString("cookie") != null)
 		{
