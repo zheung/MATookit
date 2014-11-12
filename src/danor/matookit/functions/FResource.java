@@ -306,10 +306,20 @@ public class FResource
 		{
 			ULog.log("Doad-Crd-Pak-"+card.idCard);
 			try {
-				FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1",
-						revFolderCrdNew.getPath(), "", action.server());
-				pack.downloadPack();
-			
+				if(Integer.parseInt(card.idCard)>=1096&&Integer.parseInt(card.idCard)<=1115)
+				{
+					FPack pack = new FPack(rUrl+(Integer.parseInt(card.version)-1)+"/card/card"+card.idCard+"_(zkd).pack?cyt=1",
+							revFolderCrdNew.getPath(), "", action.server());
+					pack.downloadPack();
+					
+				}
+				else
+				{
+					FPack pack = new FPack(rUrl+card.version+"/card/card"+card.idCard+"_(zkd).pack?cyt=1",
+							revFolderCrdNew.getPath(), "", action.server());
+					pack.downloadPack();
+					
+				}
 				new File(revFolderCrdNew, "thumbnail_chara_"+card.idImageNorrmal+".png")
 				.renameTo(new File(revFolderCrdNew, "/"+card.idCard+"_TumNorBac.png"));
 				new File(revFolderCrdNew, "thumbnail_chara_"+card.idImageArousal+".png")

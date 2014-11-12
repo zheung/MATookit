@@ -202,6 +202,13 @@ public class FAction
 		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
 		Connect("Collection", option);
 	}
+	public void Storage() throws Exception
+	{
+		UUtil.p("Action-Storage");
+		
+		UOption option = new UOption().put("typMethod", true).put("rqtDecryptParam", true).put("rqtDecryptFile", true).put("rqtFormatFile", true);
+		Connect("Storage", option);
+	}
 	public void Info() throws Exception
 	{
 		UUtil.p("Action-Info");
