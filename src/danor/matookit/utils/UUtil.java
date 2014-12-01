@@ -1,6 +1,7 @@
 package danor.matookit.utils;
 
 import java.applet.Applet;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 
 import org.dom4j.Element;
 
@@ -128,4 +131,17 @@ public class UUtil
 		
 		return null;
 	}
+
+	public static ImageIcon getImageIcon(String path, int width, int height)
+	{
+		return getImageIcon(new ImageIcon(path), width, height);
+	}
+	public static ImageIcon getImageIcon(ImageIcon icon, int width, int height)
+	{
+		ImageIcon ii = new ImageIcon(icon.getImage());
+		ii.setImage(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+		
+		return ii;
+	}
+
 }
